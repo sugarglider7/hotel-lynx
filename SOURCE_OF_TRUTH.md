@@ -151,7 +151,7 @@ Spare (Google, display as name + "Google"): "Friendly staff that carries your lu
 Spelling/punctuation kept exactly as written. Dates are for internal reference only — never on the site.
 
 ## (g) Open questions for the owner
-1. Which contact should the site use: phone 05 28 84 78 86 (and/or …87)? Is there a **WhatsApp** number (mobile)? Which email is read: agadir.hlynx@gmail.com or agadirhotellynx@gmail.com?
+1. **Before Fadwa shows the site: which e-mail is read every day** — agadir.hlynx@gmail.com or agadirhotellynx@gmail.com? (The "Ask for a room" form writes to the first; the site promises no reply until this is confirmed.) Also: phone 05 28 84 78 86 (and/or …87)? Is there a **WhatsApp** number (mobile)?
 2. **Children**: Booking says "children not allowed" — true, or a Booking setting to fix? From what age?
 3. **Payment**: cash only? Dirhams only, or euros too? Cards at the desk?
 4. Exact **number of rooms** (affiliates say 41) and floors; which rooms have balconies / views to the Kasbah hill; are there ground-floor rooms (no lift)?

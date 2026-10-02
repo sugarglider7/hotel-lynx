@@ -1,6 +1,6 @@
 # BUILD STATUS — hotel-lynx
 
-_Last updated: 2026-10-02 06:58 UTC by BuildLynx (phase 3 complete: all pages EN+FR, QA rounds 1–3, deployed + live-checked)_
+_Last updated: 2026-10-02 by FixLynx (phase 4 fix pass: all audit A/B findings applied, deployed fbb8059, live-checked)_
 
 ## Recovered state (resume of crashed run "agadir-batch2")
 - Prior run left ONLY raw material (no repo, no status files, no code, no deployment):
@@ -25,7 +25,7 @@ _Last updated: 2026-10-02 06:58 UTC by BuildLynx (phase 3 complete: all pages EN
 
 ## Design
 - **Phase 2 DONE.** BRAND_NOTES.md: concept "Signposted" (the hotel's own sign system: façade photo → black fascia hero, fingerposts with real bearings, the Lynx Line walking-minute transit map, key-tag room directory, yes/no board), palette sampled from bk_01/05/12/14, Overpass + Overpass Mono (self-hosted, registered in FONTS.md), page map EN/FR, section plans, conversion spec + EN/FR mail templates, must-not list.
-- Tooling: `tools/images.py` (Pillow, sequential, declarative list → `site/assets/img/*.webp` + `tools/images.manifest.json` + og image + favicons), `tools/build.py` (stdlib; `content/site.json` facts + `content/<lang>.json` copy + `tools/templates.py` partials/pages → `site/`; also 404, sitemap, robots, _headers). `tools/mapdata.py` (phase 3, stdlib: OSM Overpass JSON in research/raw → `site/assets/img/map-{door,city}.svg` + `content/map.json`). Rebuild: `python3 tools/images.py && python3 tools/mapdata.py && python3 tools/build.py`. **Edit content/templates, never site/*.html by hand.**
+- Tooling: `tools/images.py` (Pillow, sequential, declarative list → `site/assets/img/*.webp` + `tools/images.manifest.json` + og image + favicons), `tools/build.py` (stdlib; `content/site.json` facts + `content/<lang>.json` copy + `tools/templates.py` partials/pages → `site/`; also 404, sitemap, robots, _headers; French typography (U+202F) applied to FR copy at load). `tools/mapdata.py` (stdlib: OSM Overpass JSON in research/raw → `site/assets/img/map-{door,city,city-m}.svg` + `content/map.json`; `city-m` = the phone-framed city map). Rebuild: `python3 tools/images.py && python3 tools/mapdata.py && python3 tools/build.py`. **Edit content/templates, never site/*.html by hand.**
 - `site/assets/css/site.css` (26 KB, tokens + components), `site/assets/js/site.js` (8 KB: menu, sticky bar, reveal, mailto composer), favicon.svg/32/180.
 - Phase 3 adding a page: add renderer to `PAGES` in build.py + `slug` under `pages.<key>` in each content file; nav/hreflang/lang switch update automatically (unbuilt pages fall back to homepage anchors). FR: create `content/fr.json` (same keys, `dir: "/fr/"`, `date_locale: "fr-FR"`).
 
@@ -54,19 +54,20 @@ _Last updated: 2026-10-02 06:58 UTC by BuildLynx (phase 3 complete: all pages EN
 - Noise (mosque call to prayer, street) and dated furniture are recurring criticisms → never "quiet", "modern", "renovated".
 
 ## QA status
-- Phase 3: `check_site` **OK (11 pages)**, 0 WARN, contacts = tel:+212528847886 + mailto:agadir.hlynx@gmail.com only. Full claim table + functional + perf in `QA_CHECKLIST.md`.
-- Screenshot rounds 1–3 at 390 + 1440 (+ menu, errors, filled, success, FR, 404) in `/home/agent/agadir-pilot/qa/hotel-lynx/p3/`. No overflow 360–1440 on all pages; 0 console errors.
-- Perf at 390 (uncompressed local): home 183 KB / 6 requests before scroll, LCP hero webp 34 KB, CLS 0; heaviest template Your Agadir 210 KB / 8.
+- **Phase 4 fix pass (2026-10-02): 38 findings (A1–A21, B1–B17) — 37 fixed, A19(c) aggregateRating kept by decision (STANDARD §9).** Fix log with verification per ID at the end of `QA_CHECKLIST.md`; screenshots `/home/agent/agadir-pilot/qa/hotel-lynx/p4-fix/`. `check_site` OK (11 pages), 0 WARN; overflow sweep 320–1440 × 11 pages clean; composed e-mails EN/FR decoded (CRLF, accents, balcony prefill).
+- Live (fbb8059) at 390: home, rooms, your-agadir, practical, ask, FR home/chambres/votre-agadir — 200, no overflow, 0 broken images, 0 console errors; phone map shows Lynx + sea without scrolling; `/ask/?balcony=1` ticks the box; `/no-such-page/` → 404 + noindex.
+- Phase 3: rounds 1–3 in `/home/agent/agadir-pilot/qa/hotel-lynx/p3/`; audits in `…/p4/`.
 
 ## Deployment URL
-- https://hotel-lynx.peashoot.io/ (Cloudflare Pages project "hotel-lynx", output dir `site/`, no build command, auto-deploys on push to main). **Pushes to main do NOT auto-deploy** (GitHub hook silent since 8cae2b9) → after pushing run `bash /home/agent/agadir-pilot/tools/cf-static-deploy.sh hotel-lynx deploy`. Live = 5b9ccfc (site/ unchanged since).
+- https://hotel-lynx.peashoot.io/ (Cloudflare Pages project "hotel-lynx", output dir `site/`, no build command). **Pushes to main do NOT auto-deploy** (GitHub hook silent since 8cae2b9) → after pushing run `bash /home/agent/agadir-pilot/tools/cf-static-deploy.sh hotel-lynx deploy`. Live = fbb8059.
 
 ## Outstanding problems
-- Owner permission for the Booking gallery photos (SOT Q11); no Single-room photo (honest caption used).
-- Owner questions still open (all omitted on site): children policy, payment terms, room count, staff names, WhatsApp mobile, which email is read, room service content, late arrivals after 22:00.
+- Owner permission for the Booking gallery photos (SOT Q11); no Single-room photo (key-tag plate + "no photo yet" line used).
+- Owner questions still open (all omitted or softened on site): **which e-mail is read daily (the inquiry form depends on it — site no longer promises a reply)**, children policy, payment terms, room count, ground-floor rooms, staff names, WhatsApp mobile, room service content, airport-taxi booking, late arrivals after 22:00.
 - Local preview (python http.server) shows its own 404; Cloudflare serves `site/404.html`.
 
 ## Log
+- Phase 4 (FixLynx): applied audit A (rooms = "five kinds of room", no universal stairs claim, honest late-arrival/taxi/reply wording, FR rewritten + typography, FR decimals, room service listed, 404 noindex, localised JSON-LD) and audit B (phone-framed city map + "Off this map" list, 44 px FR/EN header plate, legend pairs, balcony deep link, groups grid, Single key-tag plate, hero 1200 w mobile + 320 w thumbs, tap targets, m² face, kicker wrap, desktop hero crop, done panel no inner scroll + subject copy, CRLF mailto, inert menu backdrop, practical de-duplicated). check_site OK; committed + pushed; deployed fbb8059 with cf-static-deploy; live check OK at 390 in one tab; tab closed, preview stopped.
 - 06:58 email_off on the whole body was ignored (comments stripped) → each address/mailto wrapped individually (`eo()` in templates.py); 5b9ccfc deployed. LIVE CHECK OK at 390 in one tab: home, /your-agadir/, /fr/, 404 (custom bilingual page) — 200s, canonical correct, 0 broken images, 0 failed requests, no overflow; no `email-protection` rewriting; live FR ask flow composes mailto correctly. Live home before scroll: 118 KB / 8 requests (brotli; incl. 2 Cloudflare analytics beacons). Tab closed, preview stopped.
 - 06:50 Deploy: pushes after 8cae2b9 had NOT auto-deployed (GitHub hook silent) → triggered with `tools/cf-static-deploy.sh hotel-lynx deploy` (b5d540a success). Live check found Cloudflare e-mail obfuscation rewriting mailto links (/cdn-cgi/l/email-protection + injected decoder) → body wrapped in `<!--email_off-->`; redeployed.
 - 06:42 QA rounds 1–3 (390/1440 + 360–1440 overflow sweep, menu, form errors/filled/success EN+FR, clipboard, prefill, perf); fixes listed in QA_CHECKLIST §4; owner-embarrassment pass (removed 'cash', 'no upgrades to upsell', parking 'rarely look far'); QA_CHECKLIST written.
