@@ -72,6 +72,12 @@ def dec(ctx, s):
     return str(s).replace(".", ctx["t"]["decimal"])
 
 
+def eo(html):
+    """Keep Cloudflare's e-mail obfuscation off an address: otherwise it rewrites text and
+    mailto: links into /cdn-cgi/l/email-protection that only work once its script has run."""
+    return f"<!--email_off-->{html}<!--/email_off-->"
+
+
 def tel(site):
     return "tel:" + site["phone_e164"]
 
@@ -180,7 +186,7 @@ def header(ctx):
     <ul class="menu-list">{links}<li><a href="{ask}"{cur}><span class="n">{len(t['nav']) + 1:02d}</span>{t['ui']['ask']}</a></li></ul>
     <div class="menu-foot">
       <a class="btn btn-sig" href="{tel(site)}">{ICON['phone']}{t['ui']['call_reception']}</a>
-      <a class="menu-mail" href="mailto:{site['email']}">{site['email']}</a>
+      {eo(f'<a class="menu-mail" href="mailto:{site["email"]}">{site["email"]}</a>')}
       {lang_switch(ctx)}
     </div>
   </div>
@@ -202,7 +208,7 @@ def footer(ctx):
     </address>
     <div class="ft-contact">
       <p><a class="ft-tel" href="{tel(site)}">{site['phone_display']}</a><span class="mut mono"> · 24h</span></p>
-      <p><a class="lnk" href="mailto:{site['email']}">{site['email']}</a></p>
+      <p>{eo(f'<a class="lnk" href="mailto:{site["email"]}">{site["email"]}</a>')}</p>
       <p>{ext(ctx, site['booking_url'], 'Booking.com')}</p>
     </div>
     <nav class="ft-nav" aria-label="{esc(f['nav_label'])}"><ul>{pages}</ul></nav>
@@ -264,11 +270,8 @@ def document(ctx, main, jsonld=()):
     title, desc = (p["title"], p["description"]) if p else (ctx["title"], ctx["description"])
     ctx["head_extra"] = "".join(ld(d) for d in jsonld)
     path = ctx["alt"][ctx["t"]["lang"]]
-    # email_off: Cloudflare's e-mail obfuscation would otherwise rewrite every address and
-    # mailto: into /cdn-cgi/l/email-protection links that only work after its script runs
-    return (head(ctx, title, desc, path) + "\n<body>\n<!--email_off-->\n" + header(ctx) +
-            f'\n<main id="main">\n{main}\n</main>\n' + footer(ctx) + "\n" + sticky(ctx) +
-            "\n<!--/email_off-->\n</body>\n</html>\n")
+    return (head(ctx, title, desc, path) + "\n<body>\n" + header(ctx) +
+            f'\n<main id="main">\n{main}\n</main>\n' + footer(ctx) + "\n" + sticky(ctx) + "\n</body>\n</html>\n")
 
 
 def page_head(ctx, side="", cls=""):
@@ -551,7 +554,7 @@ def side_plate(ctx):
     return f"""<aside class="ask-side" aria-label="{esc(S['h'])}">
       <h3>{S['h']}</h3>
       <a class="side-tel" href="{tel(site)}"><span class="mono">{S['call']}</span><b>{site['phone_display']}</b></a>
-      <a class="side-row" href="mailto:{site['email']}"><span class="mono">{S['email']}</span><b>{site['email']}</b></a>
+      {eo(f'<a class="side-row" href="mailto:{site["email"]}"><span class="mono">{S["email"]}</span><b>{site["email"]}</b></a>')}
       <a class="side-row" href="{site['booking_url']}" rel="noopener" target="_blank"><span class="mono">{S['booking']}</span><b>{S['booking_sub']} {ICON['out']}</b><span class="sr"> ({t['ui']['new_tab']})</span></a>
     </aside>"""
 
@@ -631,11 +634,11 @@ def sec_ask(ctx):
       <div class="done" id="ask-done" hidden tabindex="-1" aria-labelledby="done-h">
         <h2 id="done-h">{D['h']}</h2>
         <p>{D['p']}</p>
-        <p class="done-act"><a class="btn btn-sig" id="ask-retry" href="mailto:{site['email']}">{ICON['mail']}{D['retry']}</a></p>
+        <p class="done-act">{eo(f'<a class="btn btn-sig" id="ask-retry" href="mailto:{site["email"]}">{ICON["mail"]}{D["retry"]}</a>')}</p>
         <div class="done-box">
           <p class="done-k mono">{D['no_app']}</p>
           <dl class="done-to">
-            <div><dt class="mono">{D['to']}</dt><dd><span id="done-email">{site['email']}</span> <button class="btn-mini" type="button" data-copy="email">{ICON['copy']}{D['copy_email']}</button></dd></div>
+            <div><dt class="mono">{D['to']}</dt><dd>{eo(f'<span id="done-email">{site["email"]}</span>')} <button class="btn-mini" type="button" data-copy="email">{ICON['copy']}{D['copy_email']}</button></dd></div>
             <div><dt class="mono">{D['subject']}</dt><dd id="done-subject"></dd></div>
           </dl>
           <pre class="done-msg" id="done-body" tabindex="0" aria-label="{esc(D['msg_label'])}"></pre>
