@@ -264,8 +264,11 @@ def document(ctx, main, jsonld=()):
     title, desc = (p["title"], p["description"]) if p else (ctx["title"], ctx["description"])
     ctx["head_extra"] = "".join(ld(d) for d in jsonld)
     path = ctx["alt"][ctx["t"]["lang"]]
-    return (head(ctx, title, desc, path) + "\n<body>\n" + header(ctx) +
-            f'\n<main id="main">\n{main}\n</main>\n' + footer(ctx) + "\n" + sticky(ctx) + "\n</body>\n</html>\n")
+    # email_off: Cloudflare's e-mail obfuscation would otherwise rewrite every address and
+    # mailto: into /cdn-cgi/l/email-protection links that only work after its script runs
+    return (head(ctx, title, desc, path) + "\n<body>\n<!--email_off-->\n" + header(ctx) +
+            f'\n<main id="main">\n{main}\n</main>\n' + footer(ctx) + "\n" + sticky(ctx) +
+            "\n<!--/email_off-->\n</body>\n</html>\n")
 
 
 def page_head(ctx, side="", cls=""):

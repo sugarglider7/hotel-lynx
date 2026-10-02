@@ -1,6 +1,6 @@
 # BUILD STATUS — hotel-lynx
 
-_Last updated: 2026-10-02 07:45 UTC by BuildLynx (phase 3 complete: all pages EN+FR, QA rounds 1–3, pushed)_
+_Last updated: 2026-10-02 06:42 UTC by BuildLynx (phase 3 complete: all pages EN+FR, QA rounds 1–3, pushed)_
 
 ## Recovered state (resume of crashed run "agadir-batch2")
 - Prior run left ONLY raw material (no repo, no status files, no code, no deployment):
@@ -67,9 +67,10 @@ _Last updated: 2026-10-02 07:45 UTC by BuildLynx (phase 3 complete: all pages EN
 - Local preview (python http.server) shows its own 404; Cloudflare serves `site/404.html`.
 
 ## Log
-- 07:45 QA rounds 1–3 (390/1440 + 360–1440 overflow sweep, menu, form errors/filled/success EN+FR, clipboard, prefill, perf); fixes listed in QA_CHECKLIST §4; owner-embarrassment pass (removed 'cash', 'no upgrades to upsell', parking 'rarely look far'); QA_CHECKLIST written.
-- 07:20 FR mirror: content/fr.json (all 5 pages, natural French, FR quotes from Booking where they exist, EN quotes kept in English with lang=en), decimal commas, FR mail template; header de-crowded (2-letter lang switch, phone number ≥88rem); no overflow 360–1440 on all 11 pages; check_site OK (11 pages).
-- 06:45 phase 3: orchestrator fixes applied ("free public parking right by the hotel", taxi grid → "By taxi", airport "about 30 min by taxi — we can book one"); EN rooms/your-agadir/practical/ask built; images +6 (bk_19/25/18/03/14/09); Overpass roads/coast/near streets fetched to research/raw for the maps; check_site OK.
+- 06:50 Deploy: pushes after 8cae2b9 had NOT auto-deployed (GitHub hook silent) → triggered with `tools/cf-static-deploy.sh hotel-lynx deploy` (b5d540a success). Live check found Cloudflare e-mail obfuscation rewriting mailto links (/cdn-cgi/l/email-protection + injected decoder) → body wrapped in `<!--email_off-->`; redeployed.
+- 06:42 QA rounds 1–3 (390/1440 + 360–1440 overflow sweep, menu, form errors/filled/success EN+FR, clipboard, prefill, perf); fixes listed in QA_CHECKLIST §4; owner-embarrassment pass (removed 'cash', 'no upgrades to upsell', parking 'rarely look far'); QA_CHECKLIST written.
+- 06:36 FR mirror: content/fr.json (all 5 pages, natural French, FR quotes from Booking where they exist, EN quotes kept in English with lang=en), decimal commas, FR mail template; header de-crowded (2-letter lang switch, phone number ≥88rem); no overflow 360–1440 on all 11 pages; check_site OK (11 pages).
+- 06:29 phase 3: orchestrator fixes applied ("free public parking right by the hotel", taxi grid → "By taxi", airport "about 30 min by taxi — we can book one"); EN rooms/your-agadir/practical/ask built; images +6 (bk_19/25/18/03/14/09); Overpass roads/coast/near streets fetched to research/raw for the maps; check_site OK.
 - 05:08 recovery: workspace created from prior raw research; brief + standard written.
 - 05:20 research: Booking page + Apollo state parsed (rooms, sizes, beds, policies, trader contact); 377 Booking reviews captured via one browser tab; Google 4.1/241 + 30 reviews; tab closed.
 - 05:28 research: pin verified (Google vs Booking), OSRM foot/car table for 37 places; hr_ images identified as pixcdn affiliate copies of Booking photos.
