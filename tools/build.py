@@ -15,7 +15,7 @@ points at a missing file.
 Run tools/images.py first when image selections change (it writes the manifest),
 and tools/mapdata.py when the map data changes.
 """
-import hashlib, json, os, sys
+import hashlib, json, os, re, sys
 
 TOOLS = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(TOOLS)
@@ -33,6 +33,22 @@ def load(name):
         return json.load(f)
 
 
+def fr_typo(v):
+    """French typography on every copy string: narrow no-break space before : ; ! ? and » and after «
+    (text only, never inside tags). The composed e-mail ("mail") keeps plain spaces for mail clients."""
+    if isinstance(v, dict):
+        return {k: (x if k == "mail" else fr_typo(x)) for k, x in v.items()}
+    if isinstance(v, list):
+        return [fr_typo(x) for x in v]
+    if not isinstance(v, str):
+        return v
+    parts = re.split(r"(<[^>]+>)", v)
+    for i in range(0, len(parts), 2):
+        s = re.sub(r"[ \u00a0]([:;!?»])", "\u202f\\1", parts[i])
+        parts[i] = re.sub(r"«[ \u00a0]", "«\u202f", s)
+    return "".join(parts)
+
+
 def write(rel, text):
     path = os.path.join(SITE, rel)
     os.makedirs(os.path.dirname(path), exist_ok=True)
@@ -43,7 +59,7 @@ def write(rel, text):
 
 def asset_version():
     h = hashlib.sha1()
-    for rel in ("assets/css/site.css", "assets/js/site.js", "assets/img/map-city.svg", "assets/img/map-door.svg"):
+    for rel in ("assets/css/site.css", "assets/js/site.js", "assets/img/map-city.svg", "assets/img/map-city-m.svg", "assets/img/map-door.svg"):
         p = os.path.join(SITE, rel)
         if os.path.exists(p):
             h.update(open(p, "rb").read())
@@ -55,6 +71,8 @@ def main():
     img = load("tools/images.manifest.json")
     mp = load("content/map.json")
     content = {l: load(f"content/{l}.json") for l in LANGS if os.path.exists(os.path.join(ROOT, "content", f"{l}.json"))}
+    if "fr" in content:
+        content["fr"] = fr_typo(content["fr"])
 
     def page_path(lang, key):
         t = content[lang]

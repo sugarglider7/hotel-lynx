@@ -12,7 +12,7 @@ Tags refer to `SOURCE_OF_TRUTH.md` (S# = Sources table). "Verified" = stated pla
 | 9 Rue Al Mahdi Ibn Toumart, Talborjt, 80000 Agadir | [VERIFIED: S1,S3,S4,S6] | verified |
 | "Opposite the Mohammed V Mosque" | [VERIFIED: S4,S11,S12; S2] (110 m) | verified |
 | Phone +212 5 28 84 78 86, tel:+212528847886 | [VERIFIED: S3,S4,S6] | verified (only phone on site; …87 omitted) |
-| Reception 24 h | [VERIFIED: S1] | verified; paired with "tell us your arrival time" (one refused night arrival in S2) |
+| Reception 24 h | [VERIFIED: S1] | verified; check-in ends 22:00 → "arriving after 22:00? call reception before you travel" (no promise; one refused night arrival in S2) |
 | Email agadir.hlynx@gmail.com | [VERIFIED: S3] | verified (alt address omitted, CONFLICT S3,S7) |
 | Booking.com link | [VERIFIED: S1] | secondary CTA |
 | Google Maps link on 30.4228588, -9.5917027 | [VERIFIED: S4,S11] | verified (Booking pin never used) |
@@ -26,13 +26,13 @@ Tags refer to `SOURCE_OF_TRUTH.md` (S# = Sources table). "Verified" = stated pla
 | "Clean rooms, a reception that never closes, free Wi-Fi and free public parking right by the hotel" | [VERIFIED: S1,S4] | verified; orchestrator fix applied (was "by the door") |
 | 8.4 on Booking.com · 1,009 reviews · 9.2 for staff | [VERIFIED: S1] | verified, no dates |
 | Fingerposts: mosque 1 min, cafés 3 min, beach promenade 23 min (+ bearings) | [VERIFIED: S11,S12] | verified (OSRM foot) |
-| Yes board: cleanliness 8.9, Wi-Fi 9.5, free parking (public), 24 h, AC every room, own shower room, satellite/cable TV, rooftop terrace facing the Kasbah hill | [VERIFIED: S1,S4 + photo bk_10] | verified |
-| No board: no breakfast (cafés 3 min), no lift ("ask at the desk for a hand"), no pool/gym, no smoking rooms | [VERIFIED: S1,S2,S4]; luggage help [PROBABLE: S2,S5] | verified / help softened to "ask" |
-| Room directory: 5 types, m², guests | [VERIFIED: S1] | verified; Single shown as a "15 m² · 1 single bed" plate (no photo exists) |
-| Lynx Line: 16 walking stops with OSRM minutes/metres | [VERIFIED: S11,S12] | verified, "measured on foot from our front door" |
+| Yes board: cleanliness 8.9, Wi-Fi 9.5, free parking (public), 24 h, room service ("ask at the desk", no menu), AC every room, own shower room, satellite/cable TV, rooftop terrace facing the Kasbah hill | [VERIFIED: S1,S4 + photo bk_10] | verified |
+| No board: no breakfast (cafés 3 min), no lift ("upper floors by the stairs only"; "ask at the desk for a hand"), no pool/gym, no smoking rooms | [VERIFIED: S1,S2,S4]; luggage help [PROBABLE: S2,S5] | verified / help softened to "ask" |
+| Room directory: "Five kinds of room", 5 types, m², guests | [VERIFIED: S1] | verified; Single shown as a "15 m² · 1 single bed" plate (no photo exists) |
+| Lynx Line: 16 walking stops with OSRM minutes/metres (cafés and banks "3–4 min", as on Your Agadir) | [VERIFIED: S11,S12] | verified, "walking times follow the streets from our front door" |
 | "Talborjt … rebuilt after the 1960 earthquake" | context S11/S13 | plain context |
-| "By taxi": promenade ~4, CTM ~5, Kasbah ~12, airport ~30 min; "petits taxis pass all day in town; for the airport, we can book you a taxi" | [VERIFIED: S12] times; taxi booking [PROBABLE: S2] | "about", "by road, traffic permitting"; orchestrator fix applied (retitled, airport line) |
-| Getting in: free public parking, airport ~24 km, "ask us about booking you a taxi" | [VERIFIED: S1,S12]; [PROBABLE: S2] | softened ("ask us") |
+| "By taxi": promenade ~4, CTM ~5, Kasbah ~12, airport ~30 min; "petits taxis pass all day in town; for the airport, ask reception about booking you a taxi" | [VERIFIED: S12] times; taxi booking [PROBABLE: S2] | "about", "by road, traffic permitting"; booking softened (A5) |
+| Getting in: "Late flight? Call ahead." · free public parking, airport ~24 km, "ask us about booking you a taxi" | [VERIFIED: S1,S12]; [PROBABLE: S2] | softened ("ask us"); no late-arrival promise (A3) |
 | Reviews: Booking 8.4/1,009 + 7 subscores; Google 4.1/241 | [VERIFIED: S1,S4] | verified |
 | Quotes EN: Ingo (title), Joanna, Kätlin, Lars | SOT §f 1,5,3,6 | exact text |
 | Quotes FR: Alexandre (title), Chaimae, Linda; Joanna kept in English (`lang="en"`) | S2 raw `_bk_reviews_flat.json`, exact text | exact text, attribution name + country + Booking.com |
@@ -41,17 +41,17 @@ Tags refer to `SOURCE_OF_TRUTH.md` (S# = Sources table). "Verified" = stated pla
 ### Rooms `/rooms/` · `/fr/chambres/`
 | Claim | Tag | Phrasing |
 |---|---|---|
-| In every room: AC, own shower room (walk-in shower, basin, toilet), towels, flat-screen TV satellite+cable, free Wi-Fi 9.5, wake-up call, non-smoking, stairs | [VERIFIED: S1] | verified |
+| In every room: AC, own shower room (shower, basin, toilet), towels, flat-screen TV satellite+cable, free Wi-Fi 9.5, wake-up call ("ask at reception"), non-smoking, room service ("ask at the desk") | [VERIFIED: S1] | verified |
 | "No bathtubs" | photos bk_03/07/26/27 (S1) | verified from photos |
 | "Towels and fresh linen — ready when you arrive" | towels [VERIFIED: S1] | plain |
-| Single 15 m², 1 single bed, 1 guest; "We don't have a photo of the Single yet" + shower photo captioned "the shower room layout the Single shares with the Superior Single and Twin — not the bedroom" | [VERIFIED: S1]; Booking photo mapping (notes-rooms) | honest caption approach kept |
+| Single 15 m², 1 single bed, 1 guest; key-tag plate "15 m² · 1 single bed · We don't have a photo of the Single yet" (no borrowed bathroom photo) | [VERIFIED: S1] | honest plate (B7/A21) |
 | Superior Single 16 m², single bed or large double "when one is free" | [VERIFIED: S1] ("if available") | verified |
 | Twin 20 m², 2 single beds; "on Booking.com listed as a Double Room with two single beds" | [VERIFIED: S1] | verified |
 | Double 20 m², large double; "Some of our Doubles open onto a small balcony — we can't promise one" | beds [VERIFIED: S1]; balcony [PROBABLE: S2 + photo bk_02] | softened |
 | Triple 20 m², large double + single; "We don't add extra beds" | [VERIFIED: S1] (no extra beds) | verified |
 | Photo captions only describe what is visible (balcony, round table, dressing table) | photos S1 | verified |
 | What we don't do: breakfast, lift, pool/gym, extra beds, smoking rooms | [VERIFIED: S1,S2,S4] | verified |
-| Balcony block: "Many of our rooms have a small balcony; some look towards the Kasbah hill. We can't promise one" + Nabilah quote | [PROBABLE: S2] + photos; quote SOT §f 9 | softened; quote exact (kept in English on FR page) |
+| Balcony block: "Many of our rooms have a small balcony; some look towards the Kasbah hill. We can't promise one" + Nabilah quote; button → `/ask/?balcony=1` (box ticked) | [PROBABLE: S2] + photos; quote SOT §f 9 | softened; quote exact (kept in English on FR page) |
 | "Ask for today's price" (no prices) | prices [STALE] | no figures |
 | JSON-LD HotelRoom ×5 (floorSize, occupancy, bed) | [VERIFIED: S1] | verified, no aggregateRating on this page |
 
@@ -59,15 +59,15 @@ Tags refer to `SOURCE_OF_TRUTH.md` (S# = Sources table). "Verified" = stated pla
 All minutes/distances = OSRM from the verified pin (`research/notes-neighbourhood.md` §3) [VERIFIED: S11,S12]; bearings computed from OSM coordinates at build time; named places exist in OSM (trading/opening hours not claimed).
 | Claim | Tag | Phrasing |
 |---|---|---|
-| "Every walking time … measured on foot from our front door, along the streets — not as the crow flies" | S12 method | verified |
+| "Walking times … follow the streets from our front door, at an easy pace — not as the crow flies" | S12 method (OSRM foot estimate) | no "measured on foot" claim (A8) |
 | Eat: restaurants from 70 m / 1 min; cafés 3–4 min / 230–300 m; "We don't serve breakfast. Talborjt does" | [VERIFIED: S11,S12; S1,S2] | categories only, no café names |
 | Breakfast quote EN Colin ("No breakfast cafe although loads of nice cafes nearby"), FR Audrey | S2 raw, exact text | exact |
 | Errands: pharmacy 2 min/150 m (second 4 min/310 m); banks 3–4 min/200–310 m (Al Barid, Attijariwafa, Bank of Africa); post office 3 min/200 m (Amana / Poste Talborjt); supermarkets 5–7 min/370–520 m (Marjane Market, Carrefour Market, Aswak Assalam) | [VERIFIED: S11,S12] | verified; "banks", never "ATMs/cash" |
 | Sights: mosque 1, Jardin Ibn Zaïdoun 7, Jardin d'Olhão 10, Musée Mémoire 11 ("the city and the 1960 earthquake"), Amazigh Heritage Museum 15, central market 16, Vallée des Oiseaux 20 ("on the way to the beach"), cable car lower station 23 (~4 by taxi), Souk El Had 30 (~4), Marina entrance 35 (~4) | [VERIFIED: S11,S12,S13] | verified; "opening times change, check locally" (no hours) |
 | Kasbah hilltop: not a walk, ~12 min by taxi or the cable car | [VERIFIED: S12] | "about" |
 | Beach: promenade 23 min / 1.7 km (~4 taxi), sand 25 min / 1.9 km (~5 taxi) | [VERIFIED: S11,S12] (Booking's 19 min = wrong pin, not used) | verified |
-| Transport: petits taxis "flag one down, or ask reception to call one"; CTM ~5 min / 3.2 km; Supratours ~5 min / 3.7 km "check your ticket for the departure point"; airport ~30 min / 24 km, "petits taxis don't serve the airport — we can book you a taxi" | [PROBABLE: S2]; [VERIFIED: S12]; Supratours [PROBABLE]; orchestrator airport wording | softened / "about" |
-| Two maps drawn from OSM (roads, coast, beach, parks, Rue Ibn Toumert), rings "distance as the crow flies", unnamed dots for eat/errands | S11 (ODbL) | credit "Map data © OpenStreetMap contributors" on page |
+| Transport: petits taxis "all day", "flag one down, or ask at reception"; CTM ~5 min / 3.2 km; Supratours ~5 min / 3.7 km "check your ticket for the departure point"; airport ~30 min / 24 km, "petits taxis don't serve the airport — ask reception about booking you a taxi" | [PROBABLE: S2]; [VERIFIED: S12]; Supratours [PROBABLE] | softened / "about" |
+| Three maps drawn from OSM (around the door; Talborjt to the sea, wide ≥48rem and phone-framed <48rem with an "Off this map" list for Souk El Had/Kasbah/CTM/Supratours/airport), rings "distance as the crow flies", unnamed dots for eat/errands | S11 (ODbL) | credit "Map data © OpenStreetMap contributors" on page |
 | "Open in Google Maps" + per-place "Route ↗" (Google directions from the pin) | pin [VERIFIED: S4] | — |
 
 ### Practical `/practical/` · `/fr/infos-pratiques/`
@@ -75,18 +75,18 @@ All minutes/distances = OSRM from the verified pin (`research/notes-neighbourhoo
 |---|---|---|
 | Times, reception 24 h, parking free | [VERIFIED: S1,S4] | verified |
 | By car: public spaces right by the hotel, "public, so we can't reserve one" | [VERIFIED: S1,S4] (type PUBLIC) | verified + honest limit |
-| From the airport: ~24 km, ~30 min by taxi, "we can book you a taxi" | [VERIFIED: S12]; [PROBABLE: S2] | softened |
+| From the airport: ~24 km, ~30 min by taxi, "ask us about booking one when you write" | [VERIFIED: S12]; [PROBABLE: S2] | softened |
 | By bus: CTM and Supratours ~5 min by petit taxi | [VERIFIED: S12]; Supratours [PROBABLE] | "about" |
 | From the beach: 23 min on foot, ~4 by taxi | [VERIFIED: S12] | verified |
-| House rules: check-in/out, "ask at the desk if you need a little longer", non-smoking, no pets, no lift, not wheelchair accessible | [VERIFIED: S1]; late check-out [PROBABLE: S2] | late check-out softened to "ask" |
-| FAQ: no breakfast; free public parking; no lift + "ask for a hand"; arrival after 22:00 → tell us your time; airport taxi on request; Wi-Fi free 9.5; "Is it quiet?" → mosque across the square, lively streets; no pool/gym; laundry "ask at reception"; price → ask / Booking.com | [VERIFIED: S1,S2,S4]; laundry/taxi [PROBABLE: S2,S5] | honest; never "quiet"; laundry reduced to "ask at reception" |
+| House rules: check-in/out, "arriving after 22:00? call reception before you set off", "ask at the desk if you need a little longer", non-smoking, no pets, no lift, not wheelchair accessible | [VERIFIED: S1]; late check-out [PROBABLE: S2] | late check-out softened to "ask"; no late-arrival promise |
+| FAQ: no breakfast; free public parking; no lift + "ask for a lower floor when you write"; after 22:00 → "call reception before you travel and check with us first"; airport taxi "reception will try to arrange one"; Wi-Fi free 9.5; "Is it quiet?" → mosque across the square, lively streets; no pool/gym; laundry "ask at reception"; price → ask or call / Booking.com | [VERIFIED: S1,S2,S4]; laundry/taxi [PROBABLE: S2,S5] | honest; never "quiet"; no promise of a reply |
 | FAQPage JSON-LD mirrors the visible FAQ | — | — |
 
 ### Ask `/ask/` · `/fr/demande/` (+ homepage mini form)
 | Claim | Tag | Phrasing |
 |---|---|---|
 | "This form doesn't book or charge anything: it writes a clear email to our reception" | design | honest |
-| "Reception replies with what's free and today's price" | email [VERIFIED: S3] | hotel voice |
+| "Ask what's free and today's price" · "Need an answer today? Call reception — it's staffed 24 hours" (no promised e-mail reply until the owner confirms which inbox is read) | email [VERIFIED: S3]; inbox monitoring = owner Q1 | softened (A6) |
 | Side plate: call 24 h, email, Booking.com 8.4 from 1,009 reviews | [VERIFIED: S1,S3,S4] | verified |
 
 ### Omitted on purpose (owner questions)
@@ -140,7 +140,7 @@ Live: `live-home-390`, `live-agadir-390`, `live-fr-home-390`, `live-404-390`, `l
 ## 5. Known weaknesses
 - No Single-room photo (honest caption + plate instead) — owner photo needed.
 - Head photo on Your Agadir (bk_09) is soft by design (blurred balcony rail in front).
-- On phones the city map is wider than the screen and scrolls sideways inside its frame (starts centred on the hotel).
+- ~~On phones the city map is wider than the screen and scrolls sideways~~ → fixed in phase 4 (B1): phone-framed map, no sideways scroll.
 
 
 ## Audit A — facts & copy
@@ -274,3 +274,50 @@ _(FR decimal points "2.6 km", "1.7 km"… on `/fr/` and `/fr/votre-agadir/` were
 **B17 · P3 · `/`, `/fr/` room thumbnails, phones** — `sizes="(min-width: 64rem) 18vw, 40vw"`, but the thumbs render at 116 px (≈30vw), and the smallest candidate is 600w: 2.6× the rendered width at 2× DPR (4× at 1×). · **Fix:** add a 320w variant in `tools/images.py` and set `sizes="(min-width: 64rem) 18vw, 30vw"`.
 
 **Screenshots (`p4/`):** full pages at 390 for all 11 (`<page>-390-full.png`, `fr-*`), FR rooms/practical/ask at 360 (`*-360-full.png`), 1440 full for home/rooms/agadir/practical/ask/FR agadir, home folds at 360/390/430/1440 EN+FR (`*-fold.png`), maps (`agadir-390-map-*.png`, `agadir-1440-groups.png`), Lynx Line desktop (`home-1440-line-crop.png`), form errors / done EN+FR (`ask-390-errors.png`, `ask-390-done-*.png`, `fr-ask-390-done-fold.png`), menu (`menu-rooms-390.png`), room-list zoom (`home-390-rooms-list-zoom.png`).
+
+## Fix log
+
+_Phase 4 fix pass · FixLynx · 2026-10-02. All changes made in `content/*.json`, `tools/{build,templates,mapdata,images}.py`, `site/assets/{css,js}` and rebuilt (`images.py && mapdata.py && build.py`); `check_site` OK (11 pages). Screenshots: `/home/agent/agadir-pilot/qa/hotel-lynx/p4-fix/`. Overflow sweep 320/360/390/430/480/600/768/1024/1440 × 11 pages: `scrollWidth` = viewport everywhere (only the Your Agadir chip row scrolls inside itself, by design)._
+
+| ID | Status | Fix · how verified |
+|---|---|---|
+| A1 | fixed | "Five kinds of room.<br>Shown as they are." / "…One standard."; FR "Cinq types de chambre.<br>Telles qu’elles sont." / "…Les mêmes bases." ("Un seul niveau" gone); "more" link + list label say room types · `home-390-full`, `rooms-1440-full`, `fr-rooms-390-single` |
+| A2 | fixed | No universal "all up the stairs": "No lift: the upper floors are by the stairs." + "Stairs hard for you? Ask for a lower floor when you write." (rooms "What we don't do", FAQ, FR mirrors). The "Up the stairs" tick item in "What every room has" replaced by Room service (a "No lift" item under a ✓ icon would read as a feature; the lift stays in the No list) · built HTML grep + `home-390-full` |
+| A3 | fixed | "Late flight? Hire car? Fine." → "Late flight?<br>Call ahead." / "Vol tardif ?<br>Appelez-nous avant."; p1, house rule and FAQ now say check-in ends 22:00, call reception before you travel, desk staffed 24 h — no "we'll expect you" · `home-390-full` (arrive), `practical-390-full` |
+| A4 | fixed | FR intro "Un hôtel deux étoiles en plein centre-ville, et ça nous va très bien. Voici l’essentiel avant de réserver."; FR pass for calques (see A17) · `fr-home-360-basics` |
+| A5 | fixed | Airport taxi everywhere = "ask reception about booking you a taxi" / FAQ "reception will try to arrange one" (no "Yes", no "we can book") · built HTML grep |
+| A6 | fixed | No reply promised: ask intro/meta "ask what’s free and today’s price … Need an answer today? Call"; step 4 = call 24 h; done panel "just press send. In a hurry? Call reception, 24 hours a day." (no "straight to reception"); price band/FAQ "ask or call". Inbox question is SOT §g Q1 · decoded composed e-mails below |
+| A7 | fixed | "Here’s the short version before you book." (no "whole deal / no small print") · `home-390-full` |
+| A8 | fixed | "Walking times … follow the streets from our front door, at an easy pace — not as the crow flies" (EN/FR lead, home intro, meta) · built HTML grep |
+| A9 | fixed | `dist()` in templates.py localises every distance: FR "1,1 km" … "6,4 km" with no-break space before the unit (EN keeps "1.1 km") · grep of `/fr/` + `/fr/votre-agadir/`: 0 dotted decimals |
+| A10 | fixed | "In every room." / "Shower, basin and toilet. No bathtubs." (+ FR); caption no longer says "walk-in" · `rooms-1440-full` |
+| A11 | fixed | Wake-up call "Ask at reception." / "Demandez à la réception." |
+| A12 | fixed | Lynx Line cafés and banks show "3–4 min" (`min_label` in site.json), matching Your Agadir; "first cafés … three minutes" kept · `home-390-full` |
+| A13 | fixed | "All day" / "Toute la journée" · `agadir-1440-full` |
+| A14 | fixed | "Most of it is a walk away." / "Presque tout se fait à pied." |
+| A15 | fixed | "No surprises" removed (A1); beach note "Nearest sand" / "Le sable le plus proche" |
+| A16 | fixed | YES board item "Room service — Ask at the desk." (+ FR), also in "What every room has"; no menu/hours · `home-390-full` |
+| A17 | fixed | "Le deal" → "En clair"; "Ce que chaque chambre a" → "Dans chaque chambre."; comptoir → "à l’accueil" / "La réception est ouverte jour et nuit"; "On monte aux étages … par l’escalier"; "Votre salle d’eau" → "Une salle d’eau privée"; "regardent vers" → "sont tournées vers"; taxis "circulent"; meta "Ce que vous trouverez dans chaque chambre" |
+| A18 | fixed | build.py `fr_typo()` puts U+202F before : ; ! ? » and after « in all FR copy (text only, never in tags; the composed e-mail keeps plain spaces); FR quotes render «&#8239;…&#8239;» (EN quotes on FR pages too); aria-label "(24h/24)&#8239;: +212…" via `ui.colon` · `/fr/`: 0 “ ”, 31 U+202F |
+| A19 | fixed (a, b) · kept (c) | (a) FR Hotel/HotelRoom `amenityFeature` names from `content/fr.json → ld`; (b) FAQ JSON-LD drops the trailing "— see where" link text ("…Talborjt is full of them."); (c) `aggregateRating` 8.4/1,009 **kept**: STANDARD §9 allows it with verified numbers and it is the exact Booking figure — orchestrator may drop it if Google's self-serving-review policy matters more |
+| A20 | fixed | 404: own description, `<meta name="robots" content="noindex">`, no canonical/hreflang · grep `site/404.html` |
+| A21 | fixed (by removal) | The Single no longer shows a borrowed bathroom photo at all (B7), so no layout claim remains |
+| B1 | fixed | `tools/mapdata.py` draws `map-city-m.svg` (600×588, Lynx ↔ sand ↔ marina, sea on screen) shown below 48rem; wide map from 48rem; everything outside the phone frame (9 Souk El Had, Kasbah, CTM, Supratours, airport) listed under it as "Off this map" with bearing arrows + times; ring labels auto-placed clear of markers; no sideways scroll so the swipe hint and the JS centring are removed · `agadir-360-map-city`, `agadir-390-map-city`: frame scrollWidth = clientWidth (316/345) |
+| B2 | fixed | `.dir-img picture{height:100%}` — thumbs fill their 4:3 boxes · `home-390-full` |
+| B3 | fixed | Legend pairs wrapped in `.leg-i` (inline-flex), swatch always beside its own label · `agadir-390-map-door`, `agadir-1440-full` |
+| B4 | fixed | Balcony buttons → `/ask/?balcony=1` / `/fr/demande/?balcony=1`; site.js ticks the box · in-tab: balcony checked, room "No preference", e-mail "Balcony if possible: yes" |
+| B5 | fixed | 44×44 "FR"/"EN" plate in the header at every width (header re-fitted: ≤30rem burger-only + "☎ 24h"; ≤22.5rem icon-only phone; wordmark sub-line only 52–64rem); menu language = full-width 48 px row · header fit 320–1440, `menu-rooms-390`, `home-390-fold` |
+| B6 | fixed | `.grps-grid{grid-template-rows:min-content 1fr}` ≥64rem — Beach/Getting around follow straight under Eat/Errands · `agadir-1440-full` |
+| B7 | fixed | Single = black key-tag plate the size of a room photo ("15 m² · 1 single bed · We don’t have a photo of the Single yet"); the shower photo appears once (What every room has); unused `shower-*.webp` removed · `rooms-1440-full`, `fr-rooms-390-single` |
+| B8 | fixed | `facade-m-1200.webp` (56 KB) added to the mobile `srcset` (800 + 1200) · images.py output |
+| B9 | fixed | ≥44 px: footer phone/e-mail/Maps/Booking/lang, Route ↗ links, breadcrumb, header wordmark, `.btn-mini` copy buttons, menu e-mail |
+| B10 | fixed | `m2()` sets "m²" in Overpass (`.u`) inside mono text · `home-390-full`, `fr-rooms-390-single` |
+| B11 | fixed | No-break spaces "· Talborjt, Agadir" + `text-wrap:balance`: one line at 390, "…ÉTOILES / TALBORJT, AGADIR" at 360 FR · `home-390-fold`, `fr-home-360-fold` |
+| B12 | fixed | Desktop hero `object-position:50% 47%`: blade sign reads "LYNX" with the fascia sign in frame · `home-1440-fold` |
+| B13 | fixed | `.done-msg` no inner scroll below 48rem; "Copy" button for the subject; "Copy the message" copies the body only · in-tab clipboard: "Objet copié." → subject text; body copy starts "Bonjour Hôtel Lynx," · `ask-390-done-fr` |
+| B14 | fixed | mailto body joined with CRLF (`%0D%0A`, no bare `%0A`) · decoded href below |
+| B15 | fixed | Menu open → `main`, footer and sticky bar `inert`; Tab cycles menu → header only, never the page behind; Esc restores · in-tab Tab sequence |
+| B16 | fixed | `/practical/` keeps photo, heading and the four time tiles; the parking/airport paragraphs live only in "Finding us" · `practical-390-full` |
+| B17 | fixed | 320 w variants for the four directory thumbs (7 KB each), `sizes` 30vw on phones |
+
+**Composed e-mails after the fix (decoded from the success-panel href, `/ask/?balcony=1` and `/fr/demande/?balcony=1`):** EN subject "Room request: 12 Nov – 15 Nov, 2 guest(s), No preference", body lines CRLF-joined: "Hello Hôtel Lynx, / I’d like to ask about a room: / Arrival: Thu, 12 Nov 2026 / Departure: Sun, 15 Nov 2026 (3 night(s)) / Guests: 2 / Room: No preference / Balcony if possible: yes / Parking needed: no / Arriving around: Not sure yet / Name: Élodie Brás-Nuñez / Email: elodie.bras@example.fr / Message: / Late — 23:40 & a low floor? / Thanks / Could you tell me what’s available and today’s price? Thank you. / Best regards, Élodie Brás-Nuñez". FR subject "Demande de chambre : 12 nov. – 15 nov., 2 personne(s), Pas de préférence", "Balcon si possible : oui", accents/&/em dash intact, no undefined/NaN. `window.open` stubbed; no tabs opened (the form only navigates to `mailto:`).

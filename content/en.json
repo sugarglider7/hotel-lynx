@@ -18,7 +18,12 @@
     "lang_name": "English",
     "switch_label": "Français",
     "photo": "Photo",
-    "new_tab": "opens in a new tab"
+    "new_tab": "opens in a new tab",
+    "colon": ": "
+  },
+  "ld": {
+    "hotel": ["Free Wi-Fi", "Free public parking", "Air conditioning", "24-hour front desk", "Room service", "Rooftop terrace", "Non-smoking rooms"],
+    "room": ["Air conditioning", "Private bathroom with shower", "Flat-screen TV", "Free Wi-Fi"]
   },
   "nav": [
     {"page": "rooms", "anchor": "rooms", "label": "Rooms"},
@@ -43,7 +48,7 @@
       "slug": "your-agadir",
       "crumb": "Your Agadir",
       "title": "Your Agadir from Lynx — walking times from our door in Talborjt",
-      "description": "Cafés 3 minutes away, the pharmacy 2, the beach promenade 23 — every time measured on foot from the door of Hôtel Lynx. With two maps and taxi times to the bus stations and airport."
+      "description": "Cafés 3 minutes away, the pharmacy 2, the beach promenade 23 — walking times along the streets from the door of Hôtel Lynx. With two maps and taxi times to the bus stations and airport."
     },
     "basics": {
       "slug": "practical",
@@ -55,11 +60,11 @@
       "slug": "ask",
       "crumb": "Ask for a room",
       "title": "Ask for a room — Hôtel Lynx, Agadir",
-      "description": "Tell us your dates and we’ll reply with what’s free and today’s price. The form writes a clear email to our reception — or call us, 24 hours a day."
+      "description": "Tell us your dates and ask what’s free and today’s price. The form writes a clear email to our reception — or call us, 24 hours a day."
     }
   },
   "hero": {
-    "kicker": "Two-star hotel · Talborjt, Agadir",
+    "kicker": "Two-star hotel\u00a0· Talborjt,\u00a0Agadir",
     "h1": "Your base in Agadir.",
     "lead": "Clean rooms, a reception that never closes, free Wi-Fi and free public parking right by the hotel. In the middle of Talborjt, opposite the Mohammed\u00a0V Mosque.",
     "rating_label": "on Booking.com",
@@ -76,7 +81,7 @@
   "basics": {
     "kicker": "The deal",
     "h2": "What we do.<br>What we don’t.",
-    "intro": "We’re a two-star city hotel and happy with it. Here’s the whole deal before you book — no small print later.",
+    "intro": "We’re a two-star city hotel and happy with it. Here’s the short version before you book.",
     "more": "Times, getting here and questions before you book",
     "yes_label": "Yes",
     "no_label": "No",
@@ -85,6 +90,7 @@
       {"t": "Free Wi-Fi", "d": "Rated 9.5 by guests. Use it all you like."},
       {"t": "Free parking", "d": "Public spaces right by the hotel."},
       {"t": "Reception 24 hours", "d": "Someone at the desk, day and night."},
+      {"t": "Room service", "d": "Ask at the desk."},
       {"t": "Air-conditioning", "d": "In every room."},
       {"t": "Your own shower room", "d": "Shower, toilet and towels in every room."},
       {"t": "Satellite TV", "d": "Flat-screen, satellite and cable channels."},
@@ -92,7 +98,7 @@
     ],
     "no": [
       {"t": "Breakfast", "d": "We don’t serve it. Talborjt does — the first cafés are three minutes from the door."},
-      {"t": "A lift", "d": "Stairs only. Heavy bags? Ask at the desk for a hand."},
+      {"t": "A lift", "d": "Upper floors by the stairs only. Heavy bags? Ask at the desk for a hand."},
       {"t": "Pool or gym", "d": "The beach promenade is 23 minutes on foot, about 4 by taxi."},
       {"t": "Smoking rooms", "d": "Every room is non-smoking."}
     ],
@@ -101,13 +107,13 @@
   },
   "rooms": {
     "kicker": "Rooms",
-    "h2": "Five rooms.<br>No surprises.",
-    "intro": "Every room has air-conditioning, its own shower room, a flat-screen TV and free Wi-Fi. All non-smoking, all up the stairs.",
-    "more": "All five rooms, photos and what’s in them",
+    "h2": "Five kinds of room.<br>Shown as they are.",
+    "intro": "Every room has air-conditioning, its own shower room, a flat-screen TV and free Wi-Fi. All non-smoking. No lift: the upper floors are by the stairs.",
+    "more": "All five room types, with photos and what’s in them",
     "labels": {"size": "Size", "beds": "Beds", "sleeps": "Sleeps", "ask": "Ask for this room"},
     "guests": {"1": "1 guest", "2": "2 guests", "3": "3 guests"},
     "items": {
-      "single": {"name": "Single", "beds": "1 single bed", "line": "For one, travelling light.", "alt": "A shower room at Hôtel Lynx: wall basin, mirror, towels on a rail and an open walk-in shower."},
+      "single": {"name": "Single", "beds": "1 single bed", "line": "For one, travelling light."},
       "superior": {"name": "Superior Single", "beds": "1 single bed, or a large double bed when one is free", "line": "One guest, a little more room.", "alt": "A room at Hôtel Lynx with a large double bed, carved wooden wardrobe and a window onto the street flags."},
       "twin": {"name": "Twin", "beds": "2 single beds", "line": "Two friends, two beds.", "alt": "Twin room at Hôtel Lynx: two single beds with white linen, grey curtains, a wall-mounted TV and air-conditioning unit."},
       "double": {"name": "Double", "beds": "1 large double bed", "line": "For two. Some have a balcony — ask.", "alt": "Double room at Hôtel Lynx: a large double bed, a table and chair, and the glass door open onto a wrought-iron balcony."},
@@ -116,35 +122,33 @@
   },
   "rooms_page": {
     "head": {
-      "h1": "Five rooms.<br>One standard.",
+      "h1": "Five kinds of room.<br>One standard.",
       "lead": "Different beds, the same basics: clean, air-conditioned, your own shower room, free Wi-Fi. Here is each one, as it is.",
       "keys_label": "Jump to a room"
     },
-    "list_label": "The five rooms",
+    "list_label": "The five room types",
     "every": {
       "kicker": "In every room",
       "h2": "What every room has.",
       "items": [
-        {"t": "Air-conditioning", "d": "A wall unit in every room."},
-        {"t": "Your own shower room", "d": "Walk-in shower, basin, toilet. No bathtubs."},
+        {"t": "Air-conditioning", "d": "In every room."},
+        {"t": "Your own shower room", "d": "Shower, basin and toilet. No bathtubs."},
         {"t": "Towels and fresh linen", "d": "Ready when you arrive."},
         {"t": "Flat-screen TV", "d": "Satellite and cable channels."},
         {"t": "Free Wi-Fi", "d": "Guests rate it 9.5 on Booking.com."},
-        {"t": "Wake-up call", "d": "Ask at reception the night before."},
+        {"t": "Wake-up call", "d": "Ask at reception."},
         {"t": "Non-smoking", "d": "Every room, no exceptions."},
-        {"t": "Up the stairs", "d": "There’s no lift — see below."}
+        {"t": "Room service", "d": "Ask at the desk."}
       ],
       "img_alt": "Shower room at Hôtel Lynx: a wall basin under a mirror, a towel rail, an open walk-in shower and a toilet on cream tiles.",
-      "img_cap": "A Lynx shower room: walk-in shower, basin, toilet."
+      "img_cap": "A Lynx shower room: shower, basin, toilet."
     },
     "also": "+ AC · shower room · TV · Wi-Fi",
     "items": {
       "single": {
         "p": "Our smallest room: 15 m² and one single bed, with everything on the list above. The sensible choice for one night between buses or a solo city stay.",
         "nophoto": "We don’t have a photo of the Single yet.",
-        "photos": [
-          {"img": "shower", "alt": "A shower room at Hôtel Lynx: wall basin, mirror, towels on a rail and an open walk-in shower.", "cap": "This is the shower room layout the Single shares with the Superior Single and Twin — not the bedroom."}
-        ]
+        "photos": []
       },
       "superior": {
         "p": "16 m² for one guest. It comes with a single bed or, when one is free, a large double bed — tell us which you’d like when you write.",
@@ -179,7 +183,7 @@
       "h2": "What we don’t do.",
       "items": [
         {"t": "Breakfast", "d": "We don’t serve it. The first cafés are 3–4 minutes from the door — <a class=\"lnk\" href=\"/your-agadir/#eat\">see where</a>."},
-        {"t": "A lift", "d": "Upper floors by the stairs only. Heavy bags? Ask at the desk for a hand."},
+        {"t": "A lift", "d": "Upper floors by the stairs only. Heavy bags? Ask at the desk for a hand. Stairs hard for you? Ask for a lower floor when you write."},
         {"t": "Pool or gym", "d": "The beach promenade is 23 minutes on foot, about 4 by taxi."},
         {"t": "Extra beds", "d": "None. Three of you? Book the Triple."},
         {"t": "Smoking rooms", "d": "Every room is non-smoking."}
@@ -197,8 +201,8 @@
   },
   "agadir": {
     "kicker": "Your Agadir from Lynx",
-    "h2": "Everything is a walk away.",
-    "intro": "Talborjt is the town centre Agadir rebuilt after the 1960 earthquake: grills, cafés, banks, the big mosque. Every time below is measured on foot from our front door.",
+    "h2": "Most of it is a walk away.",
+    "intro": "Talborjt is the town centre Agadir rebuilt after the 1960 earthquake: grills, cafés, banks, the big mosque. Walking times below follow the streets from our front door.",
     "more": "Two maps and every walking time",
     "img_alt": "The rooftop terrace of Hôtel Lynx at sunset: white wrought-iron chairs, the minaret of the Mohammed V Mosque on the left and the Kasbah hill on the right.",
     "img_cap": "From our roof: the Mohammed\u00a0V minaret, Talborjt, and the Kasbah hill.",
@@ -221,7 +225,7 @@
       "oiseaux": {"name": "Vallée des Oiseaux"},
       "corniche": {"name": "Beach promenade"},
       "cablecar": {"name": "Cable car to the Kasbah", "note": "Lower station"},
-      "beach": {"name": "Agadir beach", "note": "Feet in the sand"},
+      "beach": {"name": "Agadir beach", "note": "Nearest sand"},
       "souk": {"name": "Souk El Had"},
       "marina": {"name": "Marina"},
       "ctm": {"name": "CTM bus station"},
@@ -229,13 +233,13 @@
       "airport": {"name": "Al Massira airport"}
     },
     "ride_h": "By taxi",
-    "ride_note": "Times are by road, traffic permitting. Petits taxis pass all day in town; for the airport, we can book you a taxi.",
+    "ride_note": "Times are by road, traffic permitting. Petits taxis pass all day in town; for the airport, ask reception about booking you a taxi.",
     "ride_about": "about"
   },
   "agadir_page": {
     "head": {
       "h1": "Your Agadir<br>from Lynx.",
-      "lead": "Talborjt is the town centre Agadir rebuilt after the 1960 earthquake. Every walking time on this page was measured on foot from our front door, along the streets — not as the crow flies. Taxi times are by road, traffic permitting.",
+      "lead": "Talborjt is the town centre Agadir rebuilt after the 1960 earthquake. Walking times on this page follow the streets from our front door, at an easy pace — not as the crow flies. Taxi times are by road, traffic permitting.",
       "img_alt": "Through the blurred iron rail of a Hôtel Lynx balcony: Talborjt rooftops, palm trees, lit shops and the Kasbah hill behind.",
       "img_cap": "From a Lynx balcony: Talborjt and the Kasbah hill."
     },
@@ -245,16 +249,17 @@
       "h2": "Two maps, one front door.",
       "intro": "Close up for coffee and errands, wider for the gardens, museums and the sea. Numbers match the lists below.",
       "door_t": "Around the door · 600 m",
-      "door_leg": "<span class=\"lg lg-eat\"></span>Restaurants & cafés <span class=\"lg lg-errands\"></span>Pharmacies, banks, post, supermarkets <span class=\"lg lg-ring\"></span>Distance as the crow flies",
+      "door_leg": "<span class=\"leg-i\"><span class=\"lg lg-eat\"></span>Restaurants & cafés</span> <span class=\"leg-i\"><span class=\"lg lg-errands\"></span>Pharmacies, banks, post, supermarkets</span> <span class=\"leg-i\"><span class=\"lg lg-ring\"></span>Distance as the crow flies</span>",
       "city_t": "Talborjt to the sea · 3 km",
-      "city_leg": "<span class=\"lg lg-n\">2</span>Sights & walks <span class=\"lg lg-n lg-beach\">11</span>Beach <span class=\"lg lg-ring\"></span>Distance as the crow flies.<span class=\"swipe\"> Swipe the map sideways.</span>",
+      "city_leg": "<span class=\"leg-i\"><span class=\"lg lg-n\">2</span>Sights & walks</span> <span class=\"leg-i\"><span class=\"lg lg-n lg-beach\">11</span>Beach</span> <span class=\"leg-i\"><span class=\"lg lg-ring\"></span>Distance as the crow flies</span>",
+      "off": "Off this map",
       "gmaps": "Open in Google Maps",
       "credit": "Map data © OpenStreetMap contributors"
     },
     "labels": {
       "min_walk": "min on foot",
       "min_taxi": "min by taxi",
-      "anytime": "Any time",
+      "anytime": "All day",
       "about": "about",
       "by_taxi": "by taxi",
       "from": "from",
@@ -291,16 +296,16 @@
       "kasbah": {"name": "Kasbah hilltop (Agadir Oufella)", "short": "Kasbah hilltop", "note": "Not a walk: take a taxi, or the cable car from its lower station."},
       "corniche": {"name": "Beach promenade", "note": "The Corniche, nearest point."},
       "beach": {"name": "Agadir beach", "note": "The nearest sand."},
-      "taxis": {"name": "Petits taxis", "note": "Flag one down outside, or ask reception to call one."},
+      "taxis": {"name": "Petits taxis", "note": "Flag one down outside, or ask at reception."},
       "ctm": {"name": "CTM bus station", "short": "CTM buses"},
       "supratours": {"name": "Supratours buses", "short": "Supratours", "note": "Check your ticket for the departure point."},
-      "airport": {"name": "Al Massira airport", "short": "Airport", "note": "Petits taxis don’t serve the airport — we can book you a taxi."}
+      "airport": {"name": "Al Massira airport", "short": "Airport", "note": "Petits taxis don’t serve the airport — ask reception about booking you a taxi."}
     }
   },
   "arrive": {
     "kicker": "Getting in",
-    "h2": "Late flight? Hire car? Fine.",
-    "p1": "Check-in runs from 12:00 to 22:00, check-out by 12:00. Landing later? Tell us your arrival time when you write — reception is staffed 24 hours.",
+    "h2": "Late flight?<br>Call ahead.",
+    "p1": "Check-in runs from 12:00 to 22:00, check-out by 12:00. Landing after 22:00? Call reception before you travel — the desk is staffed round the clock, so someone will pick up.",
     "p2": "Driving? Park for free in the public spaces right by the hotel. Coming from Al Massira airport, it’s about 24 km — ask us about booking you a taxi.",
     "more": "Getting here, house rules and questions",
     "facts": [
@@ -324,7 +329,7 @@
       "addr_k": "Address",
       "items": [
         {"k": "01", "t": "By car", "d": "Park for free in the public spaces right by the hotel. They’re public, so we can’t reserve one for you."},
-        {"k": "02", "t": "From the airport", "d": "Al Massira airport is about 24 km away: about 30 minutes by taxi, traffic permitting. Petits taxis don’t serve the airport — tell us your flight and we can book you a taxi."},
+        {"k": "02", "t": "From the airport", "d": "Al Massira airport is about 24 km away: about 30 minutes by taxi, traffic permitting. Petits taxis don’t serve the airport — ask us about booking one when you write."},
         {"k": "03", "t": "By bus", "d": "The CTM bus station and the Supratours buses are each about 5 minutes away by petit taxi."},
         {"k": "04", "t": "From the beach", "d": "23 minutes on foot from the beach promenade, or about 4 minutes by petit taxi."}
       ]
@@ -333,7 +338,7 @@
       "kicker": "House rules",
       "h2": "Short and simple.",
       "items": [
-        {"t": "Check-in 12:00–22:00", "d": "Arriving later? Tell us your time and we’ll expect you."},
+        {"t": "Check-in 12:00–22:00", "d": "Arriving after 22:00? Call reception before you set off."},
         {"t": "Check-out by 12:00", "d": "Ask at the desk if you need a little longer."},
         {"t": "Non-smoking", "d": "Every room. There’s no smoking room."},
         {"t": "No pets", "d": "Pets are not allowed.", "no": true},
@@ -346,14 +351,14 @@
       "items": [
         {"q": "Do you serve breakfast?", "a": "No. The first cafés are 3–4 minutes from the door and Talborjt is full of them — <a class=\"lnk\" href=\"/your-agadir/#eat\">see where</a>."},
         {"q": "Is the parking really free?", "a": "Yes. Public spaces right by the hotel, free of charge. They’re public, so we can’t reserve one for you."},
-        {"q": "Is there a lift?", "a": "No, stairs only. Heavy bags? Ask at the desk for a hand. If stairs are hard for you, tell us when you write."},
-        {"q": "Can I arrive after 22:00?", "a": "Reception is staffed 24 hours. Tell us your arrival time when you write or call, so we know you’re coming."},
-        {"q": "Can you book an airport taxi?", "a": "Yes — ask us when you write. The ride is about 30 minutes; petits taxis don’t go to the airport."},
+        {"q": "Is there a lift?", "a": "No — the upper floors are by the stairs only. Heavy bags? Ask at the desk for a hand. If stairs are hard for you, ask for a lower floor when you write."},
+        {"q": "Can I arrive after 22:00?", "a": "Check-in is from 12:00 to 22:00. If you’ll be later, call reception before you travel and check with us first — the desk is staffed 24 hours."},
+        {"q": "Can you book an airport taxi?", "a": "Ask us when you write and reception will try to arrange one. The ride is about 30 minutes; petits taxis don’t go to the airport."},
         {"q": "Is the Wi-Fi free?", "a": "Yes, free. Guests rate it 9.5 on Booking.com."},
         {"q": "Is it quiet?", "a": "We’re in the middle of Talborjt: the mosque is across the square and the streets are lively in the evening. Light sleeper? Mention it when you write."},
         {"q": "Is there a pool?", "a": "No pool and no gym. The beach promenade is 23 minutes on foot."},
         {"q": "Can I get laundry done?", "a": "Ask at reception."},
-        {"q": "How much is a room?", "a": "It depends on the dates. <a class=\"lnk\" href=\"/ask/\">Ask for a room</a> and we’ll reply with today’s price, or see our rates on Booking.com."}
+        {"q": "How much is a room?", "a": "It depends on the dates. <a class=\"lnk\" href=\"/ask/\">Ask for a room</a> or call reception for today’s price, or see our rates on Booking.com."}
       ]
     }
   },
@@ -374,7 +379,7 @@
   "ask": {
     "kicker": "Availability",
     "h2": "Ask for a room.",
-    "intro": "Tell us your dates and we’ll reply with what’s free and today’s price. This form doesn’t book or charge anything: it writes a clear email to our reception, ready for you to send.",
+    "intro": "Tell us your dates and ask what’s free and today’s price. This form doesn’t book or charge anything: it writes a clear email to our reception, ready for you to send. Need an answer today? Call — reception is staffed 24 hours.",
     "mini": {
       "intro": "Pick your dates. The next step writes a clear email to our reception, ready for you to send — nothing is booked or charged.",
       "submit": "Continue",
@@ -385,7 +390,7 @@
       "Fill in your dates and details. It takes a minute.",
       "Your email app opens with the message written. Press send.",
       "No email app on your phone? The message appears on screen to copy — or just call us.",
-      "Reception replies with what’s free and today’s price."
+      "Need an answer today? Call reception — it’s staffed 24 hours."
     ],
     "f": {
       "arrival": "Arrival", "departure": "Departure", "guests": "Guests", "room": "Room",
@@ -406,7 +411,7 @@
     },
     "done": {
       "h": "Your message is ready.",
-      "p": "If your email app opened, just press send — it goes straight to our reception.",
+      "p": "If your email app opened, just press send. In a hurry? Call reception, 24 hours a day.",
       "retry": "Open my email app again",
       "no_app": "Nothing opened? Send it from any email account:",
       "to": "To",
@@ -414,6 +419,7 @@
       "msg_label": "Your message",
       "copy_email": "Copy",
       "copy": "Copy the message",
+      "copied_subject": "Subject copied.",
       "copied": "Copied. Paste it into a new email to agadir.hlynx@gmail.com.",
       "copied_email": "Address copied.",
       "copy_fail": "Couldn’t copy — select the text above and copy it by hand.",
@@ -441,7 +447,7 @@
     }
   },
   "cta": {
-    "price": {"h": "Ask for today’s price.", "p": "Prices move with the dates. Tell us yours and we’ll reply with what’s free — or call reception, day or night."},
+    "price": {"h": "Ask for today’s price.", "p": "Prices move with the dates. Tell us yours and ask what’s free — or call reception, day or night."},
     "agadir": {"h": "Your base is ready.", "p": "Tell us your dates, or call reception — day or night."},
     "basics": {"h": "Anything else?", "p": "Reception is staffed 24 hours. Call, or ask for a room and add your question."}
   },
@@ -454,5 +460,5 @@
     "nav_label": "Pages"
   },
   "sticky": {"call": "Call 24h", "ask": "Ask for a room"},
-  "notfound": {"title": "Page not found — Hôtel Lynx", "h1": "Wrong door.", "p": "This page doesn’t exist. Reception is this way:", "home": "Back to the homepage"}
+  "notfound": {"title": "Page not found — Hôtel Lynx", "description": "Wrong door — this page doesn’t exist. Back to Hôtel Lynx, Talborjt.", "h1": "Wrong door.", "p": "This page doesn’t exist. Reception is this way:", "home": "Back to the homepage"}
 }

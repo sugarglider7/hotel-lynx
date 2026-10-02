@@ -69,40 +69,35 @@
    "no": "01",
    "m2": 15,
    "guests": 1,
-   "img": "shower",
-   "img_kind": "shared"
+   "img": null
   },
   {
    "key": "superior",
    "no": "02",
    "m2": 16,
    "guests": 1,
-   "img": "room-double-b",
-   "img_kind": "room"
+   "img": "room-double-b"
   },
   {
    "key": "twin",
    "no": "03",
    "m2": 20,
    "guests": 2,
-   "img": "room-twin",
-   "img_kind": "room"
+   "img": "room-twin"
   },
   {
    "key": "double",
    "no": "04",
    "m2": 20,
    "guests": 2,
-   "img": "room-double",
-   "img_kind": "room"
+   "img": "room-double"
   },
   {
    "key": "triple",
    "no": "05",
    "m2": 20,
    "guests": 3,
-   "img": "room-triple",
-   "img_kind": "room"
+   "img": "room-triple"
   }
  ],
  "_walk_note": "Walk minutes/metres: OSRM routed-foot from the verified pin (research/notes-neighbourhood.md). Bearing = initial great-circle bearing from the pin, degrees.",
@@ -132,12 +127,14 @@
   {
    "key": "cafes",
    "min": 3,
+   "min_label": "3–4",
    "dist": "230–300 m",
    "lane": 2
   },
   {
    "key": "banks",
    "min": 3,
+   "min_label": "3–4",
    "dist": "200–310 m",
    "lane": 0,
    "list_only": true

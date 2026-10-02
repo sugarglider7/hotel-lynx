@@ -7,10 +7,13 @@
   /* ---- mobile menu ---- */
   var btn = d.querySelector('.hd-menu'), menu = d.getElementById('menu');
   if (btn && menu) {
+    // while the full-screen menu is open, the page behind it is out of reach (no tabbing into it)
+    var behind = d.querySelectorAll('main, .ft, [data-sticky]');
     var setOpen = function (open, focusBack) {
       btn.setAttribute('aria-expanded', String(open));
       menu.hidden = !open;
       html.classList.toggle('menu-open', open);
+      behind.forEach(function (b) { b.inert = open; });
       if (open) { var f = menu.querySelector('a'); if (f) f.focus(); }
       else if (focusBack) btn.focus();
     };
@@ -46,12 +49,6 @@
     });
     blockers.forEach(function (b) { bo.observe(b); });
   }
-
-  /* ---- maps: on narrow screens the wide map starts centred on the hotel ---- */
-  d.querySelectorAll('.map-scroll').forEach(function (s) {
-    var pin = s.querySelector('.mp-pin');
-    if (pin && s.scrollWidth > s.clientWidth) s.scrollLeft = pin.offsetLeft - s.clientWidth / 2;
-  });
 
   /* ---- dates: shared helpers ---- */
   var pad = function (n) { return (n < 10 ? '0' : '') + n; };
@@ -90,9 +87,10 @@
   var el = function (n) { return form.elements[n]; };
   pairDates(el('arrival'), el('departure'));
 
-  // prefill from the URL: ?room=double, or the homepage mini form (?arrival=…&departure=…&guests=…)
+  // prefill from the URL: ?room=double, ?balcony=1, or the homepage mini form (?arrival=…&departure=…&guests=…)
   var q = new URLSearchParams(location.search);
   if (q.get('room') && T.rooms[q.get('room')]) el('room').value = q.get('room');
+  if (q.get('balcony') === '1') el('balcony').checked = true;
   if (isDate(q.get('arrival') || '') && parse(q.get('arrival')) >= today) {
     el('arrival').value = q.get('arrival');
     el('arrival').dispatchEvent(new Event('change'));
@@ -160,7 +158,7 @@
     L.push('', M.close, '', M.sign, v('name'));
     var body = L.join('\n');
     return { subject: subject, body: body,
-      href: 'mailto:' + T.email + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body) };
+      href: 'mailto:' + T.email + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body.replace(/\n/g, '\r\n')) };
   };
 
   var last = null;
@@ -203,7 +201,9 @@
   done.addEventListener('click', function (e) {
     var b = e.target.closest('[data-copy]');
     if (!b || !last) return;
-    if (b.getAttribute('data-copy') === 'email') copy(T.email, T.copied_email);
-    else copy(last.subject + '\n\n' + last.body, T.copied);
+    var k = b.getAttribute('data-copy');
+    if (k === 'email') copy(T.email, T.copied_email);
+    else if (k === 'subject') copy(last.subject, T.copied_subject);
+    else copy(last.body, T.copied);
   });
 })();

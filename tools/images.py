@@ -30,24 +30,22 @@ IMAGES = [
     # Hero: the façade with the HOTEL LYNX fascia and blade sign (bk_01).
     {"name": "facade", "src": "bk2048_01_418854421.jpg", "crop": (0.0, 0.06, 1.0, 1.0),
      "widths": [1800, 1200], "q": 74,
-     "alt_crop": {"suffix": "m", "crop": (0.22, 0.04, 1.0, 1.0), "widths": [800]}},
+     "alt_crop": {"suffix": "m", "crop": (0.22, 0.04, 1.0, 1.0), "widths": [1200, 800]}},
     # Blue hour over the public car park opposite (bk_05).
     {"name": "facade-night", "src": "bk2048_05_418854455.jpg", "crop": (0.0, 0.0, 1.0, 1.0),
      "widths": [1400, 760], "q": 72},
     # Rooftop terrace, minaret of Mohammed V and the Oufella hill (bk_10).
     {"name": "terrace", "src": "bk2048_10_418854453.jpg", "crop": (0.0, 0.0, 1.0, 1.0),
      "widths": [1800, 900], "q": 72},
-    # Rooms.
+    # Rooms (the four on the homepage directory also get a 320 px thumb).
     {"name": "room-twin", "src": "bk2048_22_418854475.jpg", "crop": (0.0, 0.08, 1.0, 1.0),
-     "widths": [1000, 600], "q": 74},
+     "widths": [1000, 600, 320], "q": 74},
     {"name": "room-double", "src": "bk2048_02_418854476.jpg", "crop": (0.0, 0.08, 1.0, 1.0),
-     "widths": [1000, 600], "q": 74},
+     "widths": [1000, 600, 320], "q": 74},
     {"name": "room-double-b", "src": "bk2048_06_418854452.jpg", "crop": (0.0, 0.08, 1.0, 1.0),
-     "widths": [1000, 600], "q": 74},
+     "widths": [1000, 600, 320], "q": 74},
     {"name": "room-triple", "src": "bk2048_21_418854470.jpg", "crop": (0.0, 0.08, 1.0, 1.0),
-     "widths": [1000, 600], "q": 74},
-    {"name": "shower", "src": "bk2048_26_494137618.jpg", "crop": (0.0, 0.0, 1.0, 1.0),
-     "widths": [1000, 600], "q": 72},
+     "widths": [1000, 600, 320], "q": 74},
     # Reception + tiled stairs (bk_12).
     {"name": "reception", "src": "bk2048_12_418854477.jpg", "crop": (0.0, 0.1, 1.0, 1.0),
      "widths": [1000, 600], "q": 72},

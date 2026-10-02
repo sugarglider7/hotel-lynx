@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Draw the two base maps for "Your Agadir from Lynx" from OpenStreetMap data (stdlib only).
+"""Draw the base maps for "Your Agadir from Lynx" from OpenStreetMap data (stdlib only).
 
     python3 tools/mapdata.py
 
@@ -7,7 +7,7 @@ Inputs (gitignored, on disk): research/raw/_ovp_roads.json (trunk→tertiary roa
 coastline, Overpass 2026-10-02), _ovp_beachgeom.json (beach polygon), _ovp_g2.json
 (Vallée des Oiseaux, Souk El Had, cable-car line), _ovp_geom.json (Rue El Mahdi Ibn
 Toumert) and, when present, _ovp_near.json (small streets + parks around the hotel).
-Outputs (committed): site/assets/img/map-city.svg, site/assets/img/map-door.svg
+Outputs (committed): site/assets/img/map-city.svg, map-city-m.svg, map-door.svg
 (geometry only, no text, © OpenStreetMap contributors / ODbL) and content/map.json
 (projection of each map, read by tools/templates.py to place translated markers).
 """
@@ -20,6 +20,10 @@ PIN = (30.4228588, -9.5917027)
 MAPS = {
     # Talborjt to the sea: hotel, gardens, museums, beach, marina, Souk El Had
     "city": {"lat": (30.4085, 30.4325), "lng": (-9.6185, -9.5745), "w": 1000, "eps": 1.1},
+    # the same map framed for phones (shown below 48rem): Lynx to the sand and the marina, no sideways
+    # scrolling; roads drawn heavier because it renders at ~345 px. Souk El Had and the taxi-only
+    # places fall outside and are listed under it.
+    "city-m": {"lat": (30.4060, 30.4305), "lng": (-9.6150, -9.5860), "w": 600, "eps": .9, "road_scale": 1.05},
     # Around the door: ±600 m
     "door": {"lat": (PIN[0] - 0.0050, PIN[0] + 0.0050), "lng": (PIN[1] - 0.0066, PIN[1] + 0.0066), "w": 600, "eps": .6},
 }
@@ -132,14 +136,14 @@ def build(name, spec, roads, coast, beach, polys, street):
         parts.append(f'<path fill="{COL["sand"]}" d="{path(p, beach, eps, closed=True, clip=False)}"/>')
     # roads, minor first
     order = ["service", "living_street", "unclassified", "residential", "pedestrian", "tertiary", "secondary", "primary", "trunk"]
-    scale = W / 1000
+    scale = spec.get("road_scale", W / 1000)
     for cls in order:
         d = "".join(path(p, w["geometry"], eps) for w in roads if w["tags"].get("highway") == cls)
         if d:
             sw = max(ROAD_W[cls] * (1.6 if name == "door" else 1) * scale, .8)
             parts.append(f'<path fill="none" stroke="{COL["road"]}" stroke-width="{sw:.1f}" stroke-linecap="round" stroke-linejoin="round" d="{d}"/>')
     if street:
-        sw = (3.4 if name == "door" else 2.6) * (W / 1000 if name == "city" else 1)
+        sw = 3.4 if name == "door" else 2.6 * scale
         parts.append(f'<path fill="none" stroke="{COL["street"]}" stroke-width="{max(sw, 2.2):.1f}" stroke-linecap="round" d="{path(p, street, eps)}"/>')
     parts.append("</svg>")
     svg = "\n".join(parts) + "\n"

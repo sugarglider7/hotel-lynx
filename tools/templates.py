@@ -14,6 +14,7 @@ through esc().
 """
 import json
 import math
+import re
 from html import escape
 
 
@@ -61,15 +62,27 @@ def picture(ctx, name, alt, sizes, cls="", eager=False):
     img = (f'<img class="{esc(cls)}" src="/assets/img/{fallback["file"]}" srcset="{srcset}" sizes="{esc(sizes)}" '
            f'width="{big["w"]}" height="{big["h"]}" alt="{esc(alt)}" {load} style="background:{m["color"]}">')
     if "mobile" in m:
-        mv = m["mobile"][0]
-        return (f'<picture><source media="(max-width: 47.99rem)" srcset="/assets/img/{mv["file"]} {mv["w"]}w" '
-                f'sizes="100vw" width="{mv["w"]}" height="{mv["h"]}">{img}</picture>')
+        mvs = sorted(m["mobile"], key=lambda v: v["w"])
+        mset = ", ".join(f'/assets/img/{v["file"]} {v["w"]}w' for v in mvs)
+        return (f'<picture><source media="(max-width: 47.99rem)" srcset="{mset}" '
+                f'sizes="100vw" width="{mvs[-1]["w"]}" height="{mvs[-1]["h"]}">{img}</picture>')
     return f"<picture>{img}</picture>"
 
 
 def dec(ctx, s):
     """A decimal score in the page language (8.4 → 8,4 in French)."""
     return str(s).replace(".", ctx["t"]["decimal"])
+
+
+def dist(ctx, s):
+    """A distance in the page language: decimal comma in French, no-break space before the unit."""
+    s = re.sub(r"(\d)\.(\d)", r"\1" + ctx["t"]["decimal"] + r"\2", str(s))
+    return re.sub(r" (k?m)\b", "\u00a0\\1", s)
+
+
+def m2(n):
+    """Floor area; the unit is set in the text face so the superscript doesn't float in a mono cell."""
+    return f'{n}&nbsp;<span class="u">m²</span>'
 
 
 def eo(html):
@@ -82,8 +95,9 @@ def tel(site):
     return "tel:" + site["phone_e164"]
 
 
-def ask_href(ctx, room=None):
-    return ctx["url"]("ask", "ask") + (f"?room={room}" if room else "")
+def ask_href(ctx, room=None, balcony=False):
+    q = "&".join(([f"room={room}"] if room else []) + (["balcony=1"] if balcony else []))
+    return ctx["url"]("ask", "ask") + (f"?{q}" if q else "")
 
 
 def ext(ctx, href, label, cls="lnk"):
@@ -99,6 +113,8 @@ def head(ctx, title, description, path):
     alts = "".join(f'<link rel="alternate" hreflang="{l}" href="{site["base_url"]}{h}">' for l, h in ctx["alt"].items())
     if len(ctx["alt"]) > 1:
         alts += f'<link rel="alternate" hreflang="x-default" href="{site["base_url"]}{ctx["alt"]["en"]}">'
+    # the 404 is served at any path: no canonical, no alternates, not indexed
+    links = '<meta name="robots" content="noindex">' if ctx.get("noindex") else f'<link rel="canonical" href="{canonical}">{alts}'
     og = site["base_url"] + "/assets/img/" + ctx["img"]["og-facade"]["file"]
     return f"""<!doctype html>
 <html lang="{t['lang']}">
@@ -107,7 +123,7 @@ def head(ctx, title, description, path):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(description)}">
-<link rel="canonical" href="{canonical}">{alts}
+{links}
 <meta name="theme-color" content="#15110f">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Hôtel Lynx">
@@ -177,7 +193,7 @@ def header(ctx):
     </nav>
     <div class="hd-act">
       {lang_switch(ctx, short=True)}
-      <a class="hd-tel" href="{tel(site)}" aria-label="{esc(t['ui']['call_reception'] + ': ' + site['phone_display'])}">{ICON['phone']}<span class="hd-tel-l"><span class="hd-c">{t['ui']['call']} </span>{t['ui']['h24']}</span><span class="hd-tel-n">{site['phone_display']}</span></a>
+      <a class="hd-tel" href="{tel(site)}" aria-label="{esc(t['ui']['call_reception'] + t['ui']['colon'] + site['phone_display'])}">{ICON['phone']}<span class="hd-tel-l"><span class="hd-c">{t['ui']['call']} </span>{t['ui']['h24']}</span><span class="hd-tel-n">{site['phone_display']}</span></a>
       <a class="btn btn-sig hd-ask" href="{ask}"{cur}>{t['ui']['ask']}</a>
       <button class="hd-menu" type="button" aria-expanded="false" aria-controls="menu"><span class="hd-menu-l">{t['ui']['menu']}</span><span class="burger" aria-hidden="true"></span></button>
     </div>
@@ -246,8 +262,7 @@ def hotel_data(ctx, rating=True):
         "starRating": {"@type": "Rating", "ratingValue": site["stars"]},
         "checkinTime": site["checkin"], "checkoutTime": site["checkout"],
         "petsAllowed": False,
-        "amenityFeature": [{"@type": "LocationFeatureSpecification", "name": n, "value": True} for n in
-                           ("Free Wi-Fi", "Free public parking", "Air conditioning", "24-hour front desk", "Room service", "Rooftop terrace", "Non-smoking rooms")],
+        "amenityFeature": [{"@type": "LocationFeatureSpecification", "name": n, "value": True} for n in t["ld"]["hotel"]],
         "sameAs": [site["booking_url"]],
     }
     if rating:
@@ -385,12 +400,16 @@ def sec_basics(ctx):
 </section>"""
 
 
+def key_plate(rm, c, cls="dir-plate"):
+    """The black key-tag plate that stands in for a room photo we don't have (the Single)."""
+    return (f'<span class="{cls}" aria-hidden="true"><b class="mono">{m2(rm["m2"])}</b>'
+            f'<span>{c["beds"]}</span></span>')
+
+
 def room_tile_img(ctx, rm, c, sizes):
     """Photo for a room tile; the Single has none, so it gets a plain sign plate instead."""
-    t = ctx["t"]
-    if rm["img_kind"] == "shared":
-        return (f'<span class="dir-plate" aria-hidden="true"><b class="mono">{rm["m2"]}&nbsp;m²</b>'
-                f'<span>{c["beds"]}</span></span>')
+    if not rm["img"]:
+        return key_plate(rm, c)
     return picture(ctx, rm["img"], c["alt"], sizes)
 
 
@@ -405,11 +424,11 @@ def sec_rooms(ctx):
         c = R["items"][rm["key"]]
         rows.append(f"""<li class="dir-item rv">
       <a class="dir-row" href="{base}#room-{rm['key']}">
-        <span class="dir-img">{room_tile_img(ctx, rm, c, '(min-width: 64rem) 18vw, 40vw')}</span>
+        <span class="dir-img">{room_tile_img(ctx, rm, c, '(min-width: 64rem) 18vw, 30vw')}</span>
         <span class="dir-txt">
           <span class="dir-no mono">{rm['no']}</span>
           <span class="dir-name">{c['name']}</span>
-          <span class="dir-spec mono">{rm['m2']}&nbsp;m² · {R['guests'][str(rm['guests'])]}</span>
+          <span class="dir-spec mono">{m2(rm['m2'])} · {R['guests'][str(rm['guests'])]}</span>
         </span>
         <span class="dir-go" aria-hidden="true">{ICON['go']}</span>
       </a>
@@ -443,12 +462,12 @@ def lynx_line(ctx):
         note = f'<span class="stop-note">{p["note"]}</span>' if p.get("note") else ""
         stops.append(
             f'<li class="{cls}" style="--m:{w["min"]};--gap:{gap}">'
-            f'<span class="stop-min mono">{w["min"]}<small>{A["min"]}</small></span>'
+            f'<span class="stop-min mono">{w.get("min_label", w["min"])}<small>{A["min"]}</small></span>'
             f'<span class="stop-dot" aria-hidden="true"></span>'
-            f'<span class="stop-lbl"><b>{p["name"]}</b>{note}<span class="stop-meta mono">{w["dist"]}{arrow(w.get("bearing"))}</span></span></li>')
+            f'<span class="stop-lbl"><b>{p["name"]}</b>{note}<span class="stop-meta mono">{dist(ctx, w["dist"])}{arrow(w.get("bearing"))}</span></span></li>')
     minor = [w for w in site["walk"] if w.get("list_only")]
     extra = '<span class="mono"> · </span>'.join(
-        f'{P[w["key"]]["name"]} <span class="mono">{w["min"]}&nbsp;{A["min"]}, {w["dist"]}</span>' for w in minor)
+        f'{P[w["key"]]["name"]} <span class="mono">{w.get("min_label", w["min"])}&nbsp;{A["min"]}, {dist(ctx, w["dist"])}</span>' for w in minor)
     return f"""<div class="line" style="--span:{span}">
       <p class="line-axis mono" aria-hidden="true">{A['axis_label']}</p>
       <ol class="stops">
@@ -466,7 +485,7 @@ def sec_agadir(ctx):
     P = A["places"]
     rides = "".join(
         f'<li class="ride"><span class="ride-min mono"><small>{A["ride_about"]}</small>{r["min"]}<small>{A["min"]}</small></span>'
-        f'<span class="ride-lbl"><b>{P[r["key"]]["name"]}</b><span class="mono">{r["dist"]}{arrow(r.get("bearing"))}</span></span></li>'
+        f'<span class="ride-lbl"><b>{P[r["key"]]["name"]}</b><span class="mono">{dist(ctx, r["dist"])}{arrow(r.get("bearing"))}</span></span></li>'
         for r in site["ride"])
     return f"""<section class="agadir" id="agadir" aria-labelledby="agadir-h">
   <figure class="agadir-fig">
@@ -490,11 +509,14 @@ def sec_agadir(ctx):
 </section>"""
 
 
-def sec_arrive(ctx, h="h2", more=True, eager=False):
+def sec_arrive(ctx, h="h2", more=True, eager=False, brief=False):
+    """Getting in. brief=True (the practical page) keeps the photo, heading and the four times;
+    the parking/airport sentences live in that page's "Finding us" instead."""
     t = ctx["t"]
     A = t["arrive"]
     facts = "".join(f'<div><dt class="mono">{f["k"]}</dt><dd>{f["v"]}</dd></div>' for f in A["facts"])
     link = more_link(ctx['url']('basics'), A['more']) if more else ""
+    paras = "" if brief else f"<p>{A['p1']}</p>\n      <p>{A['p2']}</p>"
     return f"""<section class="arrive" id="arrive" aria-labelledby="arrive-h">
   <div class="arrive-in">
     <figure class="arrive-fig rv">
@@ -504,8 +526,7 @@ def sec_arrive(ctx, h="h2", more=True, eager=False):
     <div class="arrive-txt">
       <p class="kicker mono">{A['kicker']}</p>
       <{h} id="arrive-h">{A['h2']}</{h}>
-      <p>{A['p1']}</p>
-      <p>{A['p2']}</p>
+      {paras}
       <dl class="facts">{facts}</dl>
       {link}
     </div>
@@ -513,9 +534,10 @@ def sec_arrive(ctx, h="h2", more=True, eager=False):
 </section>"""
 
 
-def quote(q, cls="q"):
+def quote(ctx, q, cls="q"):
     lang = f' lang="{q["lang"]}"' if q.get("lang") else ""
-    return (f'<figure class="{cls}"><blockquote{lang}><p>“{q["q"]}”</p></blockquote>'
+    o, c = ("«\u202f", "\u202f»") if ctx["t"]["lang"] == "fr" else ("“", "”")
+    return (f'<figure class="{cls}"><blockquote{lang}><p>{o}{q["q"]}{c}</p></blockquote>'
             f'<figcaption><b>{q["who"]}</b> · {q["src"]}</figcaption></figure>')
 
 
@@ -525,7 +547,7 @@ def sec_reviews(ctx):
     bars = "".join(
         f'<li style="--v:{v}"><span>{V["sub_labels"][k]}</span><b class="mono">{dec(ctx, v)}</b><i aria-hidden="true"></i></li>'
         for k, v in r["sub"])
-    quotes = "".join(quote(q, "q rv") for q in V["quotes"])
+    quotes = "".join(quote(ctx, q, "q rv") for q in V["quotes"])
     return f"""<section class="reviews sec" id="reviews" aria-labelledby="reviews-h">
   <div class="wrap">
     <header class="sec-hd">
@@ -540,7 +562,7 @@ def sec_reviews(ctx):
         <p class="mut sc-g">{V['google']}</p>
       </div>
       <div class="quotes">
-        {quote(V['lead_quote'], 'q q-lead')}
+        {quote(ctx, V['lead_quote'], 'q q-lead')}
         {quotes}
       </div>
     </div>
@@ -639,7 +661,7 @@ def sec_ask(ctx):
           <p class="done-k mono">{D['no_app']}</p>
           <dl class="done-to">
             <div><dt class="mono">{D['to']}</dt><dd>{eo(f'<span id="done-email">{site["email"]}</span>')} <button class="btn-mini" type="button" data-copy="email">{ICON['copy']}{D['copy_email']}</button></dd></div>
-            <div><dt class="mono">{D['subject']}</dt><dd id="done-subject"></dd></div>
+            <div><dt class="mono">{D['subject']}</dt><dd><span id="done-subject"></span> <button class="btn-mini" type="button" data-copy="subject">{ICON['copy']}{D['copy_email']}</button></dd></div>
           </dl>
           <pre class="done-msg" id="done-body" tabindex="0" aria-label="{esc(D['msg_label'])}"></pre>
           <p class="done-act"><button class="btn btn-ghost" type="button" data-copy="all">{ICON['copy']}{D['copy']}</button>
@@ -648,7 +670,7 @@ def sec_ask(ctx):
         <p class="done-call">{D['or_call']} <a class="lnk mono nowrap" href="{tel(site)}">{site['phone_display']}</a></p>
         <p><button class="lnk btn-reset" type="button" id="ask-edit">{D['edit']}</button></p>
       </div>
-      <script type="application/json" id="ask-i18n">{json.dumps(dict(i18n, copied=D['copied'], copied_email=D['copied_email'], copy_fail=D['copy_fail']), ensure_ascii=False)}</script>
+      <script type="application/json" id="ask-i18n">{json.dumps(dict(i18n, copied=D['copied'], copied_email=D['copied_email'], copied_subject=D['copied_subject'], copy_fail=D['copy_fail']), ensure_ascii=False)}</script>
     </div>
     <div class="ask-aside">
       {side_plate(ctx)}
@@ -703,7 +725,10 @@ def page_rooms(ctx):
             sizes = "(min-width: 64rem) 56vw, 100vw" if i == 0 else "(min-width: 64rem) 27vw, 50vw"
             figs.append(f'<figure class="rg-{"main" if i == 0 else "sub"}">{picture(ctx, ph["img"], ph["alt"], sizes)}'
                         f'<figcaption>{ph["cap"]}</figcaption></figure>')
-        nophoto = (f'<p class="nophoto mono">{cp["nophoto"]}</p>' if cp.get("nophoto") else "")
+        if not gal:
+            # no photo of this room: a key-tag plate the size of a room photo, not a borrowed bathroom shot
+            figs.append(f'<figure class="rg-main"><div class="room-plate"><b aria-hidden="true">{m2(rm["m2"])}</b>'
+                        f'<span aria-hidden="true">{c["beds"]}</span><p class="room-plate-note mono">{cp["nophoto"]}</p></div></figure>')
         entries.append(f"""<article class="rm" id="room-{rm['key']}" aria-labelledby="rm-{rm['key']}">
     <div class="rm-hd">
       <span class="room-no mono" aria-hidden="true">{rm['no']}</span>
@@ -713,10 +738,10 @@ def page_rooms(ctx):
       </div>
     </div>
     <div class="rm-body">
-      <div class="rm-gal rg-{len(gal)}">{nophoto}{''.join(figs)}</div>
+      <div class="rm-gal rg-{len(figs)}">{''.join(figs)}</div>
       <div class="rm-txt">
         <dl class="room-spec">
-          <div><dt class="mono">{L['size']}</dt><dd>{rm['m2']}&nbsp;m²</dd></div>
+          <div><dt class="mono">{L['size']}</dt><dd>{m2(rm['m2'])}</dd></div>
           <div><dt class="mono">{L['sleeps']}</dt><dd>{R['guests'][str(rm['guests'])]}</dd></div>
           <div class="room-beds"><dt class="mono">{L['beds']}</dt><dd>{c['beds']}</dd></div>
         </dl>
@@ -745,8 +770,8 @@ def page_rooms(ctx):
       <p class="kicker mono">{B['kicker']}</p>
       <h2>{B['h2']}</h2>
       <p>{B['p']}</p>
-      {quote(B['quote'])}
-      <a class="btn btn-ghost" href="{ask_href(ctx, 'double')}">{B['cta']}{ICON['go']}</a>
+      {quote(ctx, B['quote'])}
+      <a class="btn btn-ghost" href="{ask_href(ctx, balcony=True)}">{B['cta']}{ICON['go']}</a>
     </div>
   </div>
 </section>"""
@@ -757,8 +782,7 @@ def page_rooms(ctx):
          "floorSize": {"@type": "QuantitativeValue", "value": rm["m2"], "unitCode": "MTK"},
          "occupancy": {"@type": "QuantitativeValue", "maxValue": rm["guests"]},
          "bed": R["items"][rm["key"]]["beds"],
-         "amenityFeature": [{"@type": "LocationFeatureSpecification", "name": n, "value": True} for n in
-                            ("Air conditioning", "Private bathroom with shower", "Flat-screen TV", "Free Wi-Fi")],
+         "amenityFeature": [{"@type": "LocationFeatureSpecification", "name": n, "value": True} for n in t["ld"]["room"]],
          "smokingAllowed": False} for rm in site["rooms"]])
     main = "\n".join([page_head(ctx, side, "ph-rooms"), every_sec,
                       f'<section class="rms" aria-label="{esc(RP["list_label"])}"><div class="wrap">{"".join(entries)}</div></section>',
@@ -778,40 +802,90 @@ def pct(v, total):
     return f"{v / total * 100:.2f}%"
 
 
-def map_figure(ctx, which, marks, dots, rings, edges, title, legend):
-    """Self-drawn OSM base map (static SVG) + HTML markers positioned in % so they stay legible."""
+RING_FS = {"door": 18, "city": 17, "city-m": 21}   # ring label size in map units (matches site.css)
+
+
+def ring_label(m, px, py, r, lbl, fs, avoid, auto):
+    """Place a ring label just outside the ring. Fixed maps keep the south-east quarter (the emptiest
+    round the hotel); auto maps try other bearings until the label is inside the frame and clear of
+    every marker. Returns (x, y) or None (label dropped rather than drawn over a marker)."""
+    R = r * m["m"]
+    w, h = len(lbl) * fs * .62, fs
+    for a in ((135, 160, 110, 200, 225, 250, 90, 60, 300, 330) if auto else (135,)):
+        x = px + R * math.sin(math.radians(a)) + 4
+        y = py - R * math.cos(math.radians(a)) + 14
+        if not auto:
+            return x, y
+        if x < 4 or x + w > m["w"] - 4 or y - h < 4 or y > m["h"] - 4:
+            continue
+        cx, cy = min(max(px, x), x + w), min(max(py, y - h), y)
+        if math.hypot(cx - px, cy - py) < 28:
+            continue
+        if all(math.hypot(min(max(ax, x), x + w) - ax, min(max(ay, y - h), y) - ay) > 26 for ax, ay in avoid):
+            return x, y
+    return None
+
+
+def map_box(ctx, which, marks, dots, rings, edges, cls="", auto_rings=False):
+    """One drawn map: OSM base SVG + rings + HTML markers placed in % so they stay legible.
+    Returns (html, marks that fall outside this frame)."""
     m = ctx["map"][which]
     W, H = m["w"], m["h"]
     site = ctx["site"]
     px, py = map_pos(m, [site["geo"]["lat"], site["geo"]["lng"]])
-    # ring labels sit on the south-east side of each ring (the emptiest quarter round the hotel)
-    ring_svg = "".join(
-        f'<circle cx="{px:.1f}" cy="{py:.1f}" r="{r * m["m"]:.1f}"/>'
-        f'<text x="{px + r * m["m"] * .7071 + 4:.1f}" y="{py + r * m["m"] * .7071 + 14:.1f}">{lbl}</text>' for r, lbl in rings)
+    pad = 14 if auto_rings else 0     # a marker cut by the frame edge counts as off the map
+    inside = lambda x, y: pad <= x <= W - pad and pad <= y <= H - pad
+    shown, off = [], []
+    for mk in marks:
+        x, y = map_pos(m, mk["ll"])
+        (shown if inside(x, y) else off).append((mk, x, y))
+    avoid = [(x, y) for _, x, y in shown]
+    fs = RING_FS[which]
+    ring_svg = ""
+    for r, lbl in rings:
+        ring_svg += f'<circle cx="{px:.1f}" cy="{py:.1f}" r="{r * m["m"]:.1f}"/>'
+        pos = ring_label(m, px, py, r, lbl, fs, avoid, auto_rings)
+        if pos:
+            ring_svg += f'<text x="{pos[0]:.1f}" y="{pos[1]:.1f}">{lbl}</text>'
     items = []
     for d in dots:
         x, y = map_pos(m, d["ll"])
         if 0 <= x <= W and 0 <= y <= H:
             items.append(f'<li class="mp-dot mp-{d["kind"]}" style="left:{pct(x, W)};top:{pct(y, H)}" aria-hidden="true"></li>')
-    for mk in marks:
-        x, y = map_pos(m, mk["ll"])
-        if 0 <= x <= W and 0 <= y <= H:
-            items.append(f'<li class="mp-n mp-{mk["kind"]}" style="left:{pct(x, W)};top:{pct(y, H)}"><span class="mono">{mk["n"]}</span><span class="sr">{mk["name"]}</span></li>')
+    for mk, x, y in shown:
+        items.append(f'<li class="mp-n mp-{mk["kind"]}" style="left:{pct(x, W)};top:{pct(y, H)}"><span class="mono">{mk["n"]}</span><span class="sr">{mk["name"]}</span></li>')
     for e in edges:
         x, y = map_pos(m, e["ll"])
         side = "l" if x < 0 else "r"
         yy = min(max(y, H * .1), H * .9)
         items.append(f'<li class="mp-edge mp-edge-{side}" style="top:{pct(yy, H)}"><span>{arrow(e["b"])}<b>{e["name"]}</b> <span class="mono">{e["meta"]}</span></span></li>')
     items.append(f'<li class="mp-pin" style="left:{pct(px, W)};top:{pct(py, H)}"><span>Lynx</span></li>')
-    return f"""<figure class="map map-{which}">
-      <figcaption class="map-t"><h3>{title}</h3></figcaption>
-      <div class="map-scroll" tabindex="0" aria-label="{esc(title)}">
-        <div class="map-box" style="aspect-ratio:{W}/{H}">
+    html = f"""<div class="map-box {cls}" style="aspect-ratio:{W}/{H}">
           <img src="/assets/img/map-{which}.svg?v={ctx['v']}" width="{W}" height="{H}" alt="" loading="lazy" decoding="async">
           <svg class="map-rings" viewBox="0 0 {W} {H}" aria-hidden="true">{ring_svg}</svg>
           <ol class="map-pts">{''.join(items)}</ol>
-        </div>
+        </div>"""
+    return html, [mk for mk, _, _ in off]
+
+
+def map_figure(ctx, which, marks, dots, rings, edges, title, legend, mobile=None, off_label=""):
+    """A map with its title and key. mobile = key of a phone-framed version of the same map (shown
+    below 48rem instead of the wide one, so nothing needs sideways scrolling); whatever falls outside
+    the phone frame — marks and the edge arrows — is listed under it."""
+    box, _ = map_box(ctx, which, marks, dots, rings, edges, "map-box-d" if mobile else "")
+    off = ""
+    if mobile:
+        mbox, out = map_box(ctx, mobile, marks, dots, rings, [], "map-box-m", auto_rings=True)
+        box += "\n        " + mbox
+        rows = [f'<li>{arrow(mk["b"])}<b><span class="lg lg-n">{mk["n"]}</span>{mk["name"]}</b> <span class="mono">{mk["meta"]}</span></li>' for mk in out]
+        rows += [f'<li>{arrow(e["b"])}<b>{e["name"]}</b> <span class="mono">{e["meta"]}</span></li>' for e in edges]
+        off = f'<div class="map-off"><p class="mono">{off_label}</p><ul>{"".join(rows)}</ul></div>' if rows else ""
+    return f"""<figure class="map map-{which}">
+      <figcaption class="map-t"><h3>{title}</h3></figcaption>
+      <div class="map-frame">
+        {box}
       </div>
+      {off}
       <p class="map-leg">{legend}</p>
     </figure>"""
 
@@ -843,7 +917,8 @@ def page_agadir(ctx):
     door_marks = [{"ll": it["ll"], "n": num[it["key"]], "name": P[it["key"]]["name"], "kind": g["group"]}
                   for g in site["near"] for it in g["items"] if it["key"] == "mosque"]
     dots = [{"ll": d, "kind": g["group"]} for g in site["near"] for it in g["items"] for d in it.get("dots", [])]
-    city_marks = [{"ll": it["ll"], "n": num[it["key"]], "name": P[it["key"]]["name"], "kind": g["group"]}
+    city_marks = [{"ll": it["ll"], "n": num[it["key"]], "name": P[it["key"]]["name"], "kind": g["group"],
+                   "b": bearing(site, it["ll"]), "meta": f'{it["walk"]}&nbsp;{L["min_walk"]}'}
                   for g in site["near"] for it in g["items"] if it["key"] in num and it["key"] != "mosque"]
     edges = []
     for g in site["near"]:
@@ -861,7 +936,7 @@ def page_agadir(ctx):
     </header>
     <div class="maps-grid">
       {map_figure(ctx, 'door', door_marks, dots, [(100, '100 m'), (250, '250 m'), (500, '500 m')], [], M['door_t'], M['door_leg'])}
-      {map_figure(ctx, 'city', city_marks, [], [(500, '500 m'), (1000, '1 km'), (2000, '2 km')], edges, M['city_t'], M['city_leg'])}
+      {map_figure(ctx, 'city', city_marks, [], [(500, '500 m'), (1000, '1 km'), (2000, '2 km')], edges, M['city_t'], M['city_leg'], mobile='city-m', off_label=M['off'])}
     </div>
     <p class="maps-foot">{ext(ctx, site['maps_url'], ICON['pin'] + M['gmaps'], 'btn btn-ghost')}<span class="mut">{M['credit']}</span></p>
   </div>
@@ -881,7 +956,7 @@ def page_agadir(ctx):
                 big = f'<small class="rt-word">{L["anytime"]}</small>'
             meta = []
             if it.get("dist"):
-                d = (L["from"] + " " if it.get("from") else "") + it["dist"]
+                d = (L["from"] + " " if it.get("from") else "") + dist(ctx, it["dist"])
                 meta.append(d + (arrow(bearing(site, it["ll"])) if it.get("ll") else ""))
             if it.get("taxi") and it.get("walk"):
                 meta.append(f'{L["about"]} {it["taxi"]}&nbsp;{A["min"]} {L["by_taxi"]}')
@@ -894,7 +969,7 @@ def page_agadir(ctx):
           <span class="rt-min mono">{big}</span><span class="rt-dot" aria-hidden="true"></span>
           <div class="rt-txt"><h3>{badge}{p['name']}</h3>{note}<p class="rt-meta mono">{'<span aria-hidden="true"> · </span>'.join(meta)}</p></div>
         </li>""")
-        extra = quote(gc["quote"], "q rt-q") if gc.get("quote") else ""
+        extra = quote(ctx, gc["quote"], "q rt-q") if gc.get("quote") else ""
         groups.append(f"""<section class="grp grp-{g['group']}" id="{g['group']}" aria-labelledby="g-{g['group']}">
       <header class="grp-hd">
         <p class="grp-tag mono">{gi:02d}</p>
@@ -962,12 +1037,13 @@ def page_basics(ctx):
 </section>"""
     call = (f'<a class="ph-call" href="{tel(site)}"><span class="mono">{t["ask"]["side"]["call"]}</span>'
             f'<b class="mono">{site["phone_display"]}</b></a>')
-    main = "\n".join([page_head(ctx, call, "ph-basics"), sec_arrive(ctx, more=False, eager=True), getting, rest, cta_band(ctx, "basics")])
+    main = "\n".join([page_head(ctx, call, "ph-basics"), sec_arrive(ctx, more=False, eager=True, brief=True), getting, rest, cta_band(ctx, "basics")])
     return document(ctx, main, [faq_ld, crumbs(ctx)])
 
 
 def strip_tags(s):
-    import re
+    """Plain text for JSON-LD: a trailing " — <a>see where</a>" pointer means nothing without its link."""
+    s = re.sub(r"\s*—\s*<a\b[^>]*>.*?</a>", "", s)
     return re.sub(r"<[^>]+>", "", s).replace("&nbsp;", " ")
 
 
@@ -990,5 +1066,5 @@ def page_404(ctx):
   <p class="hero-cta"><a class="btn btn-sig btn-lg" href="{ctx['url']('home')}">{n['home']}{ICON['go']}</a>
   <a class="btn btn-ghost btn-lg" href="{tel(site)}">{ICON['phone']}{site['phone_display']}</a></p>
 </div></section>"""
-    ctx["title"], ctx["description"] = n["title"], t["pages"]["home"]["description"]
+    ctx["title"], ctx["description"], ctx["noindex"] = n["title"], n["description"], True
     return document(ctx, main)
