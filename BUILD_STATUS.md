@@ -1,6 +1,6 @@
 # BUILD STATUS — hotel-lynx
 
-_Last updated: 2026-10-02 06:10 UTC by DesignLynx (phase 2 design + EN homepage)_
+_Last updated: 2026-10-02 06:45 UTC by BuildLynx (phase 3 in progress: EN pages done, FR next)_
 
 ## Recovered state (resume of crashed run "agadir-batch2")
 - Prior run left ONLY raw material (no repo, no status files, no code, no deployment):
@@ -30,6 +30,7 @@ _Last updated: 2026-10-02 06:10 UTC by DesignLynx (phase 2 design + EN homepage)
 - Phase 3 adding a page: add renderer to `PAGES` in build.py + `slug` under `pages.<key>` in each content file; nav/hreflang/lang switch update automatically (unbuilt pages fall back to homepage anchors). FR: create `content/fr.json` (same keys, `dir: "/fr/"`, `date_locale: "fr-FR"`).
 
 ## Pages implemented
+- Phase 3 (EN, 06:45): `/rooms/`, `/your-agadir/` (two self-drawn OSM maps: `tools/mapdata.py` → `site/assets/img/map-{door,city}.svg` + `content/map.json`; HTML markers placed from `content/site.json` → `near`), `/practical/`, `/ask/` (full form + robust success panel). Homepage sections now summaries linking to these pages; homepage ask = dates mini-form (GET → /ask/ prefill).
 - `/` EN homepage (final quality): hero/fascia · The deal (yes/no) · Rooms 01–05 · Your Agadir from Lynx (Lynx Line + taxi branch) · Getting in · Reviews · Ask for a room (form → composed email) · footer. JSON-LD Hotel with aggregateRating 8.4/1,009.
 - `/404.html` (EN shell).
 
@@ -62,6 +63,7 @@ _Last updated: 2026-10-02 06:10 UTC by DesignLynx (phase 2 design + EN homepage)
 - Local preview has no custom 404 (python http.server); Cloudflare Pages serves `site/404.html`.
 
 ## Log
+- 06:45 phase 3: orchestrator fixes applied ("free public parking right by the hotel", taxi grid → "By taxi", airport "about 30 min by taxi — we can book one"); EN rooms/your-agadir/practical/ask built; images +6 (bk_19/25/18/03/14/09); Overpass roads/coast/near streets fetched to research/raw for the maps; check_site OK.
 - 05:08 recovery: workspace created from prior raw research; brief + standard written.
 - 05:20 research: Booking page + Apollo state parsed (rooms, sizes, beds, policies, trader contact); 377 Booking reviews captured via one browser tab; Google 4.1/241 + 30 reviews; tab closed.
 - 05:28 research: pin verified (Google vs Booking), OSRM foot/car table for 37 places; hr_ images identified as pixcdn affiliate copies of Booking photos.

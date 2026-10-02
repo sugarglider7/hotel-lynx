@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url><loc>https://hotel-lynx.peashoot.io/</loc></url>
+  <url><loc>https://hotel-lynx.peashoot.io/rooms/</loc></url>
+  <url><loc>https://hotel-lynx.peashoot.io/your-agadir/</loc></url>
+  <url><loc>https://hotel-lynx.peashoot.io/practical/</loc></url>
+  <url><loc>https://hotel-lynx.peashoot.io/ask/</loc></url>
 </urlset>

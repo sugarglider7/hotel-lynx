@@ -248,5 +248,41 @@
    "dist": "24 km",
    "bearing": 121
   }
+ ],
+ "_near_note": "Your Agadir page, grouped by need. walk/taxi = OSRM minutes from the verified pin (research/notes-neighbourhood.md §3), taxi = free-flow drive shown as 'about', traffic permitting. ll = [lat, lng] of the OSM feature; dots = OSM points of a category (shown unnamed on the map). Bearings are computed from ll at build time.",
+ "near": [
+  {"group": "eat", "items": [
+   {"key": "restaurants", "walk": "1", "dist": "70 m", "from": true, "dots": [[30.42319, -9.59229], [30.4244, -9.59328], [30.42448, -9.59319], [30.42442, -9.59348], [30.4209, -9.59478]]},
+   {"key": "cafes", "walk": "3–4", "dist": "230–300 m", "dots": [[30.42444, -9.59199], [30.42452, -9.59209], [30.42432, -9.59337]]}
+  ]},
+  {"group": "errands", "items": [
+   {"key": "pharmacy", "walk": "2", "dist": "150 m", "dots": [[30.42387, -9.5927], [30.42136, -9.59276]]},
+   {"key": "banks", "walk": "3–4", "dist": "200–310 m", "dots": [[30.42394, -9.59101], [30.42166, -9.5935], [30.42272, -9.59404]]},
+   {"key": "post", "walk": "3", "dist": "200 m", "dots": [[30.42377, -9.5911]]},
+   {"key": "supermarkets", "walk": "5–7", "dist": "370–520 m", "dots": [[30.42102, -9.59416], [30.42598, -9.5925], [30.42632, -9.59243]]}
+  ]},
+  {"group": "sights", "items": [
+   {"key": "mosque", "walk": "1", "dist": "110 m", "ll": [30.42215, -9.59252]},
+   {"key": "ibnzaidoun", "walk": "7", "dist": "540 m", "ll": [30.41918, -9.59275]},
+   {"key": "olhao", "walk": "10", "dist": "720 m", "ll": [30.42468, -9.59707]},
+   {"key": "memoire", "walk": "11", "dist": "840 m", "ll": [30.42479, -9.59842]},
+   {"key": "amazigh", "walk": "15", "dist": "1.1 km", "ll": [30.41604, -9.59713]},
+   {"key": "market", "walk": "16", "dist": "1.2 km", "ll": [30.42175, -9.60017]},
+   {"key": "oiseaux", "walk": "20", "dist": "1.5 km", "ll": [30.41963, -9.60213]},
+   {"key": "cablecar", "walk": "23", "dist": "1.7 km", "taxi": "4", "ll": [30.42599, -9.60595]},
+   {"key": "souk", "walk": "30", "dist": "2.2 km", "taxi": "4", "ll": [30.41278, -9.57959]},
+   {"key": "marina", "walk": "35", "dist": "2.6 km", "taxi": "4", "ll": [30.4249, -9.61285]},
+   {"key": "kasbah", "taxi": "12", "dist": "6.4 km", "ll": [30.42974, -9.62476], "edge": true}
+  ]},
+  {"group": "beach", "items": [
+   {"key": "corniche", "walk": "23", "dist": "1.7 km", "taxi": "4", "ll": [30.41783, -9.60383]},
+   {"key": "beach", "walk": "25", "dist": "1.9 km", "taxi": "5", "ll": [30.41686, -9.60555]}
+  ]},
+  {"group": "transport", "items": [
+   {"key": "taxis"},
+   {"key": "ctm", "taxi": "5", "dist": "3.2 km", "ll": [30.41602, -9.56571], "edge": true},
+   {"key": "supratours", "taxi": "5", "dist": "3.7 km", "ll": [30.42032, -9.56044], "edge": true},
+   {"key": "airport", "taxi": "30", "dist": "24 km", "ll": [30.3284, -9.40912], "edge": true}
+  ]}
  ]
 }

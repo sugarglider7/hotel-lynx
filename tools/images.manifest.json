@@ -169,6 +169,114 @@
    }
   ]
  },
+ "room-double-c": {
+  "src": "bk2048_19_418854446.jpg",
+  "color": "#e6e0e4",
+  "variants": [
+   {
+    "file": "room-double-c-1000.webp",
+    "w": 1000,
+    "h": 613,
+    "kb": 30
+   },
+   {
+    "file": "room-double-c-600.webp",
+    "w": 600,
+    "h": 368,
+    "kb": 15
+   }
+  ]
+ },
+ "room-triple-b": {
+  "src": "bk2048_25_418854451.jpg",
+  "color": "#c8bcce",
+  "variants": [
+   {
+    "file": "room-triple-b-1000.webp",
+    "w": 1000,
+    "h": 613,
+    "kb": 24
+   },
+   {
+    "file": "room-triple-b-600.webp",
+    "w": 600,
+    "h": 368,
+    "kb": 13
+   }
+  ]
+ },
+ "room-triple-c": {
+  "src": "bk2048_18_418854439.jpg",
+  "color": "#e0edfb",
+  "variants": [
+   {
+    "file": "room-triple-c-1000.webp",
+    "w": 1000,
+    "h": 613,
+    "kb": 28
+   },
+   {
+    "file": "room-triple-c-600.webp",
+    "w": 600,
+    "h": 368,
+    "kb": 14
+   }
+  ]
+ },
+ "shower-wc": {
+  "src": "bk2048_03_494137613.jpg",
+  "color": "#e1d1ca",
+  "variants": [
+   {
+    "file": "shower-wc-1000.webp",
+    "w": 1000,
+    "h": 667,
+    "kb": 13
+   },
+   {
+    "file": "shower-wc-600.webp",
+    "w": 600,
+    "h": 400,
+    "kb": 6
+   }
+  ]
+ },
+ "stairs": {
+  "src": "bk2048_14_418854478.jpg",
+  "color": "#bdc2be",
+  "variants": [
+   {
+    "file": "stairs-800.webp",
+    "w": 800,
+    "h": 912,
+    "kb": 39
+   },
+   {
+    "file": "stairs-480.webp",
+    "w": 480,
+    "h": 548,
+    "kb": 22
+   }
+  ]
+ },
+ "view": {
+  "src": "bk2048_09_418854413.jpg",
+  "color": "#ae8e74",
+  "variants": [
+   {
+    "file": "view-1400.webp",
+    "w": 1400,
+    "h": 887,
+    "kb": 36
+   },
+   {
+    "file": "view-800.webp",
+    "w": 800,
+    "h": 507,
+    "kb": 18
+   }
+  ]
+ },
  "og-facade": {
   "file": "og-facade.jpg",
   "w": 1200,

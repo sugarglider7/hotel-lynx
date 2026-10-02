@@ -4,13 +4,16 @@ ctx keys (built by tools/build.py):
   site  content/site.json (language-independent facts)
   t     content/<lang>.json (copy for one language)
   img   tools/images.manifest.json
-  page  page key ("home", ...)
+  map   content/map.json (projection of the two OSM base maps)
+  page  page key ("home", "rooms", ...)
   url   helper: url(page_key, anchor=None) -> href valid for this language,
         falling back to a homepage anchor while a page is not built yet
   alt   {lang: href} of this page in every built language (hreflang + switch)
-Copy strings are trusted HTML (may contain <br>, &nbsp;); attribute values go
+Copy strings are trusted HTML (may contain <br>, &nbsp;, <a>); attribute values go
 through esc().
 """
+import json
+import math
 from html import escape
 
 
@@ -29,11 +32,22 @@ ICON = {
     "yes": '<svg class="mk" viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 15.6 9.4-9.4 2 2-11.4 11.4L3.1 13.2l2-2z"/></svg>',
     "no": '<svg class="mk" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 9.9 6.4-6.4 2.1 2.1-6.4 6.4 6.4 6.4-2.1 2.1-6.4-6.4-6.4 6.4-2.1-2.1 6.4-6.4-6.4-6.4 2.1-2.1z"/></svg>',
     "mail": '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 5h20v14H2zm2.6 2.4v.3l7.4 5 7.4-5v-.3zm14.8 2.9-7.4 5-7.4-5v6.3h14.8z"/></svg>',
+    "copy": '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2h13v15h-3v-2.6h.4V4.6H10.6V5H8zM3 7h13v15H3zm2.6 2.6v9.8h7.8V9.6z"/></svg>',
+    "pin": '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5a8 8 0 0 1 8 8c0 5.6-8 13-8 13s-8-7.4-8-13a8 8 0 0 1 8-8zm0 4.7a3.3 3.3 0 1 0 0 6.6 3.3 3.3 0 0 0 0-6.6z"/></svg>',
 }
 
 
 def arrow(bearing):
     return ARROW.format(b=bearing) if bearing is not None else ""
+
+
+def bearing(site, ll):
+    """Initial great-circle bearing (degrees) from the hotel pin to ll=[lat, lng]."""
+    la1, lo1 = math.radians(site["geo"]["lat"]), math.radians(site["geo"]["lng"])
+    la2, lo2 = math.radians(ll[0]), math.radians(ll[1])
+    y = math.sin(lo2 - lo1) * math.cos(la2)
+    x = math.cos(la1) * math.sin(la2) - math.sin(la1) * math.cos(la2) * math.cos(lo2 - lo1)
+    return round((math.degrees(math.atan2(y, x)) + 360) % 360)
 
 
 def picture(ctx, name, alt, sizes, cls="", eager=False):
@@ -55,6 +69,15 @@ def picture(ctx, name, alt, sizes, cls="", eager=False):
 
 def tel(site):
     return "tel:" + site["phone_e164"]
+
+
+def ask_href(ctx, room=None):
+    return ctx["url"]("ask", "ask") + (f"?room={room}" if room else "")
+
+
+def ext(ctx, href, label, cls="lnk"):
+    return (f'<a class="{cls}" href="{esc(href)}" rel="noopener" target="_blank">{label}'
+            f'<span class="sr"> ({ctx["t"]["ui"]["new_tab"]})</span></a>')
 
 
 # --- document shell -----------------------------------------------------------
@@ -84,7 +107,11 @@ def head(ctx, title, description, path):
 <meta property="og:image" content="{og}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{esc(t['hero']['og_alt'])}">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{esc(title)}">
+<meta name="twitter:description" content="{esc(description)}">
+<meta name="twitter:image" content="{og}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -113,12 +140,19 @@ def lang_switch(ctx):
     return f'<a class="lang" href="{h}" hreflang="{l}" lang="{l}">{ctx["t"]["ui"]["switch_label"]}</a>'
 
 
+def nav_links(ctx):
+    out = []
+    for i, n in enumerate(ctx["t"]["nav"], 1):
+        cur = ' aria-current="page"' if n["page"] == ctx["page"] else ""
+        out.append(f'<li><a href="{ctx["url"](n["page"], n["anchor"])}"{cur}><span class="n">{i:02d}</span>{n["label"]}</a></li>')
+    return "".join(out)
+
+
 def header(ctx):
     site, t = ctx["site"], ctx["t"]
-    links = "".join(
-        f'<li><a href="{ctx["url"](n["page"], n["anchor"])}"><span class="n">{i:02d}</span>{n["label"]}</a></li>'
-        for i, n in enumerate(t["nav"], 1))
-    ask = ctx["url"]("ask", "ask")
+    links = nav_links(ctx)
+    ask = ask_href(ctx)
+    cur = ' aria-current="page"' if ctx["page"] == "ask" else ""
     return f"""<a class="skip" href="#main">{t['ui']['skip']}</a>
 <header class="hd" id="top">
   <div class="hd-in">
@@ -129,12 +163,12 @@ def header(ctx):
     <div class="hd-act">
       {lang_switch(ctx)}
       <a class="hd-tel" href="{tel(site)}" aria-label="{esc(t['ui']['call_reception'] + ': ' + site['phone_display'])}">{ICON['phone']}<span class="hd-tel-l"><span class="hd-c">{t['ui']['call']} </span>{t['ui']['h24']}</span><span class="hd-tel-n">{site['phone_display']}</span></a>
-      <a class="btn btn-sig hd-ask" href="{ask}">{t['ui']['ask']}</a>
+      <a class="btn btn-sig hd-ask" href="{ask}"{cur}>{t['ui']['ask']}</a>
       <button class="hd-menu" type="button" aria-expanded="false" aria-controls="menu"><span class="hd-menu-l">{t['ui']['menu']}</span><span class="burger" aria-hidden="true"></span></button>
     </div>
   </div>
   <div class="menu" id="menu" hidden>
-    <ul class="menu-list">{links}<li><a href="{ask}"><span class="n">{len(t['nav']) + 1:02d}</span>{t['ui']['ask']}</a></li></ul>
+    <ul class="menu-list">{links}<li><a href="{ask}"{cur}><span class="n">{len(t['nav']) + 1:02d}</span>{t['ui']['ask']}</a></li></ul>
     <div class="menu-foot">
       <a class="btn btn-sig" href="{tel(site)}">{ICON['phone']}{t['ui']['call_reception']}</a>
       <a class="menu-mail" href="mailto:{site['email']}">{site['email']}</a>
@@ -148,18 +182,21 @@ def footer(ctx):
     site, t = ctx["site"], ctx["t"]
     f = t["footer"]
     a = site["address"]
+    pages = "".join(f'<li><a href="{ctx["url"](n["page"], n["anchor"])}">{n["label"]}</a></li>' for n in t["nav"])
+    pages += f'<li><a href="{ask_href(ctx)}">{t["ui"]["ask"]}</a></li>'
     return f"""<footer class="ft" id="contact">
   <div class="ft-in">
     <div class="ft-brand">{wordmark(ctx, tag="span")}<p class="ft-class">{f['class']} · ★★</p></div>
     <address class="ft-addr">
       <p>{a['street']}<br>{a['district']}, {a['postcode']} {a['city']}<br><span class="mut">{f['address_note']}</span></p>
-      <p><a class="lnk" href="{site['maps_url']}" rel="noopener" target="_blank">{f['map']}<span class="sr"> ({t['ui']['new_tab']})</span></a></p>
+      <p>{ext(ctx, site['maps_url'], f['map'])}</p>
     </address>
     <div class="ft-contact">
       <p><a class="ft-tel" href="{tel(site)}">{site['phone_display']}</a><span class="mut mono"> · 24h</span></p>
       <p><a class="lnk" href="mailto:{site['email']}">{site['email']}</a></p>
-      <p><a class="lnk" href="{site['booking_url']}" rel="noopener" target="_blank">Booking.com<span class="sr"> ({t['ui']['new_tab']})</span></a></p>
+      <p>{ext(ctx, site['booking_url'], 'Booking.com')}</p>
     </div>
+    <nav class="ft-nav" aria-label="{esc(f['nav_label'])}"><ul>{pages}</ul></nav>
     <p class="ft-times mono">{f['times']}</p>
     <p class="ft-copy mut">© {f['copy']}{(' — ' + lang_switch(ctx)) if lang_switch(ctx) else ''}</p>
   </div>
@@ -170,17 +207,20 @@ def sticky(ctx):
     site, t = ctx["site"], ctx["t"]
     return f"""<div class="sticky" data-sticky>
   <a class="btn btn-ghost-d" href="{tel(site)}">{ICON['phone']}{t['sticky']['call']}</a>
-  <a class="btn btn-sig" href="{ctx['url']('ask', 'ask')}">{t['sticky']['ask']}</a>
+  <a class="btn btn-sig" href="{ask_href(ctx)}">{t['sticky']['ask']}</a>
 </div>"""
 
 
-def jsonld_hotel(ctx):
-    import json
+def ld(data):
+    return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + "</script>"
+
+
+def hotel_data(ctx, rating=True):
     site, t = ctx["site"], ctx["t"]
     a, r = site["address"], site["rating"]["booking"]
     data = {
-        "@context": "https://schema.org", "@type": "Hotel",
-        "name": site["name"], "url": site["base_url"] + "/",
+        "@context": "https://schema.org", "@type": "Hotel", "@id": site["base_url"] + "/#hotel",
+        "name": site["name"], "url": site["base_url"] + ctx["url"]("home"),
         "image": site["base_url"] + "/assets/img/" + ctx["img"]["og-facade"]["file"],
         "description": t["pages"]["home"]["description"],
         "telephone": site["phone_e164"], "email": site["email"],
@@ -192,16 +232,67 @@ def jsonld_hotel(ctx):
         "checkinTime": site["checkin"], "checkoutTime": site["checkout"],
         "petsAllowed": False,
         "amenityFeature": [{"@type": "LocationFeatureSpecification", "name": n, "value": True} for n in
-                           ("Free Wi-Fi", "Free parking", "Air conditioning", "24-hour front desk", "Room service", "Rooftop terrace", "Non-smoking rooms")],
-        "aggregateRating": {"@type": "AggregateRating", "ratingValue": r["score"], "bestRating": "10", "worstRating": "1", "reviewCount": r["count"]},
+                           ("Free Wi-Fi", "Free public parking", "Air conditioning", "24-hour front desk", "Room service", "Rooftop terrace", "Non-smoking rooms")],
         "sameAs": [site["booking_url"]],
     }
-    return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + "</script>"
+    if rating:
+        data["aggregateRating"] = {"@type": "AggregateRating", "ratingValue": r["score"], "bestRating": "10",
+                                   "worstRating": "1", "reviewCount": r["count"]}
+    return data
 
 
-def document(ctx, title, description, path, main):
-    return (head(ctx, title, description, path) + "\n<body>\n" + header(ctx) +
+def crumbs(ctx):
+    site, t = ctx["site"], ctx["t"]
+    home = t["pages"]["home"]["crumb"]
+    p = t["pages"][ctx["page"]]
+    return {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": home, "item": site["base_url"] + ctx["url"]("home")},
+        {"@type": "ListItem", "position": 2, "name": p["crumb"], "item": site["base_url"] + ctx["url"](ctx["page"])}]}
+
+
+def document(ctx, main, jsonld=()):
+    p = ctx["t"]["pages"][ctx["page"]] if ctx["page"] in ctx["t"]["pages"] else None
+    title, desc = (p["title"], p["description"]) if p else (ctx["title"], ctx["description"])
+    ctx["head_extra"] = "".join(ld(d) for d in jsonld)
+    path = ctx["alt"][ctx["t"]["lang"]]
+    return (head(ctx, title, desc, path) + "\n<body>\n" + header(ctx) +
             f'\n<main id="main">\n{main}\n</main>\n' + footer(ctx) + "\n" + sticky(ctx) + "\n</body>\n</html>\n")
+
+
+def page_head(ctx, side="", cls=""):
+    """Interior page header: a black fascia plate with a sign-board breadcrumb."""
+    t = ctx["t"]
+    P = t[ctx["page"] + "_page"]["head"]
+    n = next((i for i, x in enumerate(t["nav"], 1) if x["page"] == ctx["page"]), len(t["nav"]) + 1)
+    return f"""<section class="ph {cls}" aria-labelledby="h1">
+  <div class="ph-in">
+    <div class="ph-copy">
+      <p class="ph-sign mono"><a href="{ctx['url']('home')}">Hôtel Lynx</a><span aria-hidden="true">/</span><span><span class="n">{n:02d}</span> {t['pages'][ctx['page']]['crumb']}</span></p>
+      <h1 id="h1">{P['h1']}</h1>
+      <p class="lead">{P['lead']}</p>
+    </div>
+    {side}
+  </div>
+</section>"""
+
+
+def cta_band(ctx, key):
+    site, t = ctx["site"], ctx["t"]
+    c = t["cta"][key]
+    return f"""<section class="band" aria-labelledby="band-{key}">
+  <div class="band-in">
+    <h2 id="band-{key}">{c['h']}</h2>
+    <p>{c['p']}</p>
+    <div class="band-act">
+      <a class="btn btn-sig btn-lg" href="{ask_href(ctx)}">{t['ui']['ask']}{ICON['go']}</a>
+      <a class="btn btn-ghost-d btn-lg" href="{tel(site)}">{ICON['phone']}{t['ui']['call_reception']}</a>
+    </div>
+  </div>
+</section>"""
+
+
+def more_link(href, label):
+    return f'<p class="more"><a class="more-a" href="{href}">{label}{ICON["go"]}</a></p>'
 
 
 # --- homepage sections --------------------------------------------------------
@@ -229,10 +320,10 @@ def sec_hero(ctx):
       </div>
       <div class="hero-side">
         <div class="hero-cta">
-          <a class="btn btn-sig btn-lg" href="{ctx['url']('ask', 'ask')}">{t['ui']['ask']}{ICON['go']}</a>
+          <a class="btn btn-sig btn-lg" href="{ask_href(ctx)}">{t['ui']['ask']}{ICON['go']}</a>
           <a class="btn btn-ghost-d btn-lg" href="{tel(site)}">{ICON['phone']}{t['ui']['call_reception']}</a>
         </div>
-        <a class="score" href="{ctx['url']('reviews', 'reviews')}">
+        <a class="score" href="#reviews">
           <span class="score-n">{r['score']}</span>
           <span class="score-t"><b>{h['rating_label']}</b><span>{h['rating_count']}</span></span>
           <span class="score-s"><b>{staff}</b><span>{h['staff_label']}</span></span>
@@ -243,19 +334,14 @@ def sec_hero(ctx):
 </section>"""
 
 
-def sec_basics(ctx):
-    t = ctx["t"]
-    b = t["basics"]
+def board(ctx, b, fig=True):
     yes = "".join(f'<li>{ICON["yes"]}<div><h3>{i["t"]}</h3><p>{i["d"]}</p></div></li>' for i in b["yes"])
     no = "".join(f'<li>{ICON["no"]}<div><h3>{i["t"]}</h3><p>{i["d"]}</p></div></li>' for i in b["no"])
-    return f"""<section class="basics sec" id="basics" aria-labelledby="basics-h">
-  <div class="wrap">
-    <header class="sec-hd">
-      <p class="kicker mono">{b['kicker']}</p>
-      <h2 id="basics-h">{b['h2']}</h2>
-      <p class="sec-intro">{b['intro']}</p>
-    </header>
-    <div class="board">
+    figure = f"""<figure class="board-fig rv">
+          {picture(ctx, 'reception', b['img_alt'], '(min-width: 64rem) 30vw, 100vw')}
+          <figcaption>{b['img_cap']}</figcaption>
+        </figure>""" if fig else ""
+    return f"""<div class="board">
       <div class="board-col board-yes">
         <p class="board-tag mono"><span>{b['yes_label']}</span></p>
         <ul class="board-list">{yes}</ul>
@@ -263,41 +349,56 @@ def sec_basics(ctx):
       <div class="board-col board-no">
         <p class="board-tag mono"><span>{b['no_label']}</span></p>
         <ul class="board-list">{no}</ul>
-        <figure class="board-fig rv">
-          {picture(ctx, 'reception', b['img_alt'], '(min-width: 64rem) 30vw, 100vw')}
-          <figcaption>{b['img_cap']}</figcaption>
-        </figure>
+        {figure}
       </div>
-    </div>
+    </div>"""
+
+
+def sec_basics(ctx):
+    t = ctx["t"]
+    b = t["basics"]
+    return f"""<section class="basics sec" id="basics" aria-labelledby="basics-h">
+  <div class="wrap">
+    <header class="sec-hd">
+      <p class="kicker mono">{b['kicker']}</p>
+      <h2 id="basics-h">{b['h2']}</h2>
+      <p class="sec-intro">{b['intro']}</p>
+    </header>
+    {board(ctx, b)}
+    {more_link(ctx['url']('basics'), b['more'])}
   </div>
 </section>"""
 
 
+def room_tile_img(ctx, rm, c, sizes):
+    """Photo for a room tile; the Single has none, so it gets a plain sign plate instead."""
+    t = ctx["t"]
+    if rm["img_kind"] == "shared":
+        return (f'<span class="dir-plate" aria-hidden="true"><b class="mono">{rm["m2"]}&nbsp;m²</b>'
+                f'<span>{c["beds"]}</span></span>')
+    return picture(ctx, rm["img"], c["alt"], sizes)
+
+
 def sec_rooms(ctx):
+    """Homepage summary: the room directory, each row leading to the full entry on /rooms/."""
     site, t = ctx["site"], ctx["t"]
     R = t["rooms"]
-    L = R["labels"]
+    rooms_url = ctx["url"]("rooms", "rooms")
+    base = rooms_url if "#" not in rooms_url else rooms_url.split("#")[0]
     rows = []
     for rm in site["rooms"]:
         c = R["items"][rm["key"]]
-        rows.append(f"""<li class="room rv" id="room-{rm['key']}">
-      <div class="room-key"><span class="room-no mono">{rm['no']}</span></div>
-      <div class="room-txt">
-        <h3>{c['name']}</h3>
-        <p class="room-line">{c['line']}</p>
-        <dl class="room-spec">
-          <div><dt class="mono">{L['size']}</dt><dd>{rm['m2']}&nbsp;m²</dd></div>
-          <div><dt class="mono">{L['sleeps']}</dt><dd>{R['guests'][str(rm['guests'])]}</dd></div>
-          <div class="room-beds"><dt class="mono">{L['beds']}</dt><dd>{c['beds']}</dd></div>
-        </dl>
-        <a class="lnk room-ask" href="{ctx['url']('ask', 'ask')}" data-room="{rm['key']}">{L['ask']}{ICON['go']}</a>
-      </div>
-      <figure class="room-fig">
-        {picture(ctx, rm['img'], c['alt'], '(min-width: 64rem) 34vw, 100vw')}
-        <figcaption>{c['cap']}</figcaption>
-      </figure>
+        rows.append(f"""<li class="dir-item rv">
+      <a class="dir-row" href="{base}#room-{rm['key']}">
+        <span class="dir-img">{room_tile_img(ctx, rm, c, '(min-width: 64rem) 18vw, 40vw')}</span>
+        <span class="dir-txt">
+          <span class="dir-no mono">{rm['no']}</span>
+          <span class="dir-name">{c['name']}</span>
+          <span class="dir-spec mono">{rm['m2']}&nbsp;m² · {R['guests'][str(rm['guests'])]}</span>
+        </span>
+        <span class="dir-go" aria-hidden="true">{ICON['go']}</span>
+      </a>
     </li>""")
-    notes = "".join(f"<li>{n}</li>" for n in R["notes"])
     return f"""<section class="rooms sec" id="rooms" aria-labelledby="rooms-h">
   <div class="wrap">
     <header class="sec-hd">
@@ -305,15 +406,15 @@ def sec_rooms(ctx):
       <h2 id="rooms-h">{R['h2']}</h2>
       <p class="sec-intro">{R['intro']}</p>
     </header>
-    <ol class="room-list">
+    <ol class="dir">
     {''.join(rows)}
     </ol>
-    <ul class="room-notes">{notes}</ul>
+    {more_link(base, R['more'])}
   </div>
 </section>"""
 
 
-def sec_agadir(ctx):
+def lynx_line(ctx):
     site, t = ctx["site"], ctx["t"]
     A = t["agadir"]
     P = A["places"]
@@ -333,6 +434,21 @@ def sec_agadir(ctx):
     minor = [w for w in site["walk"] if w.get("list_only")]
     extra = '<span class="mono"> · </span>'.join(
         f'{P[w["key"]]["name"]} <span class="mono">{w["min"]}&nbsp;{A["min"]}, {w["dist"]}</span>' for w in minor)
+    return f"""<div class="line" style="--span:{span}">
+      <p class="line-axis mono" aria-hidden="true">{A['axis_label']}</p>
+      <ol class="stops">
+        <li class="stop stop-origin" style="--m:0;--gap:0"><span class="stop-min mono">0<small>{A['min']}</small></span><span class="stop-dot" aria-hidden="true"></span><span class="stop-lbl"><b>{A['origin']}</b><span class="stop-meta mono">{A['origin_sub']}</span></span></li>
+        {''.join(stops)}
+      </ol>
+      <p class="line-extra">{extra}</p>
+      <p class="line-note mono">{arrow(45)} {A['arrow_note']}</p>
+    </div>"""
+
+
+def sec_agadir(ctx):
+    site, t = ctx["site"], ctx["t"]
+    A = t["agadir"]
+    P = A["places"]
     rides = "".join(
         f'<li class="ride"><span class="ride-min mono"><small>{A["ride_about"]}</small>{r["min"]}<small>{A["min"]}</small></span>'
         f'<span class="ride-lbl"><b>{P[r["key"]]["name"]}</b><span class="mono">{r["dist"]}{arrow(r.get("bearing"))}</span></span></li>'
@@ -348,28 +464,22 @@ def sec_agadir(ctx):
       <h2 id="agadir-h">{A['h2']}</h2>
       <p class="sec-intro">{A['intro']}</p>
     </header>
-    <div class="line" style="--span:{span}">
-      <p class="line-axis mono" aria-hidden="true">{A['axis_label']}</p>
-      <ol class="stops">
-        <li class="stop stop-origin" style="--m:0;--gap:0"><span class="stop-min mono">0<small>{A['min']}</small></span><span class="stop-dot" aria-hidden="true"></span><span class="stop-lbl"><b>{A['origin']}</b><span class="stop-meta mono">{A['origin_sub']}</span></span></li>
-        {''.join(stops)}
-      </ol>
-      <p class="line-extra">{extra}</p>
-      <p class="line-note mono">{arrow(45)} {A['arrow_note']}</p>
-    </div>
+    {lynx_line(ctx)}
     <div class="rides">
       <h3>{A['ride_h']}</h3>
       <ul>{rides}</ul>
       <p class="mut">{A['ride_note']}</p>
     </div>
+    {more_link(ctx['url']('agadir'), A['more'])}
   </div>
 </section>"""
 
 
-def sec_arrive(ctx):
-    site, t = ctx["site"], ctx["t"]
+def sec_arrive(ctx, h="h2", more=True):
+    t = ctx["t"]
     A = t["arrive"]
     facts = "".join(f'<div><dt class="mono">{f["k"]}</dt><dd>{f["v"]}</dd></div>' for f in A["facts"])
+    link = more_link(ctx['url']('basics'), A['more']) if more else ""
     return f"""<section class="arrive" id="arrive" aria-labelledby="arrive-h">
   <div class="arrive-in">
     <figure class="arrive-fig rv">
@@ -378,13 +488,20 @@ def sec_arrive(ctx):
     </figure>
     <div class="arrive-txt">
       <p class="kicker mono">{A['kicker']}</p>
-      <h2 id="arrive-h">{A['h2']}</h2>
+      <{h} id="arrive-h">{A['h2']}</{h}>
       <p>{A['p1']}</p>
       <p>{A['p2']}</p>
       <dl class="facts">{facts}</dl>
+      {link}
     </div>
   </div>
 </section>"""
+
+
+def quote(q, cls="q"):
+    lang = f' lang="{q["lang"]}"' if q.get("lang") else ""
+    return (f'<figure class="{cls}"><blockquote{lang}><p>“{q["q"]}”</p></blockquote>'
+            f'<figcaption><b>{q["who"]}</b> · {q["src"]}</figcaption></figure>')
 
 
 def sec_reviews(ctx):
@@ -393,10 +510,7 @@ def sec_reviews(ctx):
     bars = "".join(
         f'<li style="--v:{v}"><span>{V["sub_labels"][k]}</span><b class="mono">{v}</b><i aria-hidden="true"></i></li>'
         for k, v in r["sub"])
-    lq = V["lead_quote"]
-    quotes = "".join(
-        f'<figure class="q rv"><blockquote><p>“{q["q"]}”</p></blockquote><figcaption><b>{q["who"]}</b> · {q["src"]}</figcaption></figure>'
-        for q in V["quotes"])
+    quotes = "".join(quote(q, "q rv") for q in V["quotes"])
     return f"""<section class="reviews sec" id="reviews" aria-labelledby="reviews-h">
   <div class="wrap">
     <header class="sec-hd">
@@ -411,7 +525,7 @@ def sec_reviews(ctx):
         <p class="mut sc-g">{V['google']}</p>
       </div>
       <div class="quotes">
-        <figure class="q q-lead"><blockquote><p>“{lq['q']}”</p></blockquote><figcaption><b>{lq['who']}</b> · {lq['src']}</figcaption></figure>
+        {quote(V['lead_quote'], 'q q-lead')}
         {quotes}
       </div>
     </div>
@@ -419,24 +533,64 @@ def sec_reviews(ctx):
 </section>"""
 
 
-def sec_ask(ctx):
-    import json
+def side_plate(ctx):
     site, t = ctx["site"], ctx["t"]
-    K = t["ask"]
-    F = K["f"]
-    rooms = "".join(f'<option value="{rm["key"]}">{t["rooms"]["items"][rm["key"]]["name"]}</option>' for rm in site["rooms"])
-    times = "".join(f"<option>{o}</option>" for o in F["time_opts"])
-    i18n = {"err": K["err"], "mail": K["mail"], "done": K["done"], "email": site["email"], "lang": t["date_locale"],
-            "room_any": F["room_any"],
-            "rooms": {rm["key"]: t["rooms"]["items"][rm["key"]]["name"] for rm in site["rooms"]}}
-    req = '<span class="req" aria-hidden="true">*</span>'
-    opt = f'<span class="opt">({F["optional"]})</span>'
+    S = t["ask"]["side"]
+    return f"""<aside class="ask-side" aria-label="{esc(S['h'])}">
+      <h3>{S['h']}</h3>
+      <a class="side-tel" href="{tel(site)}"><span class="mono">{S['call']}</span><b>{site['phone_display']}</b></a>
+      <a class="side-row" href="mailto:{site['email']}"><span class="mono">{S['email']}</span><b>{site['email']}</b></a>
+      <a class="side-row" href="{site['booking_url']}" rel="noopener" target="_blank"><span class="mono">{S['booking']}</span><b>{S['booking_sub']} {ICON['out']}</b><span class="sr"> ({t['ui']['new_tab']})</span></a>
+    </aside>"""
+
+
+def sec_ask_mini(ctx):
+    """Homepage summary of the inquiry: dates + guests, handed to /ask/ by a plain GET (works without JS)."""
+    site, t = ctx["site"], ctx["t"]
+    K, F, M = t["ask"], t["ask"]["f"], t["ask"]["mini"]
     return f"""<section class="ask sec" id="ask" aria-labelledby="ask-h">
   <div class="wrap ask-grid">
     <div class="ask-main">
       <header class="sec-hd">
         <p class="kicker mono">{K['kicker']}</p>
         <h2 id="ask-h">{K['h2']}</h2>
+        <p class="sec-intro">{M['intro']}</p>
+      </header>
+      <form class="form mini" id="ask-mini" action="{ctx['url']('ask')}" method="get">
+        <div class="fg fg-3">
+          <div class="fld"><label for="m-arr">{F['arrival']}</label><input id="m-arr" name="arrival" type="date"></div>
+          <div class="fld"><label for="m-dep">{F['departure']}</label><input id="m-dep" name="departure" type="date"></div>
+          <div class="fld"><label for="m-gst">{F['guests']}</label><input id="m-gst" name="guests" type="number" inputmode="numeric" min="1" max="12" value="2"></div>
+        </div>
+        <button class="btn btn-sig btn-lg" type="submit">{M['submit']}{ICON['go']}</button>
+        <p class="fine">{M['fine']}</p>
+      </form>
+    </div>
+    {side_plate(ctx)}
+  </div>
+</section>"""
+
+
+def sec_ask(ctx):
+    """The full availability request (the /ask/ page): validation → composed email + robust fallbacks."""
+    site, t = ctx["site"], ctx["t"]
+    K = t["ask"]
+    F = K["f"]
+    D = K["done"]
+    rooms = "".join(f'<option value="{rm["key"]}">{t["rooms"]["items"][rm["key"]]["name"]}</option>' for rm in site["rooms"])
+    times = "".join(f"<option>{o}</option>" for o in F["time_opts"])
+    i18n = {"err": K["err"], "mail": K["mail"], "email": site["email"], "lang": t["date_locale"],
+            "room_any": F["room_any"],
+            "rooms": {rm["key"]: t["rooms"]["items"][rm["key"]]["name"] for rm in site["rooms"]}}
+    req = '<span class="req" aria-hidden="true">*</span>'
+    opt = f'<span class="opt">({F["optional"]})</span>'
+    steps = "".join(f'<li><span class="mono">{i:02d}</span><p>{s}</p></li>' for i, s in enumerate(K["steps"], 1))
+    return f"""<section class="ask sec ask-page" id="ask" aria-labelledby="h1">
+  <div class="wrap ask-grid">
+    <div class="ask-main">
+      <header class="sec-hd">
+        <p class="ph-sign mono"><a href="{ctx['url']('home')}">Hôtel Lynx</a><span aria-hidden="true">/</span><span><span class="n">{len(t['nav']) + 1:02d}</span> {t['pages']['ask']['crumb']}</span></p>
+        <h1 id="h1">{K['h2']}</h1>
         <p class="sec-intro">{K['intro']}</p>
       </header>
       <form class="form" id="ask-form" novalidate>
@@ -462,41 +616,362 @@ def sec_ask(ctx):
         <button class="btn btn-sig btn-lg btn-wide" type="submit">{ICON['mail']}{F['submit']}</button>
         <p class="fine">{F['fine']}</p>
       </form>
-      <div class="done" id="ask-done" hidden tabindex="-1">
-        <h3>{K['done']['h']}</h3>
-        <p>{K['done']['p']}</p>
-        <p class="done-act"><a class="btn btn-sig" id="ask-retry" href="mailto:{site['email']}">{ICON['mail']}{K['done']['retry']}</a>
-        <button class="btn btn-ghost" type="button" id="ask-copy">{K['done']['copy']}</button></p>
-        <p class="done-copied" id="ask-copied" hidden>{K['done']['copied']} <a class="lnk" href="mailto:{site['email']}">{site['email']}</a></p>
-        <p>{K['done']['or_call']} <a class="lnk mono nowrap" href="{tel(site)}">{site['phone_display']}</a></p>
+      <div class="done" id="ask-done" hidden tabindex="-1" aria-labelledby="done-h">
+        <h2 id="done-h">{D['h']}</h2>
+        <p>{D['p']}</p>
+        <p class="done-act"><a class="btn btn-sig" id="ask-retry" href="mailto:{site['email']}">{ICON['mail']}{D['retry']}</a></p>
+        <div class="done-box">
+          <p class="done-k mono">{D['no_app']}</p>
+          <dl class="done-to">
+            <div><dt class="mono">{D['to']}</dt><dd><span id="done-email">{site['email']}</span> <button class="btn-mini" type="button" data-copy="email">{ICON['copy']}{D['copy_email']}</button></dd></div>
+            <div><dt class="mono">{D['subject']}</dt><dd id="done-subject"></dd></div>
+          </dl>
+          <pre class="done-msg" id="done-body" tabindex="0" aria-label="{esc(D['msg_label'])}"></pre>
+          <p class="done-act"><button class="btn btn-ghost" type="button" data-copy="all">{ICON['copy']}{D['copy']}</button>
+          <span class="done-copied" id="ask-copied" role="status"></span></p>
+        </div>
+        <p class="done-call">{D['or_call']} <a class="lnk mono nowrap" href="{tel(site)}">{site['phone_display']}</a></p>
+        <p><button class="lnk btn-reset" type="button" id="ask-edit">{D['edit']}</button></p>
       </div>
-      <script type="application/json" id="ask-i18n">{json.dumps(i18n, ensure_ascii=False)}</script>
+      <script type="application/json" id="ask-i18n">{json.dumps(dict(i18n, copied=D['copied'], copied_email=D['copied_email'], copy_fail=D['copy_fail']), ensure_ascii=False)}</script>
     </div>
-    <aside class="ask-side" aria-label="{esc(K['side']['h'])}">
-      <h3>{K['side']['h']}</h3>
-      <a class="side-tel" href="{tel(site)}"><span class="mono">{K['side']['call']}</span><b>{site['phone_display']}</b></a>
-      <a class="side-row" href="mailto:{site['email']}"><span class="mono">{K['side']['email']}</span><b>{site['email']}</b></a>
-      <a class="side-row" href="{site['booking_url']}" rel="noopener" target="_blank"><span class="mono">{K['side']['booking']}</span><b>{K['side']['booking_sub']} {ICON['out']}</b><span class="sr"> ({t['ui']['new_tab']})</span></a>
-    </aside>
+    <div class="ask-aside">
+      {side_plate(ctx)}
+      <div class="steps">
+        <h2 class="steps-h">{K['steps_h']}</h2>
+        <ol>{steps}</ol>
+      </div>
+    </div>
   </div>
 </section>"""
 
 
 def page_home(ctx):
-    p = ctx["t"]["pages"]["home"]
-    ctx["head_extra"] = jsonld_hotel(ctx)
-    main = "\n".join(f(ctx) for f in (sec_hero, sec_basics, sec_rooms, sec_agadir, sec_arrive, sec_reviews, sec_ask))
-    return document(ctx, p["title"], p["description"], ctx["alt"][ctx["t"]["lang"]], main)
+    main = "\n".join(f(ctx) for f in (sec_hero, sec_basics, sec_rooms, sec_agadir, sec_arrive, sec_reviews, sec_ask_mini))
+    return document(ctx, main, [hotel_data(ctx)])
 
+
+# --- rooms page ----------------------------------------------------------------
+
+def page_rooms(ctx):
+    site, t = ctx["site"], ctx["t"]
+    R, RP = t["rooms"], t["rooms_page"]
+    keys = "".join(
+        f'<li><a href="#room-{rm["key"]}"><span class="mono">{rm["no"]}</span>{R["items"][rm["key"]]["name"]}</a></li>'
+        for rm in site["rooms"])
+    side = f'<nav class="ph-keys" aria-label="{esc(RP["head"]["keys_label"])}"><ol>{keys}</ol></nav>'
+
+    every = "".join(f'<li>{ICON["yes"]}<div><h3>{i["t"]}</h3><p>{i["d"]}</p></div></li>' for i in RP["every"]["items"])
+    E = RP["every"]
+    every_sec = f"""<section class="every sec" aria-labelledby="every-h">
+  <div class="wrap every-grid">
+    <div>
+      <p class="kicker mono">{E['kicker']}</p>
+      <h2 id="every-h">{E['h2']}</h2>
+      <ul class="board-list every-list">{every}</ul>
+    </div>
+    <figure class="every-fig rv">
+      {picture(ctx, 'shower-wc', E['img_alt'], '(min-width: 64rem) 40vw, 100vw')}
+      <figcaption>{E['img_cap']}</figcaption>
+    </figure>
+  </div>
+</section>"""
+
+    L = R["labels"]
+    entries = []
+    for rm in site["rooms"]:
+        c = R["items"][rm["key"]]
+        cp = RP["items"][rm["key"]]
+        gal = cp["photos"]
+        figs = []
+        for i, ph in enumerate(gal):
+            sizes = "(min-width: 64rem) 56vw, 100vw" if i == 0 else "(min-width: 64rem) 27vw, 50vw"
+            figs.append(f'<figure class="rg-{"main" if i == 0 else "sub"}">{picture(ctx, ph["img"], ph["alt"], sizes)}'
+                        f'<figcaption>{ph["cap"]}</figcaption></figure>')
+        nophoto = (f'<p class="nophoto mono">{cp["nophoto"]}</p>' if cp.get("nophoto") else "")
+        entries.append(f"""<article class="rm" id="room-{rm['key']}" aria-labelledby="rm-{rm['key']}">
+    <div class="rm-hd">
+      <span class="room-no mono" aria-hidden="true">{rm['no']}</span>
+      <div>
+        <h2 id="rm-{rm['key']}">{c['name']}</h2>
+        <p class="rm-line">{c['line']}</p>
+      </div>
+    </div>
+    <div class="rm-body">
+      <div class="rm-gal rg-{len(gal)}">{nophoto}{''.join(figs)}</div>
+      <div class="rm-txt">
+        <dl class="room-spec">
+          <div><dt class="mono">{L['size']}</dt><dd>{rm['m2']}&nbsp;m²</dd></div>
+          <div><dt class="mono">{L['sleeps']}</dt><dd>{R['guests'][str(rm['guests'])]}</dd></div>
+          <div class="room-beds"><dt class="mono">{L['beds']}</dt><dd>{c['beds']}</dd></div>
+        </dl>
+        <p>{cp['p']}</p>
+        <p class="rm-also mono">{RP['also']}</p>
+        <a class="btn btn-sig" href="{ask_href(ctx, rm['key'])}">{L['ask']}{ICON['go']}</a>
+      </div>
+    </div>
+  </article>""")
+
+    N = RP["nots"]
+    nots = "".join(f'<li>{ICON["no"]}<div><h3>{i["t"]}</h3><p>{i["d"]}</p></div></li>' for i in N["items"])
+    B = RP["balcony"]
+    nots_sec = f"""<section class="nots sec" id="not" aria-labelledby="not-h">
+  <div class="wrap nots-grid">
+    <div class="board-col board-no nots-board">
+      <p class="board-tag mono"><span>{N['tag']}</span></p>
+      <h2 id="not-h">{N['h2']}</h2>
+      <ul class="board-list">{nots}</ul>
+    </div>
+    <figure class="nots-fig rv">
+      {picture(ctx, 'stairs', N['img_alt'], '(min-width: 64rem) 28vw, 60vw')}
+      <figcaption>{N['img_cap']}</figcaption>
+    </figure>
+    <div class="balc">
+      <p class="kicker mono">{B['kicker']}</p>
+      <h2>{B['h2']}</h2>
+      <p>{B['p']}</p>
+      {quote(B['quote'])}
+      <a class="btn btn-ghost" href="{ask_href(ctx, 'double')}">{B['cta']}{ICON['go']}</a>
+    </div>
+  </div>
+</section>"""
+
+    rooms_data = dict(hotel_data(ctx, rating=False), containsPlace=[
+        {"@type": "HotelRoom", "name": R["items"][rm["key"]]["name"],
+         "url": site["base_url"] + ctx["url"]("rooms") + f"#room-{rm['key']}",
+         "floorSize": {"@type": "QuantitativeValue", "value": rm["m2"], "unitCode": "MTK"},
+         "occupancy": {"@type": "QuantitativeValue", "maxValue": rm["guests"]},
+         "bed": R["items"][rm["key"]]["beds"],
+         "amenityFeature": [{"@type": "LocationFeatureSpecification", "name": n, "value": True} for n in
+                            ("Air conditioning", "Private bathroom with shower", "Flat-screen TV", "Free Wi-Fi")],
+         "smokingAllowed": False} for rm in site["rooms"]])
+    main = "\n".join([page_head(ctx, side, "ph-rooms"), every_sec,
+                      f'<section class="rms" aria-label="{esc(RP["list_label"])}"><div class="wrap">{"".join(entries)}</div></section>',
+                      nots_sec, cta_band(ctx, "price")])
+    return document(ctx, main, [rooms_data, crumbs(ctx)])
+
+
+# --- your Agadir page ----------------------------------------------------------
+
+def map_pos(m, ll):
+    x = (ll[1] - m["lng0"]) * m["c"] * m["k"]
+    y = (m["lat1"] - ll[0]) * m["k"]
+    return x, y
+
+
+def pct(v, total):
+    return f"{v / total * 100:.2f}%"
+
+
+def map_figure(ctx, which, marks, dots, rings, edges, title, legend):
+    """Self-drawn OSM base map (static SVG) + HTML markers positioned in % so they stay legible."""
+    m = ctx["map"][which]
+    W, H = m["w"], m["h"]
+    site = ctx["site"]
+    px, py = map_pos(m, [site["geo"]["lat"], site["geo"]["lng"]])
+    # ring labels sit on the south-east side of each ring (the emptiest quarter round the hotel)
+    ring_svg = "".join(
+        f'<circle cx="{px:.1f}" cy="{py:.1f}" r="{r * m["m"]:.1f}"/>'
+        f'<text x="{px + r * m["m"] * .7071 + 4:.1f}" y="{py + r * m["m"] * .7071 + 14:.1f}">{lbl}</text>' for r, lbl in rings)
+    items = []
+    for d in dots:
+        x, y = map_pos(m, d["ll"])
+        if 0 <= x <= W and 0 <= y <= H:
+            items.append(f'<li class="mp-dot mp-{d["kind"]}" style="left:{pct(x, W)};top:{pct(y, H)}" aria-hidden="true"></li>')
+    for mk in marks:
+        x, y = map_pos(m, mk["ll"])
+        if 0 <= x <= W and 0 <= y <= H:
+            items.append(f'<li class="mp-n mp-{mk["kind"]}" style="left:{pct(x, W)};top:{pct(y, H)}"><span class="mono">{mk["n"]}</span><span class="sr">{mk["name"]}</span></li>')
+    for e in edges:
+        x, y = map_pos(m, e["ll"])
+        side = "l" if x < 0 else "r"
+        yy = min(max(y, H * .1), H * .9)
+        items.append(f'<li class="mp-edge mp-edge-{side}" style="top:{pct(yy, H)}"><span>{arrow(e["b"])}<b>{e["name"]}</b> <span class="mono">{e["meta"]}</span></span></li>')
+    items.append(f'<li class="mp-pin" style="left:{pct(px, W)};top:{pct(py, H)}"><span>Lynx</span></li>')
+    return f"""<figure class="map map-{which}">
+      <figcaption class="map-t"><h3>{title}</h3></figcaption>
+      <div class="map-scroll" tabindex="0" aria-label="{esc(title)}">
+        <div class="map-box" style="aspect-ratio:{W}/{H}">
+          <img src="/assets/img/map-{which}.svg?v={ctx['v']}" width="{W}" height="{H}" alt="" loading="lazy" decoding="async">
+          <svg class="map-rings" viewBox="0 0 {W} {H}" aria-hidden="true">{ring_svg}</svg>
+          <ol class="map-pts">{''.join(items)}</ol>
+        </div>
+      </div>
+      <p class="map-leg">{legend}</p>
+    </figure>"""
+
+
+def page_agadir(ctx):
+    site, t = ctx["site"], ctx["t"]
+    A, AP = t["agadir"], t["agadir_page"]
+    P, G = AP["places"], AP["groups"]
+    L = AP["labels"]
+    route = lambda ll, mode: ("https://www.google.com/maps/dir/?api=1&origin="
+                              f"{site['geo']['lat']},{site['geo']['lng']}&destination={ll[0]},{ll[1]}&travelmode={mode}")
+
+    # numbering: everything with a single location that is drawn on a map
+    n, num = 0, {}
+    for g in site["near"]:
+        for it in g["items"]:
+            if it.get("ll") and not it.get("edge"):
+                n += 1
+                num[it["key"]] = n
+
+    side = f"""<figure class="ph-fig">
+      {picture(ctx, 'view', AP['head']['img_alt'], '(min-width: 64rem) 40vw, 100vw', eager=True)}
+      <figcaption>{AP['head']['img_cap']}</figcaption>
+    </figure>"""
+    chips = "".join(f'<li><a href="#{g["group"]}"><span class="mono">{i:02d}</span>{G[g["group"]]["h2"]}</a></li>'
+                    for i, g in enumerate(site["near"], 1))
+
+    # maps
+    door_marks = [{"ll": it["ll"], "n": num[it["key"]], "name": P[it["key"]]["name"], "kind": g["group"]}
+                  for g in site["near"] for it in g["items"] if it["key"] == "mosque"]
+    dots = [{"ll": d, "kind": g["group"]} for g in site["near"] for it in g["items"] for d in it.get("dots", [])]
+    city_marks = [{"ll": it["ll"], "n": num[it["key"]], "name": P[it["key"]]["name"], "kind": g["group"]}
+                  for g in site["near"] for it in g["items"] if it["key"] in num and it["key"] != "mosque"]
+    edges = []
+    for g in site["near"]:
+        for it in g["items"]:
+            if it.get("edge"):
+                edges.append({"ll": it["ll"], "b": bearing(site, it["ll"]), "name": P[it["key"]]["short"],
+                              "meta": f'{L["about"]} {it["taxi"]}&nbsp;{A["min"]} {L["by_taxi"]}'})
+    M = AP["maps"]
+    maps = f"""<section class="maps sec" id="map" aria-labelledby="map-h">
+  <div class="wrap">
+    <header class="sec-hd">
+      <p class="kicker mono">{M['kicker']}</p>
+      <h2 id="map-h">{M['h2']}</h2>
+      <p class="sec-intro">{M['intro']}</p>
+    </header>
+    <div class="maps-grid">
+      {map_figure(ctx, 'door', door_marks, dots, [(100, '100 m'), (250, '250 m'), (500, '500 m')], [], M['door_t'], M['door_leg'])}
+      {map_figure(ctx, 'city', city_marks, [], [(500, '500 m'), (1000, '1 km'), (2000, '2 km')], edges, M['city_t'], M['city_leg'])}
+    </div>
+    <p class="maps-foot">{ext(ctx, site['maps_url'], ICON['pin'] + M['gmaps'], 'btn btn-ghost')}<span class="mut">{M['credit']}</span></p>
+  </div>
+</section>"""
+
+    groups = []
+    for gi, g in enumerate(site["near"], 1):
+        gc = G[g["group"]]
+        rows = []
+        for it in g["items"]:
+            p = P[it["key"]]
+            if it.get("walk"):
+                big = f'{it["walk"]}<small>{L["min_walk"]}</small>'
+            elif it.get("taxi"):
+                big = f'<em>~</em>{it["taxi"]}<small>{L["min_taxi"]}</small>'
+            else:
+                big = f'<small class="rt-word">{L["anytime"]}</small>'
+            meta = []
+            if it.get("dist"):
+                d = (L["from"] + " " if it.get("from") else "") + it["dist"]
+                meta.append(d + (arrow(bearing(site, it["ll"])) if it.get("ll") else ""))
+            if it.get("taxi") and it.get("walk"):
+                meta.append(f'{L["about"]} {it["taxi"]}&nbsp;{A["min"]} {L["by_taxi"]}')
+            if it.get("ll"):
+                mode = "walking" if it.get("walk") else "driving"
+                meta.append(ext(ctx, route(it["ll"], mode), L["route"], "rt-route"))
+            badge = f'<span class="rt-n mono" aria-hidden="true">{num[it["key"]]}</span>' if it["key"] in num else ""
+            note = f'<p>{p["note"]}</p>' if p.get("note") else ""
+            rows.append(f"""<li class="rt{' rt-taxi' if not it.get('walk') else ''}">
+          <span class="rt-min mono">{big}</span><span class="rt-dot" aria-hidden="true"></span>
+          <div class="rt-txt"><h3>{badge}{p['name']}</h3>{note}<p class="rt-meta mono">{'<span aria-hidden="true"> · </span>'.join(meta)}</p></div>
+        </li>""")
+        extra = quote(gc["quote"], "q rt-q") if gc.get("quote") else ""
+        groups.append(f"""<section class="grp grp-{g['group']}" id="{g['group']}" aria-labelledby="g-{g['group']}">
+      <header class="grp-hd">
+        <p class="grp-tag mono">{gi:02d}</p>
+        <h2 id="g-{g['group']}">{gc['h2']}</h2>
+        <p>{gc['intro']}</p>
+      </header>
+      <ol class="route">{''.join(rows)}</ol>
+      {extra}
+    </section>""")
+
+    main = "\n".join([
+        page_head(ctx, side, "ph-agadir"),
+        f'<nav class="chips" aria-label="{esc(AP["chips_label"])}"><div class="wrap"><ol>{chips}</ol></div></nav>',
+        maps,
+        f'<div class="grps"><div class="wrap grps-grid">{"".join(groups)}</div></div>',
+        cta_band(ctx, "agadir")])
+    return document(ctx, main, [crumbs(ctx)])
+
+
+# --- practical page -------------------------------------------------------------
+
+def page_basics(ctx):
+    site, t = ctx["site"], ctx["t"]
+    BP = t["basics_page"]
+    a = site["address"]
+    W = BP["ways"]
+    ways = "".join(f'<li class="way"><h3><span class="mono">{w["k"]}</span>{w["t"]}</h3><p>{w["d"]}</p></li>' for w in W["items"])
+    getting = f"""<section class="ways sec" id="getting-here" aria-labelledby="ways-h">
+  <div class="wrap">
+    <header class="sec-hd">
+      <p class="kicker mono">{W['kicker']}</p>
+      <h2 id="ways-h">{W['h2']}</h2>
+      <p class="sec-intro">{W['intro']}</p>
+    </header>
+    <div class="ways-grid">
+      <div class="addr-plate">
+        <p class="mono addr-k">{W['addr_k']}</p>
+        <p class="addr">{a['street']}<br>{a['district']}, {a['postcode']} {a['city']}</p>
+        <p class="addr-note">{t['footer']['address_note']}</p>
+        {ext(ctx, site['maps_url'], ICON['pin'] + t['footer']['map'], 'btn btn-sig')}
+      </div>
+      <ol class="way-list">{ways}</ol>
+    </div>
+  </div>
+</section>"""
+    R = BP["rules"]
+    rules = "".join(f'<li>{ICON["no" if r.get("no") else "yes"]}<div><h3>{r["t"]}</h3><p>{r["d"]}</p></div></li>' for r in R["items"])
+    F = BP["faq"]
+    faq = "".join(f'<details class="qa"><summary><h3>{q["q"]}</h3></summary><div class="qa-a"><p>{q["a"]}</p></div></details>' for q in F["items"])
+    faq_ld = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
+        {"@type": "Question", "name": q["q"], "acceptedAnswer": {"@type": "Answer", "text": strip_tags(q["a"])}} for q in F["items"]]}
+    rest = f"""<section class="rules sec" id="rules" aria-labelledby="rules-h">
+  <div class="wrap rules-grid">
+    <div>
+      <p class="kicker mono">{R['kicker']}</p>
+      <h2 id="rules-h">{R['h2']}</h2>
+      <ul class="board-list rules-list">{rules}</ul>
+    </div>
+    <div class="faq" id="faq">
+      <p class="kicker mono">{F['kicker']}</p>
+      <h2>{F['h2']}</h2>
+      {faq}
+    </div>
+  </div>
+</section>"""
+    main = "\n".join([page_head(ctx, "", "ph-basics"), sec_arrive(ctx, more=False), getting, rest, cta_band(ctx, "basics")])
+    return document(ctx, main, [faq_ld, crumbs(ctx)])
+
+
+def strip_tags(s):
+    import re
+    return re.sub(r"<[^>]+>", "", s).replace("&nbsp;", " ")
+
+
+# --- ask page -------------------------------------------------------------------
+
+def page_ask(ctx):
+    return document(ctx, sec_ask(ctx), [crumbs(ctx)])
+
+
+# --- 404 --------------------------------------------------------------------------
 
 def page_404(ctx):
     site, t = ctx["site"], ctx["t"]
-    n = t["notfound"]
+    n, fr = t["notfound"], ctx["fr"]["notfound"]
     main = f"""<section class="nf sec"><div class="wrap">
   <p class="kicker mono">404</p>
   <h1>{n['h1']}</h1>
   <p class="sec-intro">{n['p']}</p>
+  <p class="nf-fr" lang="fr"><b>{fr['h1']}</b> {fr['p']} <a class="lnk" href="{ctx['fr_home']}">{fr['home']}</a></p>
   <p class="hero-cta"><a class="btn btn-sig btn-lg" href="{ctx['url']('home')}">{n['home']}{ICON['go']}</a>
   <a class="btn btn-ghost btn-lg" href="{tel(site)}">{ICON['phone']}{site['phone_display']}</a></p>
 </div></section>"""
-    return document(ctx, n["title"], t["pages"]["home"]["description"], "/404.html", main)
+    ctx["title"], ctx["description"] = n["title"], t["pages"]["home"]["description"]
+    return document(ctx, main)

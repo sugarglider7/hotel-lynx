@@ -51,6 +51,22 @@ IMAGES = [
     # Reception + tiled stairs (bk_12).
     {"name": "reception", "src": "bk2048_12_418854477.jpg", "crop": (0.0, 0.1, 1.0, 1.0),
      "widths": [1000, 600], "q": 72},
+    # Rooms page galleries (Booking's own room assignment, research/notes-rooms.md).
+    {"name": "room-double-c", "src": "bk2048_19_418854446.jpg", "crop": (0.0, 0.08, 1.0, 1.0),
+     "widths": [1000, 600], "q": 74},
+    {"name": "room-triple-b", "src": "bk2048_25_418854451.jpg", "crop": (0.0, 0.08, 1.0, 1.0),
+     "widths": [1000, 600], "q": 74},
+    {"name": "room-triple-c", "src": "bk2048_18_418854439.jpg", "crop": (0.0, 0.08, 1.0, 1.0),
+     "widths": [1000, 600], "q": 74},
+    # Shower room with basin + WC (bk_03) — "in every room" figure.
+    {"name": "shower-wc", "src": "bk2048_03_494137613.jpg", "crop": (0.0, 0.0, 1.0, 1.0),
+     "widths": [1000, 600], "q": 72},
+    # Tiled staircase, portrait (bk_14) — "stairs, no lift".
+    {"name": "stairs", "src": "bk2048_14_418854478.jpg", "crop": (0.0, 0.12, 1.0, 0.88),
+     "widths": [800, 480], "q": 72},
+    # View through a balcony rail to the Kasbah hill (bk_09) — Your Agadir page head.
+    {"name": "view", "src": "bk2048_09_418854413.jpg", "crop": (0.0, 0.05, 1.0, 1.0),
+     "widths": [1400, 800], "q": 72},
 ]
 
 OG = {"name": "og-facade", "src": "bk2048_01_418854421.jpg", "size": (1200, 630), "focus_y": 0.55}
