@@ -484,7 +484,7 @@ def sec_agadir(ctx):
 </section>"""
 
 
-def sec_arrive(ctx, h="h2", more=True):
+def sec_arrive(ctx, h="h2", more=True, eager=False):
     t = ctx["t"]
     A = t["arrive"]
     facts = "".join(f'<div><dt class="mono">{f["k"]}</dt><dd>{f["v"]}</dd></div>' for f in A["facts"])
@@ -492,7 +492,7 @@ def sec_arrive(ctx, h="h2", more=True):
     return f"""<section class="arrive" id="arrive" aria-labelledby="arrive-h">
   <div class="arrive-in">
     <figure class="arrive-fig rv">
-      {picture(ctx, 'facade-night', A['img_alt'], '(min-width: 64rem) 55vw, 100vw')}
+      {picture(ctx, 'facade-night', A['img_alt'], '(min-width: 64rem) 55vw, 100vw', eager=eager)}
       <figcaption>{A['img_cap']}</figcaption>
     </figure>
     <div class="arrive-txt">
@@ -954,7 +954,9 @@ def page_basics(ctx):
     </div>
   </div>
 </section>"""
-    main = "\n".join([page_head(ctx, "", "ph-basics"), sec_arrive(ctx, more=False), getting, rest, cta_band(ctx, "basics")])
+    call = (f'<a class="ph-call" href="{tel(site)}"><span class="mono">{t["ask"]["side"]["call"]}</span>'
+            f'<b class="mono">{site["phone_display"]}</b></a>')
+    main = "\n".join([page_head(ctx, call, "ph-basics"), sec_arrive(ctx, more=False, eager=True), getting, rest, cta_band(ctx, "basics")])
     return document(ctx, main, [faq_ld, crumbs(ctx)])
 
 

@@ -266,7 +266,7 @@
         "intro": "Nous ne servons pas de petit-déjeuner. Talborjt s’en charge, dès la rue d’à côté.",
         "quote": {"q": "Mais en tournant juste au coin de la rue, vous vous trouverez au paradis des petits déjeuners", "who": "Audrey, France", "src": "Booking.com"}
       },
-      "errands": {"h2": "Le quotidien", "intro": "Pharmacie, argent, timbres et courses, tout à moins de sept minutes."},
+      "errands": {"h2": "Le quotidien", "intro": "Pharmacie, banques, poste et courses, tout à moins de sept minutes."},
       "sights": {"h2": "À voir, à pied", "intro": "Des jardins, deux musées, le marché central et le téléphérique — tout à pied. Les horaires changent : vérifiez-les sur place avant d’y aller."},
       "beach": {"h2": "La plage", "intro": "Vingt-trois minutes à pied jusqu’à la promenade, vingt-cinq jusqu’au sable. Ou environ quatre minutes en petit taxi."},
       "transport": {"h2": "Se déplacer", "intro": "Les petits taxis passent toute la journée en ville. Pour aller plus loin, demandez à la réception."}
