@@ -2,6 +2,19 @@
 
 _Last updated: 2026-10-02 by FixLynx (phase 4 fix pass: all audit A/B findings applied, deployed fbb8059, live-checked)_
 
+## FINAL STATE — orchestrator sign-off (2026-10-02 08:15 UTC)
+- **Status: COMPLETE — deployed and owner-showable.** Live: https://hotel-lynx.peashoot.io/ (Cloudflare Pages, domain active, live commit 42f01d0).
+- Pages: 5 EN + 5 FR + bilingual 404 (11).
+- Conversion: 'Ask for a room' form → composed email to agadir.hlynx@gmail.com with on-screen copy fallback; 'Call reception 24h' tel:+212528847886; Booking.com secondary. No WhatsApp (none verified)..
+- QA: Audit A 21 + Audit B 17 findings → 37 fixed + A19(c) resolved by orchestrator (aggregateRating removed). check_site OK (11 pages). Live 390 + 1920 checks pass.
+- Cross-site checks passed: differentiation (type, hero, nav, grid, motion distinct from the other two and from hyle/agadir-trip), AI-copy scan clean, owner-embarrassment audit applied, live mobile inspection at 390.
+- Redeploy after any push: `/home/agent/agadir-pilot/tools/cf-static-deploy.sh hotel-lynx deploy` (pushes don't auto-deploy).
+- Questions for the owner (Fadwa) — everything uncertain is omitted or softened on the site until answered:
+  - Which email is read daily (form depends on it)? Is there a WhatsApp mobile?
+  - Children policy (Booking says not allowed; families do stay), payment terms (cash only?), number of rooms, ground-floor rooms
+  - OK to use the Booking gallery photos? A photo of the Single room
+  - OK to name Rachid/Ahmed/Hicham (currently only inside guest quotes)?
+
 ## Recovered state (resume of crashed run "agadir-batch2")
 - Prior run left ONLY raw material (no repo, no status files, no code, no deployment):
   raw page dumps + downloaded images, now in `research/raw/` (gitignored; on disk at /home/agent/agadir-pilot/sites/hotel-lynx/research/raw/). Original copy still at /tmp/sites2/hotel-lynx/.
