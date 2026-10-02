@@ -1,19 +1,19 @@
 {
  "facade": {
   "src": "bk2048_01_418854421.jpg",
-  "color": "#b29290",
+  "color": "#bd9f9e",
   "variants": [
    {
-    "file": "facade-1800.webp",
-    "w": 1800,
-    "h": 1038,
-    "kb": 81
+    "file": "facade-2000.webp",
+    "w": 2000,
+    "h": 834,
+    "kb": 70
    },
    {
     "file": "facade-1200.webp",
     "w": 1200,
-    "h": 692,
-    "kb": 49
+    "h": 500,
+    "kb": 38
    }
   ],
   "mobile": [
