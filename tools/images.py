@@ -27,12 +27,9 @@ MANIFEST = os.path.join(ROOT, "tools", "images.manifest.json")
 MAX_BYTES = 450 * 1024
 
 IMAGES = [
-    # Hero: the façade with the HOTEL LYNX fascia and blade sign (bk_01). The desktop crop is the
-    # band from just above the blade sign (src y≈0.08) to just under the fascia sign, where the
-    # black ground floor starts (y≈0.73) — neither sign is ever cut, and the photo hands over to
-    # the black band right under the sign. The CSS shows this crop at its natural ratio.
-    {"name": "facade", "src": "bk2048_01_418854421.jpg", "crop": (0.0, 0.065, 1.0, 0.745),
-     "widths": [2000, 1200], "q": 74,
+    # Hero: the façade with the HOTEL LYNX fascia and blade sign (bk_01).
+    {"name": "facade", "src": "bk2048_01_418854421.jpg", "crop": (0.0, 0.06, 1.0, 1.0),
+     "widths": [1800, 1200], "q": 74,
      "alt_crop": {"suffix": "m", "crop": (0.22, 0.04, 1.0, 1.0), "widths": [1200, 800]}},
     # Blue hour over the public car park opposite (bk_05).
     {"name": "facade-night", "src": "bk2048_05_418854455.jpg", "crop": (0.0, 0.0, 1.0, 1.0),
