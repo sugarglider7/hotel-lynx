@@ -138,7 +138,7 @@
   };
 
   var compose = function () {
-    var M = T.mail, v = function (n) { return el(n).value.trim(); };
+    var M = T.mail, S = M.sep, v = function (n) { return el(n).value.trim(); };
     var a = v('arrival'), dp = v('departure');
     var nights = Math.round((parse(dp) - parse(a)) / 864e5);
     var room = v('room') ? T.rooms[v('room')] : T.room_any;
@@ -146,17 +146,17 @@
     var subject = M.subject.replace('{arrival}', fmt(a)).replace('{departure}', fmt(dp))
       .replace('{guests}', guests).replace('{room}', room);
     var L = [M.hello, '', M.ask_line, '',
-      M.arrival + ': ' + fmt(a, true),
-      M.departure + ': ' + fmt(dp, true) + ' (' + nights + ' ' + M.nights + ')',
-      M.guests + ': ' + guests,
-      M.room + ': ' + room,
-      M.balcony + ': ' + (el('balcony').checked ? M.yes : M.no),
-      M.parking + ': ' + (el('parking').checked ? M.yes : M.no),
-      M.time + ': ' + v('time'), '',
-      M.name + ': ' + v('name'),
-      M.email + ': ' + v('email')];
-    if (v('phone')) L.push(M.phone + ': ' + v('phone'));
-    if (v('message')) L.push('', M.message + ':', v('message'));
+      M.arrival + S + fmt(a, true),
+      M.departure + S + fmt(dp, true) + ' (' + nights + ' ' + M.nights + ')',
+      M.guests + S + guests,
+      M.room + S + room,
+      M.balcony + S + (el('balcony').checked ? M.yes : M.no),
+      M.parking + S + (el('parking').checked ? M.yes : M.no),
+      M.time + S + v('time'), '',
+      M.name + S + v('name'),
+      M.email + S + v('email')];
+    if (v('phone')) L.push(M.phone + S + v('phone'));
+    if (v('message')) L.push('', M.message + S.replace(/\s+$/, ''), v('message'));
     L.push('', M.close, '', M.sign, v('name'));
     var body = L.join('\n');
     return { subject: subject, body: body,

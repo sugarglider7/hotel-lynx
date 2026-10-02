@@ -2,6 +2,7 @@
   "lang": "en",
   "locale": "en_GB",
   "date_locale": "en-GB",
+  "decimal": ".",
   "dir": "/",
   "ui": {
     "skip": "Skip to content",
@@ -360,7 +361,7 @@
     "kicker": "Reviews",
     "h2": "Why guests come back.",
     "score_label": "Booking.com",
-    "count_label": "reviews",
+    "count": "1,009 reviews",
     "sub_labels": {"wifi": "Free Wi-Fi", "staff": "Staff", "clean": "Cleanliness", "location": "Location", "value": "Value for money", "comfort": "Comfort", "facilities": "Facilities"},
     "google": "Google: 4.1 / 5 from 241 reviews",
     "lead_quote": {"q": "Friendly, Central, Clean and Simple Hotel", "who": "Ingo, Germany", "src": "Booking.com"},
@@ -420,6 +421,7 @@
       "edit": "Change my details"
     },
     "mail": {
+      "sep": ": ",
       "subject": "Room request: {arrival} – {departure}, {guests} guest(s), {room}",
       "hello": "Hello Hôtel Lynx,",
       "ask_line": "I’d like to ask about a room:",

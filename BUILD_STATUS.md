@@ -1,6 +1,6 @@
 # BUILD STATUS — hotel-lynx
 
-_Last updated: 2026-10-02 06:45 UTC by BuildLynx (phase 3 in progress: EN pages done, FR next)_
+_Last updated: 2026-10-02 07:20 UTC by BuildLynx (phase 3: EN + FR built, QA rounds next)_
 
 ## Recovered state (resume of crashed run "agadir-batch2")
 - Prior run left ONLY raw material (no repo, no status files, no code, no deployment):
@@ -63,6 +63,7 @@ _Last updated: 2026-10-02 06:45 UTC by BuildLynx (phase 3 in progress: EN pages 
 - Local preview has no custom 404 (python http.server); Cloudflare Pages serves `site/404.html`.
 
 ## Log
+- 07:20 FR mirror: content/fr.json (all 5 pages, natural French, FR quotes from Booking where they exist, EN quotes kept in English with lang=en), decimal commas, FR mail template; header de-crowded (2-letter lang switch, phone number ≥88rem); no overflow 360–1440 on all 11 pages; check_site OK (11 pages).
 - 06:45 phase 3: orchestrator fixes applied ("free public parking right by the hotel", taxi grid → "By taxi", airport "about 30 min by taxi — we can book one"); EN rooms/your-agadir/practical/ask built; images +6 (bk_19/25/18/03/14/09); Overpass roads/coast/near streets fetched to research/raw for the maps; check_site OK.
 - 05:08 recovery: workspace created from prior raw research; brief + standard written.
 - 05:20 research: Booking page + Apollo state parsed (rooms, sizes, beds, policies, trader contact); 377 Booking reviews captured via one browser tab; Google 4.1/241 + 30 reviews; tab closed.

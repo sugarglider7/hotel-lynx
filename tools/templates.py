@@ -67,6 +67,11 @@ def picture(ctx, name, alt, sizes, cls="", eager=False):
     return f"<picture>{img}</picture>"
 
 
+def dec(ctx, s):
+    """A decimal score in the page language (8.4 → 8,4 in French)."""
+    return str(s).replace(".", ctx["t"]["decimal"])
+
+
 def tel(site):
     return "tel:" + site["phone_e164"]
 
@@ -132,12 +137,16 @@ def wordmark(ctx, tag="a"):
     return f'<span class="wm">{inner}</span>'
 
 
-def lang_switch(ctx):
+def lang_switch(ctx, short=False):
+    """Link to this page in the other language; the header shows the 2-letter code."""
     others = [(l, h) for l, h in ctx["alt"].items() if l != ctx["t"]["lang"]]
     if not others:
         return ""
     l, h = others[0]
-    return f'<a class="lang" href="{h}" hreflang="{l}" lang="{l}">{ctx["t"]["ui"]["switch_label"]}</a>'
+    label = ctx["t"]["ui"]["switch_label"]
+    if short:
+        return f'<a class="lang lang-hd" href="{h}" hreflang="{l}" lang="{l}" aria-label="{esc(label)}">{l.upper()}</a>'
+    return f'<a class="lang" href="{h}" hreflang="{l}" lang="{l}">{label}</a>'
 
 
 def nav_links(ctx):
@@ -161,7 +170,7 @@ def header(ctx):
       <ul>{links}</ul>
     </nav>
     <div class="hd-act">
-      {lang_switch(ctx)}
+      {lang_switch(ctx, short=True)}
       <a class="hd-tel" href="{tel(site)}" aria-label="{esc(t['ui']['call_reception'] + ': ' + site['phone_display'])}">{ICON['phone']}<span class="hd-tel-l"><span class="hd-c">{t['ui']['call']} </span>{t['ui']['h24']}</span><span class="hd-tel-n">{site['phone_display']}</span></a>
       <a class="btn btn-sig hd-ask" href="{ask}"{cur}>{t['ui']['ask']}</a>
       <button class="hd-menu" type="button" aria-expanded="false" aria-controls="menu"><span class="hd-menu-l">{t['ui']['menu']}</span><span class="burger" aria-hidden="true"></span></button>
@@ -324,9 +333,9 @@ def sec_hero(ctx):
           <a class="btn btn-ghost-d btn-lg" href="{tel(site)}">{ICON['phone']}{t['ui']['call_reception']}</a>
         </div>
         <a class="score" href="#reviews">
-          <span class="score-n">{r['score']}</span>
+          <span class="score-n">{dec(ctx, r['score'])}</span>
           <span class="score-t"><b>{h['rating_label']}</b><span>{h['rating_count']}</span></span>
-          <span class="score-s"><b>{staff}</b><span>{h['staff_label']}</span></span>
+          <span class="score-s"><b>{dec(ctx, staff)}</b><span>{h['staff_label']}</span></span>
         </a>
       </div>
     </div>
@@ -508,7 +517,7 @@ def sec_reviews(ctx):
     site, t = ctx["site"], ctx["t"]
     V, r = t["reviews"], site["rating"]["booking"]
     bars = "".join(
-        f'<li style="--v:{v}"><span>{V["sub_labels"][k]}</span><b class="mono">{v}</b><i aria-hidden="true"></i></li>'
+        f'<li style="--v:{v}"><span>{V["sub_labels"][k]}</span><b class="mono">{dec(ctx, v)}</b><i aria-hidden="true"></i></li>'
         for k, v in r["sub"])
     quotes = "".join(quote(q, "q rv") for q in V["quotes"])
     return f"""<section class="reviews sec" id="reviews" aria-labelledby="reviews-h">
@@ -519,8 +528,8 @@ def sec_reviews(ctx):
     </header>
     <div class="rv-grid">
       <div class="scorecard">
-        <p class="sc-big"><span class="sc-n">{r['score']}</span><span class="sc-of mono">/10</span></p>
-        <p class="sc-src"><b>{V['score_label']}</b>, {r['count_display']} {V['count_label']}</p>
+        <p class="sc-big"><span class="sc-n">{dec(ctx, r['score'])}</span><span class="sc-of mono">/10</span></p>
+        <p class="sc-src"><b>{V['score_label']}</b>, {V['count']}</p>
         <ul class="bars">{bars}</ul>
         <p class="mut sc-g">{V['google']}</p>
       </div>
