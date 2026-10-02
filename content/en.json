@@ -1,0 +1,213 @@
+{
+  "lang": "en",
+  "locale": "en_GB",
+  "date_locale": "en-GB",
+  "dir": "/",
+  "ui": {
+    "skip": "Skip to content",
+    "menu": "Menu",
+    "close": "Close",
+    "call": "Call",
+    "h24": "24h",
+    "call_reception": "Call reception (24h)",
+    "ask": "Ask for a room",
+    "nav_label": "Main",
+    "wordmark_sub": "Talborjt · Agadir",
+    "home_label": "Hôtel Lynx — home",
+    "lang_name": "English",
+    "switch_label": "Français",
+    "photo": "Photo",
+    "new_tab": "opens in a new tab"
+  },
+  "nav": [
+    {"page": "rooms", "anchor": "rooms", "label": "Rooms"},
+    {"page": "agadir", "anchor": "agadir", "label": "Your Agadir"},
+    {"page": "basics", "anchor": "basics", "label": "The deal"},
+    {"page": "reviews", "anchor": "reviews", "label": "Reviews"}
+  ],
+  "pages": {
+    "home": {
+      "slug": "",
+      "title": "Hôtel Lynx — your base in Agadir · 2-star hotel in Talborjt",
+      "description": "Clean rooms, a 24-hour reception, free Wi-Fi and free public parking by the door. A 2-star city hotel in Talborjt, opposite the Mohammed V Mosque. 8.4 on Booking.com."
+    }
+  },
+  "hero": {
+    "kicker": "Two-star hotel · Talborjt, Agadir",
+    "h1": "Your base in Agadir.",
+    "lead": "Clean rooms, a reception that never closes, free Wi-Fi and free parking by the door. Right in Talborjt, opposite the Mohammed\u00a0V Mosque.",
+    "rating_label": "on Booking.com",
+    "rating_count": "1,009 reviews",
+    "staff_label": "for staff",
+    "alt": "The front of Hôtel Lynx in Talborjt: a three-storey pink building with wrought-iron balconies, a row of flags and the black HOTEL LYNX sign above the entrance.",
+    "posts": [
+      {"key": "mosque", "label": "Mohammed\u00a0V Mosque"},
+      {"key": "cafes", "label": "Cafés for breakfast"},
+      {"key": "corniche", "label": "Beach promenade"}
+    ]
+  },
+  "basics": {
+    "kicker": "The deal",
+    "h2": "What we do.<br>What we don’t.",
+    "intro": "We’re a two-star city hotel and happy with it. Here’s the whole deal before you book — no small print later.",
+    "yes_label": "Yes",
+    "no_label": "No",
+    "yes": [
+      {"t": "Clean rooms", "d": "Guests score our cleanliness 8.9 on Booking.com."},
+      {"t": "Free Wi-Fi", "d": "Rated 9.5 by guests. Use it all you like."},
+      {"t": "Free parking", "d": "Public spaces right by the hotel."},
+      {"t": "Reception 24 hours", "d": "Someone at the desk, day and night."},
+      {"t": "Air-conditioning", "d": "In every room."},
+      {"t": "Your own shower room", "d": "Shower, toilet and towels in every room."},
+      {"t": "Satellite TV", "d": "Flat-screen, satellite and cable channels."},
+      {"t": "A rooftop terrace", "d": "Over the roofs of Talborjt, facing the Kasbah hill."}
+    ],
+    "no": [
+      {"t": "Breakfast", "d": "We don’t serve it. Talborjt does — the first cafés are three minutes from the door."},
+      {"t": "A lift", "d": "Stairs only. Heavy bags? Ask at the desk for a hand."},
+      {"t": "Pool or gym", "d": "The beach promenade is 23 minutes on foot, about 4 by taxi."},
+      {"t": "Smoking rooms", "d": "Every room is non-smoking."}
+    ],
+    "img_alt": "The reception of Hôtel Lynx: a lit wooden desk, carved chairs, a marble floor and the staircase with blue-tiled steps.",
+    "img_cap": "Reception and the tiled stairs. The desk is staffed round the clock."
+  },
+  "rooms": {
+    "kicker": "Rooms",
+    "h2": "Five rooms.<br>No surprises.",
+    "intro": "Every room has air-conditioning, its own shower room, a flat-screen TV and free Wi-Fi. All non-smoking, all up the stairs.",
+    "labels": {"size": "Size", "beds": "Beds", "sleeps": "Sleeps", "ask": "Ask for this room"},
+    "guests": {"1": "1 guest", "2": "2 guests", "3": "3 guests"},
+    "items": {
+      "single": {"name": "Single", "beds": "1 single bed", "line": "For one, travelling light.", "alt": "A shower room at Hôtel Lynx: wall basin, mirror, towels on a rail and an open walk-in shower.", "cap": "Shower room — the Single, Superior Single and Twin share this layout."},
+      "superior": {"name": "Superior Single", "beds": "1 single bed, or a large double bed when one is free", "line": "One guest, a little more room.", "alt": "A room at Hôtel Lynx with a large double bed, carved wooden wardrobe and a window onto the street flags.", "cap": "With the large double bed."},
+      "twin": {"name": "Twin", "beds": "2 single beds", "line": "Two friends, two beds.", "alt": "Twin room at Hôtel Lynx: two single beds with white linen, grey curtains, a wall-mounted TV and air-conditioning unit.", "cap": "Twin room."},
+      "double": {"name": "Double", "beds": "1 large double bed", "line": "For two. Some have a balcony — ask.", "alt": "Double room at Hôtel Lynx: a large double bed, a table and chair, and the glass door open onto a wrought-iron balcony.", "cap": "This Double has a balcony."},
+      "triple": {"name": "Triple", "beds": "1 large double + 1 single bed", "line": "Three of you, one key.", "alt": "Triple room at Hôtel Lynx: a single bed and a large double bed, table and chairs, grey curtains and a wall TV.", "cap": "Triple room."}
+    },
+    "notes": [
+      "Many rooms have a small balcony. Ask for one when you write.",
+      "Prices move with the dates. Ask us for today’s price."
+    ]
+  },
+  "agadir": {
+    "kicker": "Your Agadir from Lynx",
+    "h2": "Everything is a walk away.",
+    "intro": "Talborjt is the town centre Agadir rebuilt after the 1960 earthquake: grills, cafés, banks, the big mosque. Every time below is measured on foot from our front door.",
+    "img_alt": "The rooftop terrace of Hôtel Lynx at sunset: white wrought-iron chairs, the minaret of the Mohammed V Mosque on the left and the Kasbah hill on the right.",
+    "img_cap": "From our roof: the Mohammed\u00a0V minaret, Talborjt, and the Kasbah hill.",
+    "origin": "Lynx",
+    "origin_sub": "front door",
+    "min": "min",
+    "axis_label": "Minutes on foot",
+    "arrow_note": "Arrows point the way as the crow flies.",
+    "places": {
+      "mosque": {"name": "Mohammed\u00a0V Mosque", "note": "Across the square"},
+      "restaurants": {"name": "Restaurants & grills", "note": "From the next street"},
+      "pharmacy": {"name": "Pharmacy"},
+      "cafes": {"name": "Cafés & crèmeries", "note": "Breakfast is here"},
+      "banks": {"name": "Banks & post office"},
+      "supermarkets": {"name": "Three supermarkets", "note": "All within 7 min"},
+      "olhao": {"name": "Jardin d’Olhão"},
+      "memoire": {"name": "Musée Mémoire d’Agadir", "note": "The 1960 earthquake"},
+      "amazigh": {"name": "Amazigh Heritage Museum"},
+      "market": {"name": "Central market"},
+      "oiseaux": {"name": "Vallée des Oiseaux"},
+      "corniche": {"name": "Beach promenade"},
+      "cablecar": {"name": "Cable car to the Kasbah", "note": "Lower station"},
+      "beach": {"name": "Agadir beach", "note": "Feet in the sand"},
+      "souk": {"name": "Souk El Had"},
+      "marina": {"name": "Marina"},
+      "ctm": {"name": "CTM bus station"},
+      "kasbah": {"name": "Kasbah hilltop"},
+      "airport": {"name": "Al Massira airport"}
+    },
+    "ride_h": "Or hop in a petit taxi",
+    "ride_note": "Petits taxis pass all day. Times are by road, traffic permitting.",
+    "ride_about": "about"
+  },
+  "arrive": {
+    "kicker": "Getting in",
+    "h2": "Late flight? Hire car? Fine.",
+    "p1": "Check-in runs from 12:00 to 22:00, check-out by 12:00. Landing later? Tell us your arrival time when you write — reception is staffed 24 hours.",
+    "p2": "Driving? Park for free in the public spaces right by the hotel. Coming from Al Massira airport, it’s about 24 km — ask us about booking you a taxi.",
+    "facts": [
+      {"k": "Check-in", "v": "12:00–22:00"},
+      {"k": "Check-out", "v": "by 12:00"},
+      {"k": "Reception", "v": "24 h"},
+      {"k": "Parking", "v": "Free"}
+    ],
+    "img_alt": "Hôtel Lynx at blue hour seen from across the street: the lit HOTEL LYNX rooftop sign, street lamps and cars parked in front.",
+    "img_cap": "Blue hour on Rue Al Mahdi Ibn Toumart. The lit sign on the roof is us."
+  },
+  "reviews": {
+    "kicker": "Reviews",
+    "h2": "Why guests come back.",
+    "score_label": "Booking.com",
+    "count_label": "reviews",
+    "sub_labels": {"wifi": "Free Wi-Fi", "staff": "Staff", "clean": "Cleanliness", "location": "Location", "value": "Value for money", "comfort": "Comfort", "facilities": "Facilities"},
+    "google": "Google: 4.1 / 5 from 241 reviews",
+    "lead_quote": {"q": "Friendly, Central, Clean and Simple Hotel", "who": "Ingo, Germany", "src": "Booking.com"},
+    "quotes": [
+      {"q": "Convenient location. Great staff. We are returning guests. First visit was 19 years ago.", "who": "Joanna, United Kingdom", "src": "Booking.com"},
+      {"q": "So clean. I had a fantastic stay. The hotels can be a gamble in Morocco, and this one was excellent.", "who": "Kätlin, Estonia", "src": "Booking.com"},
+      {"q": "Smooth and easy check in, all nice staff no matter which time of the day, clean room and room service, clean linen and towels , hot shower and good water pressure.", "who": "Lars, Germany", "src": "Booking.com"}
+    ]
+  },
+  "ask": {
+    "kicker": "Availability",
+    "h2": "Ask for a room.",
+    "intro": "Tell us your dates and we’ll reply with what’s free and today’s price. This form doesn’t book or charge anything: it writes a clear email to our reception, ready for you to send.",
+    "f": {
+      "arrival": "Arrival", "departure": "Departure", "guests": "Guests", "room": "Room",
+      "room_any": "No preference",
+      "time": "Arriving around", "time_opts": ["Not sure yet", "Before 14:00", "14:00–18:00", "18:00–22:00", "After 22:00"],
+      "balcony": "A balcony if possible", "parking": "I’ll need parking",
+      "name": "Your name", "email": "Your email", "phone": "Phone / WhatsApp", "optional": "optional",
+      "message": "Anything else?", "message_ph": "Late arrival, a lower floor, questions…",
+      "submit": "Write my email to reception",
+      "fine": "Opens your email app with everything filled in. Nothing is sent until you press send."
+    },
+    "err": {
+      "required": "Please fill this in.",
+      "email": "That email address doesn’t look right.",
+      "past": "Please pick a date from today on.",
+      "order": "Departure must be after arrival.",
+      "guests": "Between 1 and 12 guests, please."
+    },
+    "done": {
+      "h": "Your email is ready.",
+      "p": "Your email app should now be open with the message filled in. Press send and it goes straight to our reception.",
+      "retry": "Didn’t open? Try again",
+      "copy": "Copy the message",
+      "copied": "Copied — paste it into any email to",
+      "or_call": "Or call reception, 24h:"
+    },
+    "mail": {
+      "subject": "Room request: {arrival} – {departure}, {guests} guest(s), {room}",
+      "hello": "Hello Hôtel Lynx,",
+      "ask_line": "I’d like to ask about a room:",
+      "arrival": "Arrival", "departure": "Departure", "nights": "night(s)", "guests": "Guests", "room": "Room",
+      "balcony": "Balcony if possible", "parking": "Parking needed", "time": "Arriving around",
+      "yes": "yes", "no": "no",
+      "name": "Name", "email": "Email", "phone": "Phone / WhatsApp", "message": "Message",
+      "close": "Could you tell me what’s available and today’s price? Thank you.",
+      "sign": "Best regards,"
+    },
+    "side": {
+      "h": "Rather talk?",
+      "call": "Call reception — 24 hours",
+      "email": "Email",
+      "booking": "We’re on Booking.com too",
+      "booking_sub": "8.4 from 1,009 reviews"
+    }
+  },
+  "footer": {
+    "address_note": "Opposite the Mohammed\u00a0V Mosque",
+    "map": "Open in Google Maps",
+    "times": "Check-in 12:00–22:00 · Check-out by 12:00",
+    "class": "Two-star hotel",
+    "copy": "Hôtel Lynx, Agadir"
+  },
+  "sticky": {"call": "Call 24h", "ask": "Ask for a room"},
+  "notfound": {"title": "Page not found — Hôtel Lynx", "h1": "Wrong door.", "p": "This page doesn’t exist. Reception is this way:", "home": "Back to the homepage"}
+}

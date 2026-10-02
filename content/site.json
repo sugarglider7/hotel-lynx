@@ -1,0 +1,252 @@
+{
+ "_note": "Language-independent facts. Every value traces to SOURCE_OF_TRUTH.md (tags in BRAND_NOTES.md section plan). Copy lives in content/<lang>.json.",
+ "base_url": "https://hotel-lynx.peashoot.io",
+ "name": "Hôtel Lynx",
+ "phone_e164": "+212528847886",
+ "phone_display": "+212 5 28 84 78 86",
+ "email": "agadir.hlynx@gmail.com",
+ "booking_url": "https://www.booking.com/hotel/ma/lynx.html",
+ "maps_url": "https://www.google.com/maps/search/?api=1&query=30.4228588%2C-9.5917027",
+ "geo": {
+  "lat": 30.4228588,
+  "lng": -9.5917027
+ },
+ "address": {
+  "street": "9 Rue Al Mahdi Ibn Toumart",
+  "district": "Talborjt",
+  "postcode": "80000",
+  "city": "Agadir",
+  "country": "MA"
+ },
+ "stars": 2,
+ "checkin": "12:00",
+ "checkin_until": "22:00",
+ "checkout": "12:00",
+ "rating": {
+  "booking": {
+   "score": "8.4",
+   "count": 1009,
+   "count_display": "1,009",
+   "sub": [
+    [
+     "wifi",
+     "9.5"
+    ],
+    [
+     "staff",
+     "9.2"
+    ],
+    [
+     "clean",
+     "8.9"
+    ],
+    [
+     "location",
+     "8.9"
+    ],
+    [
+     "value",
+     "8.8"
+    ],
+    [
+     "comfort",
+     "8.6"
+    ],
+    [
+     "facilities",
+     "8.2"
+    ]
+   ]
+  },
+  "google": {
+   "score": "4.1",
+   "count": 241
+  }
+ },
+ "rooms": [
+  {
+   "key": "single",
+   "no": "01",
+   "m2": 15,
+   "guests": 1,
+   "img": "shower",
+   "img_kind": "shared"
+  },
+  {
+   "key": "superior",
+   "no": "02",
+   "m2": 16,
+   "guests": 1,
+   "img": "room-double-b",
+   "img_kind": "room"
+  },
+  {
+   "key": "twin",
+   "no": "03",
+   "m2": 20,
+   "guests": 2,
+   "img": "room-twin",
+   "img_kind": "room"
+  },
+  {
+   "key": "double",
+   "no": "04",
+   "m2": 20,
+   "guests": 2,
+   "img": "room-double",
+   "img_kind": "room"
+  },
+  {
+   "key": "triple",
+   "no": "05",
+   "m2": 20,
+   "guests": 3,
+   "img": "room-triple",
+   "img_kind": "room"
+  }
+ ],
+ "_walk_note": "Walk minutes/metres: OSRM routed-foot from the verified pin (research/notes-neighbourhood.md). Bearing = initial great-circle bearing from the pin, degrees.",
+ "walk": [
+  {
+   "key": "mosque",
+   "min": 1,
+   "dist": "110 m",
+   "bearing": 225,
+   "lane": 1
+  },
+  {
+   "key": "restaurants",
+   "min": 1,
+   "dist": "70 m",
+   "bearing": 303,
+   "lane": 0,
+   "list_only": true
+  },
+  {
+   "key": "pharmacy",
+   "min": 2,
+   "dist": "150 m",
+   "bearing": 320,
+   "lane": 3
+  },
+  {
+   "key": "cafes",
+   "min": 3,
+   "dist": "230–300 m",
+   "lane": 2
+  },
+  {
+   "key": "banks",
+   "min": 3,
+   "dist": "200–310 m",
+   "lane": 0,
+   "list_only": true
+  },
+  {
+   "key": "supermarkets",
+   "min": 5,
+   "dist": "370–520 m",
+   "lane": 4
+  },
+  {
+   "key": "olhao",
+   "min": 10,
+   "dist": "720 m",
+   "bearing": 291,
+   "lane": 1
+  },
+  {
+   "key": "memoire",
+   "min": 11,
+   "dist": "840 m",
+   "bearing": 288,
+   "lane": 3
+  },
+  {
+   "key": "amazigh",
+   "min": 15,
+   "dist": "1.1 km",
+   "bearing": 214,
+   "lane": 2
+  },
+  {
+   "key": "market",
+   "min": 16,
+   "dist": "1.2 km",
+   "bearing": 261,
+   "lane": 4
+  },
+  {
+   "key": "oiseaux",
+   "min": 20,
+   "dist": "1.5 km",
+   "bearing": 250,
+   "lane": 1
+  },
+  {
+   "key": "corniche",
+   "min": 23,
+   "dist": "1.7 km",
+   "bearing": 244,
+   "lane": 3,
+   "star": true
+  },
+  {
+   "key": "cablecar",
+   "min": 23,
+   "dist": "1.7 km",
+   "bearing": 284,
+   "lane": 2,
+   "list_only": true
+  },
+  {
+   "key": "beach",
+   "min": 25,
+   "dist": "1.9 km",
+   "bearing": 243,
+   "lane": 4
+  },
+  {
+   "key": "souk",
+   "min": 30,
+   "dist": "2.2 km",
+   "bearing": 134,
+   "lane": 1,
+   "end": true
+  },
+  {
+   "key": "marina",
+   "min": 35,
+   "dist": "2.6 km",
+   "bearing": 276,
+   "lane": 3,
+   "end": true
+  }
+ ],
+ "_ride_note": "Drive minutes are OSRM free-flow; shown as 'about', traffic permitting.",
+ "ride": [
+  {
+   "key": "corniche",
+   "min": "4",
+   "dist": "2.6 km"
+  },
+  {
+   "key": "ctm",
+   "min": "5",
+   "dist": "3.2 km",
+   "bearing": 107
+  },
+  {
+   "key": "kasbah",
+   "min": "12",
+   "dist": "6.4 km",
+   "bearing": 284
+  },
+  {
+   "key": "airport",
+   "min": "30",
+   "dist": "24 km",
+   "bearing": 121
+  }
+ ]
+}

@@ -1,6 +1,6 @@
 # BUILD STATUS — hotel-lynx
 
-_Last updated: 2026-10-02 05:35 UTC by ResearchLynx (phase 1 research)_
+_Last updated: 2026-10-02 06:10 UTC by DesignLynx (phase 2 design + EN homepage)_
 
 ## Recovered state (resume of crashed run "agadir-batch2")
 - Prior run left ONLY raw material (no repo, no status files, no code, no deployment):
@@ -16,13 +16,18 @@ _Last updated: 2026-10-02 05:35 UTC by ResearchLynx (phase 1 research)_
 - Key facts: 5 room types (Single 15 m² · Superior Single 16 m² · Twin 20 m² · Double 20 m² · Triple 20 m²); **no breakfast** (verified); free public parking; 24 h desk; no lift; Booking 8.4/1,009 (Staff 9.2, Clean 8.9, Value 8.8, Location 8.9, Wi-Fi 9.5); Google 4.1/241.
 
 ## Design
-- BRAND_NOTES.md — not started
+- **Phase 2 DONE.** BRAND_NOTES.md: concept "Signposted" (the hotel's own sign system: façade photo → black fascia hero, fingerposts with real bearings, the Lynx Line walking-minute transit map, key-tag room directory, yes/no board), palette sampled from bk_01/05/12/14, Overpass + Overpass Mono (self-hosted, registered in FONTS.md), page map EN/FR, section plans, conversion spec + EN/FR mail templates, must-not list.
+- Tooling: `tools/images.py` (Pillow, sequential, declarative list → `site/assets/img/*.webp` + `tools/images.manifest.json` + og image + favicons), `tools/build.py` (stdlib; `content/site.json` facts + `content/<lang>.json` copy + `tools/templates.py` partials/pages → `site/`; also 404, sitemap, robots, _headers). Rebuild: `python3 tools/images.py && python3 tools/build.py`. **Edit content/templates, never site/*.html by hand.**
+- `site/assets/css/site.css` (26 KB, tokens + components), `site/assets/js/site.js` (8 KB: menu, sticky bar, reveal, mailto composer), favicon.svg/32/180.
+- Phase 3 adding a page: add renderer to `PAGES` in build.py + `slug` under `pages.<key>` in each content file; nav/hreflang/lang switch update automatically (unbuilt pages fall back to homepage anchors). FR: create `content/fr.json` (same keys, `dir: "/fr/"`, `date_locale: "fr-FR"`).
 
 ## Pages implemented
-- none
+- `/` EN homepage (final quality): hero/fascia · The deal (yes/no) · Rooms 01–05 · Your Agadir from Lynx (Lynx Line + taxi branch) · Getting in · Reviews · Ask for a room (form → composed email) · footer. JSON-LD Hotel with aggregateRating 8.4/1,009.
+- `/404.html` (EN shell).
 
 ## Pages remaining
-- all
+- EN: `/rooms/`, `/your-agadir/`, `/practical/`, `/ask/` (until built, nav links go to homepage anchors).
+- FR: `/fr/`, `/fr/chambres/`, `/fr/votre-agadir/`, `/fr/infos-pratiques/`, `/fr/demande/` (+ bilingual 404 line, language switch appears automatically once fr.json exists).
 
 ## Factual uncertainties
 - **Map pin**: Booking's coordinates are the "Swiss City" district centroid (821 m off). Use Google pin 30.4228588, -9.5917027 (verified against OSM street + mosque).
@@ -37,16 +42,24 @@ _Last updated: 2026-10-02 05:35 UTC by ResearchLynx (phase 1 research)_
 - Noise (mosque call to prayer, street) and dated furniture are recurring criticisms → never "quiet", "modern", "renovated".
 
 ## QA status
-- not started (see QA_CHECKLIST.md)
+- Phase 2: check_site OK (2 pages; contacts = tel:+212528847886, mailto:agadir.hlynx@gmail.com only; 0 WARN). Screenshots `/home/agent/agadir-pilot/qa/hotel-lynx/p2/` (round1–3, 390 + 1440, fold + full, menu, form errors/done, 404).
+- Verified in one browser tab: no horizontal overflow at 360/390/430; menu aria-expanded/Esc/focus/close-on-link; room "Ask for this room" preselects the form; validation messages; composed mailto decoded correctly (no undefined/NaN); 0 console errors (only the expected headless mailto abort); cold mobile first load 169 KB (html 40, css 26, js 8, fonts 61, hero 34 KB), LCP = hero webp, CLS 0.
+- Full QA_CHECKLIST pass still to do in phase 4.
 
 ## Deployment URL
 - target: https://hotel-lynx.peashoot.io/ (Cloudflare Pages project "hotel-lynx", output dir `site/`, no build command) — not yet created
 
 ## Outstanding problems
-- none recorded
+- Owner permission for the Booking gallery photos (SOT Q11) and naming staff (not used yet — no staff names on the site).
+- Local preview has no custom 404 (python http.server); Cloudflare Pages serves `site/404.html`.
 
 ## Log
 - 05:08 recovery: workspace created from prior raw research; brief + standard written.
 - 05:20 research: Booking page + Apollo state parsed (rooms, sizes, beds, policies, trader contact); 377 Booking reviews captured via one browser tab; Google 4.1/241 + 30 reviews; tab closed.
 - 05:28 research: pin verified (Google vs Booking), OSRM foot/car table for 37 places; hr_ images identified as pixcdn affiliate copies of Booking photos.
 - 05:35 research: SOURCE_OF_TRUTH, CONTENT_INVENTORY, ASSET_INVENTORY, notes-* written; committed + pushed.
+- 05:40 design: read contract/brief/SOT/assets; looked at sheets + full bk2048 images; palette sampled with Pillow; Overpass/Overpass Mono fetched (4 woff2) and registered in FONTS.md.
+- 05:55 build: images.py, build.py, templates.py, content/site.json + en.json, site.css, site.js, favicons; check_site OK.
+- 05:57 round 1 (390 + 1440): strong fascia hero; problems — full-page shots missed lazy images (scroll helper didn't await), desktop hero photo too tall (h1 pushed below fold), ghost buttons' chamfer clipped the border, mobile header "CALL 24H" wrapped, "Mohammed / V" orphan, Overpass "·" eats the following space, desktop rooms too tall/sparse, line axis label overlapped stop labels, terrace crop lost the minaret, 4-up facts wrapped. Fixed all: hero photo 44vh, ghost buttons unchamfered, nbsp, mono separators, compact room rows (3:2, 3-col specs), desktop 2-col section headers, terrace object-position, 2×2 facts.
+- 06:03 round 2: mobile header overflowed (Menu cut off) → ≤26rem shows "☎ 24h" + burger only; line extra/axis overlap → axis label moved top-left, notes hidden on desktop, line widened; success panel phone wrapped; email dates were US style → en-GB date locale; success copy no longer promises a reply. Functional checks passed (menu, preselect, validation, mailto).
+- 06:08 round 3 (final): 390/1440 fold + full clean; 404 checked; tab closed; preview stopped.
