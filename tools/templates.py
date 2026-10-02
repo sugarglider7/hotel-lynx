@@ -246,9 +246,9 @@ def ld(data):
     return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + "</script>"
 
 
-def hotel_data(ctx, rating=True):
+def hotel_data(ctx):
     site, t = ctx["site"], ctx["t"]
-    a, r = site["address"], site["rating"]["booking"]
+    a = site["address"]
     data = {
         "@context": "https://schema.org", "@type": "Hotel", "@id": site["base_url"] + "/#hotel",
         "name": site["name"], "url": site["base_url"] + ctx["url"]("home"),
@@ -265,9 +265,6 @@ def hotel_data(ctx, rating=True):
         "amenityFeature": [{"@type": "LocationFeatureSpecification", "name": n, "value": True} for n in t["ld"]["hotel"]],
         "sameAs": [site["booking_url"]],
     }
-    if rating:
-        data["aggregateRating"] = {"@type": "AggregateRating", "ratingValue": r["score"], "bestRating": "10",
-                                   "worstRating": "1", "reviewCount": r["count"]}
     return data
 
 
@@ -776,7 +773,7 @@ def page_rooms(ctx):
   </div>
 </section>"""
 
-    rooms_data = dict(hotel_data(ctx, rating=False), containsPlace=[
+    rooms_data = dict(hotel_data(ctx), containsPlace=[
         {"@type": "HotelRoom", "name": R["items"][rm["key"]]["name"],
          "url": site["base_url"] + ctx["url"]("rooms") + f"#room-{rm['key']}",
          "floorSize": {"@type": "QuantitativeValue", "value": rm["m2"], "unitCode": "MTK"},
