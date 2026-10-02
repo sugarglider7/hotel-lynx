@@ -113,7 +113,9 @@ Removed/softened during QA: "No room upgrades to upsell" (unfounded) → removed
 | Inputs ≥17 px (no iOS zoom), tap targets ≥44 px, reduced motion respected | ✅ |
 | Images: all via `tools/images.py` (WebP, srcset/sizes, width/height, dominant colour), largest file 105 KB, hero mobile 34 KB | ✅ |
 | `_headers`: immutable cache for css/js/fonts, 1 week for images, nosniff, referrer policy, X-Frame-Options SAMEORIGIN, Permissions-Policy (camera/mic/geo/payment off) — no CSP that could block tel:/mailto:/map links | ✅ |
-| 404: self-contained, EN + FR line, links home (EN + FR) and phone | ✅ (local python server shows its own 404; live Cloudflare check in BUILD_STATUS) |
+| 404: self-contained, EN + FR line, links home (EN + FR) and phone | ✅ live: /no-such-page/ → 404 with the custom page |
+| Cloudflare e-mail obfuscation (zone feature) would rewrite mailto: links → each address wrapped in `<!--email_off-->` | ✅ live: 0 `email-protection` rewrites, 4 intact mailto links on /ask/ |
+| Live site (after deploy 5b9ccfc): home, /your-agadir/, /fr/, 404 at 390 — 200, canonical correct, no broken assets, no failed requests | ✅ screenshots `live-*` |
 
 ## 3. Performance (390×844, cache disabled, local server = **uncompressed**; Cloudflare adds brotli/gzip to HTML/CSS/JS)
 | Template | KB before scroll | Requests | LCP element | LCP (local) | CLS |
@@ -126,13 +128,14 @@ Removed/softened during QA: "No room upgrades to upsell" (unfounded) → removed
 | FR home | 185 | 6 | hero webp | 0.38 s | 0 |
 | FR Your Agadir | 210 | 8 | `view-800.webp` | 0.28 s | 0 |
 | 404 | 122 | 5 | FR paragraph | 0.19 s | 0 |
-CSS 43 KB (≤60), JS 10 KB (≤30), fonts 61 KB (2 latin woff2, preloaded Overpass). Map base SVGs 27 + 17 KB, lazy.
+**Live (Cloudflare, brotli) home at 390: 118 KB / 8 requests before scroll** (html 8, css 11, js 4, fonts 61, hero 34; 2 zone analytics beacons). CSS 43 KB raw (≤60), JS 10 KB raw (≤30), fonts 61 KB (2 latin woff2, preloaded Overpass). Map base SVGs 27 + 17 KB, lazy.
 
 ## 4. Screenshots — `/home/agent/agadir-pilot/qa/hotel-lynx/p3/`
 Round 1 (390 + 1440 full pages): `r1-home-*`, `r1-rooms-*`, `r1-agadir-*`, `r1-practical-390`, `r1-ask-390-full/-errors/-filled/-done`, `r1-fr-home-*`, `r1-fr-ask-390-done`.
 Fixed after round 1: map ring labels clashing with the pin, sand colour, swipe hint hidden on desktop, wide map centred on the hotel on phones, Double gallery layout, stairs crop, 3-field mini form overflow, success panel e-mail wrapping, header overflow once FR existed (lang code, phone number from 88rem), FR sticky labels, FR balcony heading overflow at 1024, 404 buttons, practical head call plate, practical LCP eager.
 Round 2: `r2-home-390/1440`, `r2-rooms-1440`, `r2-agadir-1440`, `r2-practical-1440`, `r2-ask-1440`, `r2-fr-ask-1440`, `r2-fr-rooms-390`, `r2-fr-agadir-390`, `r2-fr-practical-390`, `r2-404-390/1440`, `r2-menu-en-390`, `r2-menu-fr-390`.
 Round 3 (folds after last fixes): `r3-home-390-fold`, `r3-fr-home-390-fold`, `r3-practical-390-fold`, `r3-practical-1440-fold`.
+Live: `live-home-390`, `live-agadir-390`, `live-fr-home-390`, `live-404-390`, `live-fr-ask-done-390`.
 
 ## 5. Known weaknesses
 - No Single-room photo (honest caption + plate instead) — owner photo needed.

@@ -1,6 +1,6 @@
 # BUILD STATUS — hotel-lynx
 
-_Last updated: 2026-10-02 06:42 UTC by BuildLynx (phase 3 complete: all pages EN+FR, QA rounds 1–3, pushed)_
+_Last updated: 2026-10-02 06:58 UTC by BuildLynx (phase 3 complete: all pages EN+FR, QA rounds 1–3, deployed + live-checked)_
 
 ## Recovered state (resume of crashed run "agadir-batch2")
 - Prior run left ONLY raw material (no repo, no status files, no code, no deployment):
@@ -59,7 +59,7 @@ _Last updated: 2026-10-02 06:42 UTC by BuildLynx (phase 3 complete: all pages EN
 - Perf at 390 (uncompressed local): home 183 KB / 6 requests before scroll, LCP hero webp 34 KB, CLS 0; heaviest template Your Agadir 210 KB / 8.
 
 ## Deployment URL
-- https://hotel-lynx.peashoot.io/ (Cloudflare Pages project "hotel-lynx", output dir `site/`, no build command, auto-deploys on push to main). Live check result: see Log.
+- https://hotel-lynx.peashoot.io/ (Cloudflare Pages project "hotel-lynx", output dir `site/`, no build command, auto-deploys on push to main). **Pushes to main do NOT auto-deploy** (GitHub hook silent since 8cae2b9) → after pushing run `bash /home/agent/agadir-pilot/tools/cf-static-deploy.sh hotel-lynx deploy`. Live = 5b9ccfc (site/ unchanged since).
 
 ## Outstanding problems
 - Owner permission for the Booking gallery photos (SOT Q11); no Single-room photo (honest caption used).
@@ -67,6 +67,7 @@ _Last updated: 2026-10-02 06:42 UTC by BuildLynx (phase 3 complete: all pages EN
 - Local preview (python http.server) shows its own 404; Cloudflare serves `site/404.html`.
 
 ## Log
+- 06:58 email_off on the whole body was ignored (comments stripped) → each address/mailto wrapped individually (`eo()` in templates.py); 5b9ccfc deployed. LIVE CHECK OK at 390 in one tab: home, /your-agadir/, /fr/, 404 (custom bilingual page) — 200s, canonical correct, 0 broken images, 0 failed requests, no overflow; no `email-protection` rewriting; live FR ask flow composes mailto correctly. Live home before scroll: 118 KB / 8 requests (brotli; incl. 2 Cloudflare analytics beacons). Tab closed, preview stopped.
 - 06:50 Deploy: pushes after 8cae2b9 had NOT auto-deployed (GitHub hook silent) → triggered with `tools/cf-static-deploy.sh hotel-lynx deploy` (b5d540a success). Live check found Cloudflare e-mail obfuscation rewriting mailto links (/cdn-cgi/l/email-protection + injected decoder) → body wrapped in `<!--email_off-->`; redeployed.
 - 06:42 QA rounds 1–3 (390/1440 + 360–1440 overflow sweep, menu, form errors/filled/success EN+FR, clipboard, prefill, perf); fixes listed in QA_CHECKLIST §4; owner-embarrassment pass (removed 'cash', 'no upgrades to upsell', parking 'rarely look far'); QA_CHECKLIST written.
 - 06:36 FR mirror: content/fr.json (all 5 pages, natural French, FR quotes from Booking where they exist, EN quotes kept in English with lang=en), decimal commas, FR mail template; header de-crowded (2-letter lang switch, phone number ≥88rem); no overflow 360–1440 on all 11 pages; check_site OK (11 pages).
