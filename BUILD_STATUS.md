@@ -7,6 +7,14 @@ _Last updated: 2026-10-02 06:10 UTC by DesignLynx (phase 2 design + EN homepage)
   raw page dumps + downloaded images, now in `research/raw/` (gitignored; on disk at /home/agent/agadir-pilot/sites/hotel-lynx/research/raw/). Original copy still at /tmp/sites2/hotel-lynx/.
 - Confirmed on 2026-10-02: no GitHub repo, no Cloudflare Pages project, no live hotel-lynx.peashoot.io before this run.
 
+## Orchestrator review (phase 2 → phase 3, binding)
+- Homepage proof approved: "Signposted" concept, Overpass/Overpass Mono, façade + black band, transit-line "Your Agadir from Lynx". Keep it.
+- Fix: "free parking by the door" overstates — use "free public parking right by the hotel" (hero + anywhere else).
+- Fix: the "Or hop in a petit taxi" grid includes Al Massira airport — petit taxis don't serve the airport (grand taxi / arranged taxi). Retitle to something like "By taxi" and keep times "by road, traffic permitting"; airport line = "about 30 min by taxi — we can book one".
+- Phase 3 must add the dedicated pages from the page map (rooms, your Agadir, practical/getting here, ask for a room, reviews if planned) + full FR mirror; keep homepage sections as summaries linking to them, not duplicates.
+- No WhatsApp anywhere until the owner gives a mobile number (decision stands).
+- Live: https://hotel-lynx.peashoot.io/ (Cloudflare Pages project hotel-lynx, output dir site/, auto-deploys on push to main).
+
 ## Research
 - **Phase 1 research DONE (2026-10-02).**
 - SOURCE_OF_TRUTH.md — done: 15 sources, contact block, facts tagged, ratings, people, 12 quotes, 12 owner questions.
