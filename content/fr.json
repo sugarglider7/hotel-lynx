@@ -19,7 +19,17 @@
     "switch_label": "English",
     "photo": "Photo",
     "new_tab": "s’ouvre dans un nouvel onglet",
-    "colon": "\u202f: "
+    "colon": "\u202f: ",
+    "looks": {
+      "trigger": "Essayer d’autres styles",
+      "title": "Essayez un autre look",
+      "intro": "Parcourez quelques designs créés pour l’Hôtel Lynx.",
+      "colours": "Couleurs",
+      "type": "Typographie",
+      "reset": "Réinitialiser",
+      "palettes": {"original": "Lynx d’origine", "green": "Vert Agadir", "blue": "Bleu Atlantique", "rose": "Rose & Argile"},
+      "fonts": {"original": "D’origine", "modern": "Moderne", "boutique": "Boutique", "soft": "Douce"}
+    }
   },
   "ld": {
     "hotel": ["Wi-Fi gratuit", "Parking public gratuit", "Climatisation", "Réception 24h/24", "Service en chambre", "Toit-terrasse", "Chambres non-fumeurs"],

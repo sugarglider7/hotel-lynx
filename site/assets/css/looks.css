@@ -1,0 +1,182 @@
+/* Hôtel Lynx — style demo ("Try different styles"): 4 palettes × 4 typography modes, switched by looks.js through
+   html[data-look] / html[data-font]. Neither attribute set = the original site, untouched: everything below only
+   re-points the role tokens defined in site.css :root. Remove this file + looks.js + looks_panel() to drop the demo. */
+
+/* demo faces: self-hosted Google Fonts subsets, loaded only once the visitor reaches for the switcher */
+@font-face{font-family:"Cormorant Garamond";font-style:normal;font-weight:300 700;font-display:swap;src:url(/assets/fonts/cormorant-garamond-latin-ext.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Cormorant Garamond";font-style:normal;font-weight:300 700;font-display:swap;src:url(/assets/fonts/cormorant-garamond-latin.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"DM Sans";font-style:normal;font-weight:100 1000;font-display:swap;src:url(/assets/fonts/dm-sans-latin-ext.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"DM Sans";font-style:normal;font-weight:100 1000;font-display:swap;src:url(/assets/fonts/dm-sans-latin.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Manrope";font-style:normal;font-weight:200 800;font-display:swap;src:url(/assets/fonts/manrope-latin-ext.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Manrope";font-style:normal;font-weight:200 800;font-display:swap;src:url(/assets/fonts/manrope-latin.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Quicksand";font-style:normal;font-weight:300 700;font-display:swap;src:url(/assets/fonts/quicksand-latin-ext.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Quicksand";font-style:normal;font-weight:300 700;font-display:swap;src:url(/assets/fonts/quicksand-latin.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+
+/* ---- palettes: same roles as site.css :root, re-tinted. Text stays darker than the brand surfaces (--ink) so the
+   original contrast steps hold: body text ≥ 10:1, muted text ≥ 4.9:1, text on the accent ≥ 4.9:1 ---- */
+html[data-look="green"]{
+  --ink:#264A3A;--ink-2:#315A48;--text:#1C3529;--text-2:#2A4537;
+  --paper:#F4F0E6;--white:#FCFAF4;--facade:#C6D3C0;--facade-l:#E2E6D8;
+  --sig:#8FA88B;--sig-d:#476548;--sig-h:#A2B99E;--on-sig:#142A1E;--sig-on-dark:#B0C7AC;
+  --night:#2E4A52;--mut:#535F57;--rule:rgba(38,74,58,.2);
+  --on-dark-1:#EEF1E9;--on-dark-2:#DCE3D7;--on-dark-3:#D8E0D3;--on-dark-4:#CFD8CA;--on-dark-5:#BFCBB9;--on-dark-6:#B8C4B2;
+  --on-night-1:#C5D5D6;--on-night-2:#E4EDEC;--photo-bg:#9AA897;
+}
+html[data-look="blue"]{
+  --ink:#173A52;--ink-2:#224A63;--text:#132F42;--text-2:#1F4258;
+  --paper:#E8DDC9;--white:#FAF6EE;--facade:#A8C5D2;--facade-l:#D6E0DE;
+  --sig:#5E93A8;--sig-d:#2B6780;--sig-h:#73A6BA;--on-sig:#0A2030;--sig-on-dark:#86B8CB;
+  --night:#2C4468;--mut:#4B5862;--rule:rgba(23,58,82,.2);
+  --on-dark-1:#EAF0F2;--on-dark-2:#D5E0E5;--on-dark-3:#D1DDE2;--on-dark-4:#C8D6DC;--on-dark-5:#B5C6CE;--on-dark-6:#AEC0C8;
+  --on-night-1:#C8D2E6;--on-night-2:#E6EBF5;--photo-bg:#8FA9B6;
+}
+html[data-look="rose"]{
+  --ink:#7C4C46;--ink-2:#6A3F3A;--text:#472B27;--text-2:#5A3832;
+  --paper:#FAF1E8;--white:#FFFAF5;--facade:#F3D5C8;--facade-l:#F2E2D8;
+  --sig:#C99582;--sig-d:#985A4A;--sig-h:#D6A895;--on-sig:#3A201C;--sig-on-dark:#F2C6B3;
+  --night:#5A4458;--mut:#735C57;--rule:rgba(124,76,70,.22);
+  --on-dark-1:#FCF2EC;--on-dark-2:#F6E5DD;--on-dark-3:#F5E3DB;--on-dark-4:#F1DDD4;--on-dark-5:#EDD6CB;--on-dark-6:#EBD2C7;
+  --on-night-1:#E6D6E2;--on-night-2:#F5EDF2;--photo-bg:#C99582;
+}
+/* the walking-group numbers inherit --mut on an --ink tag (2.5:1 in the original); on the demo palettes --mut sits too close to --ink */
+html[data-look] .grp:not(.grp-beach) .grp-tag{color:var(--facade)}
+
+/* ---- typography modes. Original = Overpass/Overpass Mono from site.css; --fd (display face) follows --f.
+   font-size-adjust .511 = Overpass's own x-height, so every demo face keeps the original's optical size and line
+   lengths (Overpass itself is unaffected). The wordmark is the hotel's sign: it stays Overpass in every mode. ---- */
+:root{--fd:var(--f);--f0:"Overpass",system-ui,-apple-system,"Segoe UI",sans-serif}
+h1,h2,.q-lead p,.sc-n,.score-n,.dir-name,.room-plate b,.addr,.menu-list a{font-family:var(--fd)}
+html[data-font] .wm-plate{font-family:var(--f0)}
+html[data-font="modern"]{--f:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;--fm:var(--f)}
+html[data-font="boutique"]{--f:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;--fm:var(--f);--fd:"Cormorant Garamond",Georgia,"Times New Roman",serif}
+html[data-font="soft"]{--f:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;--fm:var(--f);--fd:"Quicksand",system-ui,-apple-system,"Segoe UI",sans-serif}
+/* set on every element: site.css's `font:` shorthands would otherwise reset the inherited value */
+html[data-font],html[data-font] *{font-size-adjust:.511}
+html[data-font] .looks *{font-size-adjust:none}
+/* Cormorant: a semibold editorial cut, sized up to the sans' visual height (its x-height is 0.39 em), lining figures for scores */
+html[data-font="boutique"] :is(h1,h2,.q-lead p,.sc-n,.score-n,.dir-name,.room-plate b,.addr,.menu-list a){font-weight:600;font-size-adjust:.44;letter-spacing:-.01em;font-variant-numeric:lining-nums}
+/* Quicksand tops out at 700 and its round letters want a touch more air than Overpass 800 */
+html[data-font="soft"] :is(h1,h2,.q-lead p,.sc-n,.score-n,.dir-name,.room-plate b,.addr,.menu-list a){font-weight:700;letter-spacing:-.012em}
+/* Manrope + DM Sans set wider than Overpass: keep the 1024–1279px desktop header (already flush in FR) and the
+   room directory names inside their boxes — the only places where the extra width would overflow */
+@media (min-width:64rem) and (max-width:79.99rem){
+  html[data-font] :is(.hd-nav a,.hd-ask){font-size-adjust:.48}
+  html:is([data-font="modern"],[data-font="soft"]) .dir-name{font-size:1.375rem}
+}
+@media (max-width:22.5rem){
+  html:is([data-font="modern"],[data-font="soft"]) .dir-name{font-size:1.25rem}
+}
+
+/* ===== style demo switcher: trigger + panel =====
+   Colours follow the theme tokens (the panel re-themes live); its own type is pinned to Overpass with
+   literal stacks and fixed widths, so switching typography never reflows the panel under the pointer. */
+/* a 200 ms colour cross-fade while a choice lands (looks.js sets .looks-anim on <html> for 300 ms) */
+.looks-anim,.looks-anim *,.looks-anim *::before,.looks-anim *::after{transition:color .2s,background-color .2s,border-color .2s,fill .2s,stroke .2s,box-shadow .2s,outline-color .2s,text-decoration-color .2s!important}
+
+/* trigger. looks.js measures the header and sets data-fit:
+   label = star + text in the header's free space; icon = 44×44 star; hang = a compact paper tab hanging from the
+   header's lower edge (no room in the row): top-left on phones (sky in the hero photo, clear of the blade sign),
+   under the action group from 48rem (fingerposts own the photo's left, the blade sign its right edge).
+   Unset (measuring / no JS) = takes no space. */
+.looks-tr{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;flex:none;min-width:2.75rem;min-height:2.75rem;margin:0;padding:0 .7rem;border:0;background:none;color:var(--text,var(--ink));font:600 .875rem/1 "Overpass",system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:0;text-transform:none;white-space:nowrap;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.looks-tr:not([data-fit]){position:absolute;visibility:hidden}
+html:not(.js) .looks-tr{display:none}
+.looks-star{width:1rem;height:1rem;flex:none;fill:var(--sig-d);transition:transform .3s ease}
+.looks-tr-l{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.32em;text-decoration-color:transparent;transition:text-decoration-color .15s}
+@media (hover:hover){.looks-tr:hover .looks-tr-l{text-decoration-color:var(--sig)}}
+.looks-tr:hover .looks-star,.looks-tr[aria-expanded="true"] .looks-star{transform:rotate(90deg)}
+.looks-tr[data-fit="icon"]{width:2.75rem;padding:0}
+.looks-tr[data-fit="icon"] .looks-star{width:1.25rem;height:1.25rem}
+.looks-tr[data-fit="icon"] .looks-tr-l{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.looks-tr[data-fit="hang"]{--cut:8px;position:absolute;z-index:1;top:100%;left:var(--pad);min-height:1.875rem;padding:0 .75rem .0625rem .625rem;gap:.375rem;background:var(--paper);font-size:.8125rem;clip-path:polygon(0 0,100% 0,100% calc(100% - var(--cut)),calc(100% - var(--cut)) 100%,0 100%)}
+.looks-tr[data-fit="hang"] .looks-star{width:.875rem;height:.875rem}
+.menu-open .looks-tr[data-fit="hang"]{visibility:hidden}
+@media (max-width:26rem){
+  .looks-tr[data-fit="hang"]{left:1rem}
+}
+@media (min-width:48rem){
+  .looks-tr[data-fit="hang"]{left:var(--lx-hang,auto);right:auto}
+}
+
+/* panel: native popover (top layer, light dismiss, Escape). Desktop: anchored under the trigger by looks.js */
+.looks{position:fixed;inset:var(--lx-top,4.75rem) .5rem auto var(--lx-left,auto);box-sizing:border-box;width:22rem;max-width:calc(100vw - 1rem);height:auto;max-height:calc(100dvh - var(--lx-top,4.75rem) - .75rem);margin:0;padding:1.125rem 1.25rem 1rem;overflow:auto;overscroll-behavior:contain;border:0;border-top:3px solid var(--ink);color:var(--text,var(--ink));background:var(--white);box-shadow:0 1.25rem 3rem -.75rem rgba(21,17,15,.38),0 0 0 1px var(--rule);font:400 .9375rem/1.4 "Overpass",system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:0;text-align:left;opacity:0;transform:translateY(-.375rem);transition:opacity .16s ease,transform .16s ease,overlay .16s allow-discrete,display .16s allow-discrete}
+.looks:popover-open{opacity:1;transform:none}
+@starting-style{.looks:popover-open{opacity:0;transform:translateY(-.375rem)}}
+@supports not selector(:popover-open){
+  .looks,.looks-tr{display:none!important}
+}
+.looks-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem}
+.looks-t{margin:0;padding-top:.3rem;font-weight:800;font-size:1.25rem;line-height:1.1;letter-spacing:-.012em}
+.looks-x{display:grid;place-items:center;flex:none;width:2.75rem;height:2.75rem;margin:-.5rem -.75rem 0 0;padding:0;border:0;background:none;color:inherit;cursor:pointer}
+.looks-x svg{width:1.25rem;height:1.25rem;fill:currentColor}
+.looks-x:hover{background:var(--paper)}
+.looks-d{margin:.35rem 0 0;color:var(--mut);font-size:.875rem;line-height:1.45}
+.looks-fs{min-width:0;margin:1.125rem 0 0;padding:0;border:0}
+.looks-lg{display:flex;align-items:center;gap:.6em;margin:0 0 .6rem;padding:0;font:600 .6875rem/1 "Overpass Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;letter-spacing:.09em;text-transform:uppercase;color:var(--mut)}
+.looks-lg::before{content:"";width:1.4em;height:2px;background:currentColor}
+.looks-g{display:grid;gap:.5rem}
+.looks-g-c{grid-template-columns:1fr 1fr}
+
+/* options: native radios stay in the tab order (arrow keys), the label carries focus + selection */
+.looks-o{position:relative;display:block;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.looks-in{position:absolute;top:0;left:0;width:1px;height:1px;margin:0;opacity:0;pointer-events:none}
+.looks-b{position:relative;display:grid;box-shadow:inset 0 0 0 1px var(--rule);transition:box-shadow .15s}
+.looks-o:hover .looks-b{box-shadow:inset 0 0 0 1px var(--text,var(--ink))}
+.looks-in:checked+.looks-b{box-shadow:inset 0 0 0 2px var(--text,var(--ink))}
+.looks-in:focus-visible+.looks-b{outline:3px solid var(--sig);outline-offset:2px}
+.looks-n{font-weight:700;font-size:.875rem;line-height:1.2}
+.looks-ck{position:absolute;display:grid;place-items:center;width:1.125rem;height:1.125rem;background:var(--text,var(--ink));color:var(--white);opacity:0;transform:scale(.5);transition:opacity .15s,transform .15s}
+.looks-ck svg{width:.8125rem;height:.8125rem;fill:currentColor}
+.looks-in:checked+.looks-b .looks-ck{opacity:1;transform:none}
+
+/* colours: each swatch is the façade sign in that palette — dark plate with the diamond eye, an accent button, on its ground */
+.looks-g-c .looks-b{padding:.375rem .375rem .5rem}
+.looks-g-c .looks-n{padding:.45rem 1.5rem 0 .125rem}
+.looks-g-c .looks-ck{right:.375rem;bottom:.375rem}
+.looks-sw{position:relative;display:block;height:2.75rem;background:var(--sw-l);box-shadow:inset 0 0 0 1px rgba(21,17,15,.08)}
+.looks-sw-p{--cut:7px;position:absolute;top:.625rem;bottom:.625rem;left:.5rem;width:55%;display:grid;place-items:center;background:var(--sw-d);clip-path:polygon(0 0,calc(100% - var(--cut)) 0,100% var(--cut),100% 100%,0 100%)}
+.looks-sw-p::before{content:"";width:.5rem;height:.5rem;background:var(--sw-a);transform:scaleY(.5) rotate(45deg)}
+.looks-sw-b{--cut:5px;position:absolute;top:.875rem;bottom:.875rem;right:.5rem;width:24%;background:var(--sw-a);clip-path:polygon(0 0,calc(100% - var(--cut)) 0,100% var(--cut),100% 100%,0 100%)}
+
+/* typography: an "Aa" in each mode's display face */
+.looks-g-f .looks-b{grid-template-columns:3.25rem minmax(0,1fr);align-items:center;gap:.75rem;min-height:3.5rem;padding:.375rem 2.25rem .375rem .375rem}
+.looks-g-f .looks-ck{right:.75rem;top:50%;margin-top:-.5625rem}
+.looks-aa{display:grid;place-items:center;height:2.75rem;background:var(--paper);color:var(--text,var(--ink));font-size:1.5rem;line-height:1;letter-spacing:-.01em}
+.looks-aa-original{font-family:"Overpass",system-ui,sans-serif;font-weight:800}
+.looks-aa-modern{font-family:"Manrope","Overpass",system-ui,sans-serif;font-weight:800}
+.looks-aa-boutique{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:1.75rem}
+.looks-aa-soft{font-family:"Quicksand","Overpass",system-ui,sans-serif;font-weight:700}
+.looks-s{display:block;margin-top:.2rem;font:500 .6875rem/1.3 "Overpass Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;letter-spacing:.02em;color:var(--mut)}
+
+.looks-ft{display:flex;justify-content:flex-end;margin-top:.5rem}
+.looks-reset{min-height:2.75rem;margin-right:-.25rem;padding:0 .25rem;border:0;background:none;color:inherit;font:600 .875rem/1 "Overpass",system-ui,-apple-system,"Segoe UI",sans-serif;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.3em;text-decoration-color:var(--rule);cursor:pointer}
+.looks-reset:hover{text-decoration-color:var(--sig)}
+
+/* phones: a compact bottom sheet (colours in one row, typography 2 × 2) so most of the page stays in view above it;
+   full width, internal scroll if needed, page stays scrollable behind it */
+@media (max-width:39.99rem){
+  .looks{inset:auto 0 0;width:100%;max-width:none;max-height:70svh;padding:.75rem max(1rem,env(safe-area-inset-right)) calc(.5rem + env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-left));box-shadow:0 -1rem 2.5rem -.75rem rgba(21,17,15,.38);transform:translateY(1.5rem)}
+  .looks:popover-open{transform:none}
+  @starting-style{.looks:popover-open{transform:translateY(1.5rem)}}
+  .looks-t{font-size:1.125rem}
+  .looks-x{margin:-.6rem -.6rem 0 0}
+  .looks-d{margin-top:0;font-size:.8125rem}
+  .looks-fs{margin-top:.75rem}
+  .looks-lg{margin-bottom:.45rem}
+  .looks-g{gap:.375rem}
+  .looks-g-c{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .looks-g-c .looks-b{padding:.25rem .25rem .375rem}
+  .looks-sw{height:2.125rem}
+  .looks-sw-p{left:.3rem;top:.5rem;bottom:.5rem}
+  .looks-sw-b{right:.3rem;top:.7rem;bottom:.7rem}
+  .looks-g-c .looks-n{padding:.35rem .125rem 0;font-size:.75rem;line-height:1.15}
+  .looks-g-c .looks-ck{top:.25rem;right:.25rem;bottom:auto}
+  .looks-g-f{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .looks-g-f .looks-b{grid-template-columns:2.375rem minmax(0,1fr);gap:.5rem;min-height:3.25rem;padding:.25rem 1.5rem .25rem .25rem}
+  .looks-g-f .looks-ck{top:.375rem;right:.375rem;margin-top:0}
+  .looks-aa{height:2.375rem;font-size:1.25rem}
+  .looks-aa-boutique{font-size:1.5rem}
+  .looks-g-f .looks-n{font-size:.8125rem}
+  .looks-s{font-size:.625rem;letter-spacing:0}
+  .looks-ft{margin-top:.125rem}
+}

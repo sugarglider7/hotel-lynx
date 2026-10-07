@@ -19,7 +19,17 @@
     "switch_label": "Français",
     "photo": "Photo",
     "new_tab": "opens in a new tab",
-    "colon": ": "
+    "colon": ": ",
+    "looks": {
+      "trigger": "Try different styles",
+      "title": "Try another look",
+      "intro": "Explore a few designs we created for Hôtel Lynx.",
+      "colours": "Colours",
+      "type": "Typography",
+      "reset": "Reset",
+      "palettes": {"original": "Lynx Original", "green": "Agadir Green", "blue": "Atlantic Blue", "rose": "Rose & Clay"},
+      "fonts": {"original": "Original", "modern": "Modern", "boutique": "Boutique", "soft": "Soft"}
+    }
   },
   "ld": {
     "hotel": ["Free Wi-Fi", "Free public parking", "Air conditioning", "24-hour front desk", "Room service", "Rooftop terrace", "Non-smoking rooms"],

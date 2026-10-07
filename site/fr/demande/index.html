@@ -25,9 +25,12 @@
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/overpass-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/site.css?v=c99de5a5">
+<link rel="stylesheet" href="/assets/css/site.css?v=0beba1c1">
+<link rel="stylesheet" href="/assets/css/looks.css?v=0beba1c1">
 <script>document.documentElement.classList.add('js')</script>
-<script src="/assets/js/site.js?v=c99de5a5" defer></script>
+<script>(function(d){try{var s=JSON.parse(sessionStorage.getItem('lynx-look')),h=d.documentElement,F={modern:['manrope'],boutique:['cormorant-garamond','manrope'],soft:['quicksand','dm-sans']};if(!s)return;if({green:1,blue:1,rose:1}[s.c]===1)h.setAttribute('data-look',s.c);if(F.hasOwnProperty(s.f)){h.setAttribute('data-font',s.f);F[s.f].forEach(function(n){var l=d.createElement('link');l.rel='preload';l.as='font';l.type='font/woff2';l.crossOrigin='';l.href='/assets/fonts/'+n+'-latin.woff2';d.head.appendChild(l)})}}catch(e){}})(document)</script>
+<script src="/assets/js/site.js?v=0beba1c1" defer></script>
+<script src="/assets/js/looks.js?v=0beba1c1" defer></script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://hotel-lynx.peashoot.io/fr/"}, {"@type": "ListItem", "position": 2, "name": "Demander une chambre", "item": "https://hotel-lynx.peashoot.io/fr/demande/"}]}</script>
 </head>
 <body>
@@ -39,6 +42,7 @@
       <ul><li><a href="/fr/chambres/"><span class="n">01</span>Chambres</a></li><li><a href="/fr/votre-agadir/"><span class="n">02</span>Votre Agadir</a></li><li><a href="/fr/infos-pratiques/"><span class="n">03</span>Infos pratiques</a></li><li><a href="/fr/#reviews"><span class="n">04</span>Avis</a></li></ul>
     </nav>
     <div class="hd-act">
+      <button class="looks-tr" type="button" popovertarget="looks" aria-haspopup="dialog" aria-expanded="false"><svg class="looks-star" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 1c.8 5.9 5.1 10.2 11 11-5.9.8-10.2 5.1-11 11-.8-5.9-5.1-10.2-11-11 5.9-.8 10.2-5.1 11-11z"/></svg><span class="looks-tr-l">Essayer d’autres styles</span></button>
       <a class="lang lang-hd" href="/ask/" hreflang="en" lang="en" aria-label="English">EN</a>
       <a class="hd-tel" href="tel:+212528847886" aria-label="Appeler la réception (24h/24) : +212 5 28 84 78 86"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 2.8 9.4 6c.5.6.5 1.4 0 2l-1.6 1.7a12.6 12.6 0 0 0 6.5 6.5l1.7-1.6c.6-.5 1.4-.5 2 0l3.2 2.8c.6.6.7 1.5.1 2.1l-1.6 1.9c-.7.8-1.8 1.1-2.8.8A19.5 19.5 0 0 1 1.8 7.1c-.3-1 0-2.1.8-2.8L4.5 2.7c.6-.6 1.5-.5 2.1.1z"/></svg><span class="hd-tel-l"><span class="hd-c"> </span>24h/24</span><span class="hd-tel-n">+212 5 28 84 78 86</span></a>
       <a class="btn btn-sig hd-ask" href="/fr/demande/" aria-current="page">Demander une chambre</a>
@@ -52,6 +56,16 @@
       <!--email_off--><a class="menu-mail" href="mailto:agadir.hlynx@gmail.com">agadir.hlynx@gmail.com</a><!--/email_off-->
       <a class="lang" href="/ask/" hreflang="en" lang="en">English</a>
     </div>
+  </div>
+  <div class="looks" id="looks" popover role="dialog" aria-labelledby="looks-t" aria-describedby="looks-d">
+    <div class="looks-hd">
+      <p class="looks-t" id="looks-t">Essayez un autre look</p>
+      <button class="looks-x" type="button" popovertarget="looks" popovertargetaction="hide" aria-label="Fermer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6.3 4.4 5.7 5.7 5.7-5.7 1.9 1.9-5.7 5.7 5.7 5.7-1.9 1.9-5.7-5.7-5.7 5.7-1.9-1.9 5.7-5.7-5.7-5.7z"/></svg></button>
+    </div>
+    <p class="looks-d" id="looks-d">Parcourez quelques designs créés pour l’Hôtel Lynx.</p>
+    <fieldset class="looks-fs"><legend class="looks-lg">Couleurs</legend><div class="looks-g looks-g-c"><label class="looks-o"><input class="looks-in" type="radio" name="look" value="original" checked><span class="looks-b"><span class="looks-sw" style="--sw-d:#15110f;--sw-a:#d4652f;--sw-l:#f5efee" aria-hidden="true"><span class="looks-sw-p"></span><span class="looks-sw-b"></span></span><span class="looks-n">Lynx d’origine</span><span class="looks-ck" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="m9.5 15.6 9.4-9.4 2 2-11.4 11.4L3.1 13.2l2-2z"/></svg></span></span></label><label class="looks-o"><input class="looks-in" type="radio" name="look" value="green"><span class="looks-b"><span class="looks-sw" style="--sw-d:#264A3A;--sw-a:#8FA88B;--sw-l:#F4F0E6" aria-hidden="true"><span class="looks-sw-p"></span><span class="looks-sw-b"></span></span><span class="looks-n">Vert Agadir</span><span class="looks-ck" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="m9.5 15.6 9.4-9.4 2 2-11.4 11.4L3.1 13.2l2-2z"/></svg></span></span></label><label class="looks-o"><input class="looks-in" type="radio" name="look" value="blue"><span class="looks-b"><span class="looks-sw" style="--sw-d:#173A52;--sw-a:#5E93A8;--sw-l:#E8DDC9" aria-hidden="true"><span class="looks-sw-p"></span><span class="looks-sw-b"></span></span><span class="looks-n">Bleu Atlantique</span><span class="looks-ck" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="m9.5 15.6 9.4-9.4 2 2-11.4 11.4L3.1 13.2l2-2z"/></svg></span></span></label><label class="looks-o"><input class="looks-in" type="radio" name="look" value="rose"><span class="looks-b"><span class="looks-sw" style="--sw-d:#7C4C46;--sw-a:#C99582;--sw-l:#FAF1E8" aria-hidden="true"><span class="looks-sw-p"></span><span class="looks-sw-b"></span></span><span class="looks-n">Rose &amp; Argile</span><span class="looks-ck" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="m9.5 15.6 9.4-9.4 2 2-11.4 11.4L3.1 13.2l2-2z"/></svg></span></span></label></div></fieldset>
+    <fieldset class="looks-fs"><legend class="looks-lg">Typographie</legend><div class="looks-g looks-g-f"><label class="looks-o"><input class="looks-in" type="radio" name="font" value="original" checked><span class="looks-b"><span class="looks-aa looks-aa-original" aria-hidden="true">Aa</span><span class="looks-n">D’origine<span class="looks-s">Overpass</span></span><span class="looks-ck" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="m9.5 15.6 9.4-9.4 2 2-11.4 11.4L3.1 13.2l2-2z"/></svg></span></span></label><label class="looks-o"><input class="looks-in" type="radio" name="font" value="modern"><span class="looks-b"><span class="looks-aa looks-aa-modern" aria-hidden="true">Aa</span><span class="looks-n">Moderne<span class="looks-s">Manrope</span></span><span class="looks-ck" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="m9.5 15.6 9.4-9.4 2 2-11.4 11.4L3.1 13.2l2-2z"/></svg></span></span></label><label class="looks-o"><input class="looks-in" type="radio" name="font" value="boutique"><span class="looks-b"><span class="looks-aa looks-aa-boutique" aria-hidden="true">Aa</span><span class="looks-n">Boutique<span class="looks-s">Cormorant Garamond + Manrope</span></span><span class="looks-ck" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="m9.5 15.6 9.4-9.4 2 2-11.4 11.4L3.1 13.2l2-2z"/></svg></span></span></label><label class="looks-o"><input class="looks-in" type="radio" name="font" value="soft"><span class="looks-b"><span class="looks-aa looks-aa-soft" aria-hidden="true">Aa</span><span class="looks-n">Douce<span class="looks-s">Quicksand + DM Sans</span></span><span class="looks-ck" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="m9.5 15.6 9.4-9.4 2 2-11.4 11.4L3.1 13.2l2-2z"/></svg></span></span></label></div></fieldset>
+    <div class="looks-ft"><button class="looks-reset" type="button">Réinitialiser</button></div>
   </div>
 </header>
 <main id="main">

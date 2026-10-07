@@ -105,6 +105,50 @@ def ext(ctx, href, label, cls="lnk"):
             f'<span class="sr"> ({ctx["t"]["ui"]["new_tab"]})</span></a>')
 
 
+# style demo ("Try different styles"): palette × typography, chosen in the #looks popover (assets/js/looks.js).
+# The boot script restores the tab's choice before first paint and preloads that mode's latin font files.
+LOOKS_BOOT = ("(function(d){try{var s=JSON.parse(sessionStorage.getItem('lynx-look')),h=d.documentElement,"
+              "F={modern:['manrope'],boutique:['cormorant-garamond','manrope'],soft:['quicksand','dm-sans']};"
+              "if(!s)return;if({green:1,blue:1,rose:1}[s.c]===1)h.setAttribute('data-look',s.c);"
+              "if(F.hasOwnProperty(s.f)){h.setAttribute('data-font',s.f);F[s.f].forEach(function(n){"
+              "var l=d.createElement('link');l.rel='preload';l.as='font';l.type='font/woff2';l.crossOrigin='';"
+              "l.href='/assets/fonts/'+n+'-latin.woff2';d.head.appendChild(l)})}}catch(e){}})(document)")
+LOOKS_PALETTES = (("original", "#15110f", "#d4652f", "#f5efee"), ("green", "#264A3A", "#8FA88B", "#F4F0E6"),
+                  ("blue", "#173A52", "#5E93A8", "#E8DDC9"), ("rose", "#7C4C46", "#C99582", "#FAF1E8"))
+LOOKS_FONTS = (("original", "Overpass"), ("modern", "Manrope"), ("boutique", "Cormorant Garamond + Manrope"),
+               ("soft", "Quicksand + DM Sans"))
+LOOKS_STAR = ('<svg class="looks-star" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'
+              '<path d="M12 1c.8 5.9 5.1 10.2 11 11-5.9.8-10.2 5.1-11 11-.8-5.9-5.1-10.2-11-11 5.9-.8 10.2-5.1 11-11z"/></svg>')
+LOOKS_CHECK = ('<span class="looks-ck" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false">'
+               '<path d="m9.5 15.6 9.4-9.4 2 2-11.4 11.4L3.1 13.2l2-2z"/></svg></span>')
+
+
+def looks_panel(ctx):
+    """The style-demo popover: two radio groups (name=look / name=font) and a reset."""
+    t = ctx["t"]
+    lk = t["ui"]["looks"]
+    def opt(name, value, visual, label):
+        checked = " checked" if value == "original" else ""
+        return (f'<label class="looks-o"><input class="looks-in" type="radio" name="{name}" value="{value}"{checked}>'
+                f'<span class="looks-b">{visual}{label}{LOOKS_CHECK}</span></label>')
+    colours = "".join(opt("look", v, f'<span class="looks-sw" style="--sw-d:{dk};--sw-a:{ac};--sw-l:{lt}" aria-hidden="true">'
+                          '<span class="looks-sw-p"></span><span class="looks-sw-b"></span></span>',
+                          f'<span class="looks-n">{esc(lk["palettes"][v])}</span>') for v, dk, ac, lt in LOOKS_PALETTES)
+    fonts = "".join(opt("font", v, f'<span class="looks-aa looks-aa-{v}" aria-hidden="true">Aa</span>',
+                        f'<span class="looks-n">{esc(lk["fonts"][v])}<span class="looks-s">{esc(faces)}</span></span>')
+                    for v, faces in LOOKS_FONTS)
+    return f"""<div class="looks" id="looks" popover role="dialog" aria-labelledby="looks-t" aria-describedby="looks-d">
+    <div class="looks-hd">
+      <p class="looks-t" id="looks-t">{esc(lk['title'])}</p>
+      <button class="looks-x" type="button" popovertarget="looks" popovertargetaction="hide" aria-label="{esc(t['ui']['close'])}"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6.3 4.4 5.7 5.7 5.7-5.7 1.9 1.9-5.7 5.7 5.7 5.7-1.9 1.9-5.7-5.7-5.7 5.7-1.9-1.9 5.7-5.7-5.7-5.7z"/></svg></button>
+    </div>
+    <p class="looks-d" id="looks-d">{esc(lk['intro'])}</p>
+    <fieldset class="looks-fs"><legend class="looks-lg">{esc(lk['colours'])}</legend><div class="looks-g looks-g-c">{colours}</div></fieldset>
+    <fieldset class="looks-fs"><legend class="looks-lg">{esc(lk['type'])}</legend><div class="looks-g looks-g-f">{fonts}</div></fieldset>
+    <div class="looks-ft"><button class="looks-reset" type="button">{esc(lk['reset'])}</button></div>
+  </div>"""
+
+
 # --- document shell -----------------------------------------------------------
 
 def head(ctx, title, description, path):
@@ -144,8 +188,11 @@ def head(ctx, title, description, path):
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/overpass-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/site.css?v={ctx['v']}">
+<link rel="stylesheet" href="/assets/css/looks.css?v={ctx['v']}">
 <script>document.documentElement.classList.add('js')</script>
+<script>{LOOKS_BOOT}</script>
 <script src="/assets/js/site.js?v={ctx['v']}" defer></script>
+<script src="/assets/js/looks.js?v={ctx['v']}" defer></script>
 {ctx.get('head_extra', '')}
 </head>"""
 
@@ -192,6 +239,7 @@ def header(ctx):
       <ul>{links}</ul>
     </nav>
     <div class="hd-act">
+      <button class="looks-tr" type="button" popovertarget="looks" aria-haspopup="dialog" aria-expanded="false">{LOOKS_STAR}<span class="looks-tr-l">{esc(t['ui']['looks']['trigger'])}</span></button>
       {lang_switch(ctx, short=True)}
       <a class="hd-tel" href="{tel(site)}" aria-label="{esc(t['ui']['call_reception'] + t['ui']['colon'] + site['phone_display'])}">{ICON['phone']}<span class="hd-tel-l"><span class="hd-c">{t['ui']['call']} </span>{t['ui']['h24']}</span><span class="hd-tel-n">{site['phone_display']}</span></a>
       <a class="btn btn-sig hd-ask" href="{ask}"{cur}>{t['ui']['ask']}</a>
@@ -206,6 +254,7 @@ def header(ctx):
       {lang_switch(ctx)}
     </div>
   </div>
+  {looks_panel(ctx)}
 </header>"""
 
 

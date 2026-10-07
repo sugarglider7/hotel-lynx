@@ -57,9 +57,29 @@ def write(rel, text):
     print("wrote", rel)
 
 
+# style demo (site/assets/css/looks.css): the three OSM base maps re-tinted per demo palette, swapped in by looks.js.
+# Base colour → palette colour; keep in step with html[data-look="…"] in looks.css (facade-l, night, white, ink).
+MAPS = ("door", "city", "city-m")
+LOOK_MAPS = {
+    "green": {"#e6d9d9": "#e2e6d8", "#d9c9c9": "#d5d9ca", "#384770": "#2e4a52", "#fffdfc": "#fcfaf4", "#15110f": "#264a3a"},
+    "blue": {"#e6d9d9": "#d6e0de", "#d9c9c9": "#c8d3d1", "#384770": "#2c4468", "#fffdfc": "#faf6ee", "#15110f": "#173a52"},
+    "rose": {"#e6d9d9": "#f2e2d8", "#d9c9c9": "#e5d3c8", "#384770": "#5a4458", "#fffdfc": "#fffaf5", "#15110f": "#7c4c46"},
+}
+
+
+def map_variants():
+    for which in MAPS:
+        with open(os.path.join(SITE, "assets", "img", f"map-{which}.svg"), encoding="utf-8") as f:
+            svg = f.read()
+        for look, sub in LOOK_MAPS.items():
+            write(f"assets/img/map-{which}-{look}.svg", re.sub(r"#[0-9a-f]{6}\b", lambda m: sub.get(m.group(0), m.group(0)), svg))
+
+
 def asset_version():
     h = hashlib.sha1()
-    for rel in ("assets/css/site.css", "assets/js/site.js", "assets/img/map-city.svg", "assets/img/map-city-m.svg", "assets/img/map-door.svg"):
+    rels = ["assets/css/site.css", "assets/js/site.js", "assets/css/looks.css", "assets/js/looks.js"]
+    rels += [f"assets/img/map-{w}.svg" for w in MAPS] + [f"assets/img/map-{w}-{l}.svg" for w in MAPS for l in LOOK_MAPS]
+    for rel in rels:
         p = os.path.join(SITE, rel)
         if os.path.exists(p):
             h.update(open(p, "rb").read())
@@ -82,6 +102,7 @@ def main():
         return t["dir"] + (slug + "/" if slug else "")
 
     built = []
+    map_variants()
     v = asset_version()
     for lang, t in content.items():
         for key, render in PAGES.items():
