@@ -1,6 +1,14 @@
 # BUILD STATUS — hotel-lynx
 
-_Last updated: 2026-10-02 by FixLynx (phase 4 fix pass: all audit A/B findings applied, deployed fbb8059, live-checked)_
+_Last updated: 2026-10-07 — style demo switcher added (local, not deployed)_
+
+## Style demo — "Try different styles" (2026-10-07, local only; the live site is untouched by this work)
+- Client-facing switcher in the header: 4 palettes (Lynx Original, Agadir Green, Atlantic Blue, Rose & Clay) × 4 type modes (Original Overpass, Modern = Manrope, Boutique = Cormorant Garamond + Manrope, Soft = Quicksand + DM Sans). No choice = the original site: computed styles identical to ff1c9e4 on all 11 pages at 390/768/1024/1440/1920, full-page pixels identical below the header except the trigger.
+- How it works: `site/assets/css/site.css` :root role tokens (`--text`, `--on-sig`, `--sig-on-dark`, `--sig-ui`, `--bar`, `--on-dark-1…6`, `--on-night-1…2`, …) default to the old literals. `site/assets/css/looks.css` re-points them under `html[data-look]` / `html[data-font]` (+ a few documented typography-specific metric tweaks) and styles the panel. `site/assets/js/looks.js`: native popover, choice in sessionStorage (`lynx-look`, per tab, survives navigation), demo fonts warmed on first hover/focus of the trigger (never on plain page load), switch waits for fonts + tinted maps then lands in one frame. Inline boot script (templates.py `LOOKS_BOOT`) restores the choice before first paint and preloads that mode's fonts. `tools/build.py` writes `map-{door,city,city-m}-{green,blue,rose}.svg`.
+- Fonts: 8 self-hosted Google Fonts woff2 subsets (latin + latin-ext) in `site/assets/fonts/`. Demo faces are x-height-normalised to Overpass (`font-size-adjust`) so line breaks hold.
+- Remove the demo: delete looks.css, looks.js, the demo fonts and map variants, `looks_panel()`/`LOOKS_*` + the 3 head lines in templates.py, `ui.looks` in content, `map_variants()` in build.py (site.css tokens can stay — they equal the original values).
+- QA: 4 palette agents + typography audit, 396 page×width×font states with no overflow/clip/horizontal scroll, contrast audit per palette, functional regression (menu, sticky bar, reveal, mini form → /ask/ prefill, form errors + composed mail, FAQ, FR switch) in default and demo states, rapid switching. Screens in `/tmp/lynx-qa/`.
+- To show it on the live domain: push + `bash /home/agent/agadir-pilot/tools/cf-static-deploy.sh hotel-lynx deploy` (not done).
 
 ## FINAL STATE — orchestrator sign-off (2026-10-02 08:15 UTC)
 - **Status: COMPLETE — deployed and owner-showable.** Live: https://hotel-lynx.peashoot.io/ (Cloudflare Pages, domain active, live commit 42f01d0).
