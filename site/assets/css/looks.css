@@ -13,11 +13,12 @@
 @font-face{font-family:"Quicksand";font-style:normal;font-weight:300 700;font-display:swap;src:url(/assets/fonts/quicksand-latin.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
 
 /* ---- palettes: same roles as site.css :root, re-tinted. Text stays darker than the brand surfaces (--ink) so the
-   original contrast steps hold: body text ≥ 10:1, muted text ≥ 4.9:1, text on the accent ≥ 4.9:1 ---- */
+   original contrast steps hold: body text ≥ 10:1, muted text ≥ 4.9:1, text on the accent ≥ 4.9:1.
+   --sig-ui is a mid accent that keeps the original's ≥ 3:1 for focus rings, underlines and map dots on light grounds. ---- */
 html[data-look="green"]{
   --ink:#264A3A;--ink-2:#315A48;--text:#1C3529;--text-2:#2A4537;
   --paper:#F4F0E6;--white:#FCFAF4;--facade:#C6D3C0;--facade-l:#E2E6D8;
-  --sig:#8FA88B;--sig-d:#476548;--sig-h:#A2B99E;--on-sig:#142A1E;--sig-on-dark:#B0C7AC;
+  --sig:#8FA88B;--sig-d:#476548;--sig-h:#A2B99E;--on-sig:#142A1E;--sig-on-dark:#B0C7AC;--sig-ui:#6B8A67;
   --night:#2E4A52;--mut:#535F57;--rule:rgba(38,74,58,.2);
   --on-dark-1:#EEF1E9;--on-dark-2:#DCE3D7;--on-dark-3:#D8E0D3;--on-dark-4:#CFD8CA;--on-dark-5:#BFCBB9;--on-dark-6:#B8C4B2;
   --on-night-1:#C5D5D6;--on-night-2:#E4EDEC;--photo-bg:#9AA897;
@@ -25,7 +26,7 @@ html[data-look="green"]{
 html[data-look="blue"]{
   --ink:#173A52;--ink-2:#224A63;--text:#132F42;--text-2:#1F4258;
   --paper:#E8DDC9;--white:#FAF6EE;--facade:#A8C5D2;--facade-l:#D6E0DE;
-  --sig:#5E93A8;--sig-d:#2B6780;--sig-h:#73A6BA;--on-sig:#0A2030;--sig-on-dark:#86B8CB;
+  --sig:#5E93A8;--sig-d:#2B6780;--sig-h:#73A6BA;--on-sig:#0A2030;--sig-on-dark:#86B8CB;--sig-ui:#3F7C95;
   --night:#2C4468;--mut:#4B5862;--rule:rgba(23,58,82,.2);
   --on-dark-1:#EAF0F2;--on-dark-2:#D5E0E5;--on-dark-3:#D1DDE2;--on-dark-4:#C8D6DC;--on-dark-5:#B5C6CE;--on-dark-6:#AEC0C8;
   --on-night-1:#C8D2E6;--on-night-2:#E6EBF5;--photo-bg:#8FA9B6;
@@ -33,11 +34,20 @@ html[data-look="blue"]{
 html[data-look="rose"]{
   --ink:#7C4C46;--ink-2:#6A3F3A;--text:#472B27;--text-2:#5A3832;
   --paper:#FAF1E8;--white:#FFFAF5;--facade:#F3D5C8;--facade-l:#F2E2D8;
-  --sig:#C99582;--sig-d:#985A4A;--sig-h:#D6A895;--on-sig:#3A201C;--sig-on-dark:#F2C6B3;
-  --night:#5A4458;--mut:#735C57;--rule:rgba(124,76,70,.22);
+  --sig:#C99582;--sig-d:#985A4A;--sig-h:#D6A895;--on-sig:#3A201C;--sig-on-dark:#F2C6B3;--sig-ui:#A9644F;
+  --night:#4A5361;--mut:#735C57;--rule:rgba(124,76,70,.22);
   --on-dark-1:#FCF2EC;--on-dark-2:#F6E5DD;--on-dark-3:#F5E3DB;--on-dark-4:#F1DDD4;--on-dark-5:#EDD6CB;--on-dark-6:#EBD2C7;
-  --on-night-1:#E6D6E2;--on-night-2:#F5EDF2;--photo-bg:#C99582;
+  --on-night-1:#D5DCE6;--on-night-2:#EEF1F5;--photo-bg:#C99582;
 }
+/* the original tells the top two review bars apart by hue (orange vs façade pink); one-hue palettes need a dimmer rest */
+html[data-look]{--bar:rgba(255,253,250,.3)}
+/* on the dark plates the thin marks take the light accent, and the primary button the lighter accent tint so it keeps
+   the original's pull against the plate */
+html[data-look] :is(.hero,.ph,.band,.menu,.ft,.sticky,.board-no,.scorecard,.ask-side,.addr-plate,.ride,.arrive){--sig-ui:var(--sig-on-dark)}
+html[data-look] :is(.hero,.band,.menu,.sticky) .btn-sig{background:var(--sig-h)}
+html[data-look] :is(.hero,.band,.menu,.sticky) .btn-sig:hover{background:var(--sig-on-dark)}
+/* footer links: a light accent alone is too close to the light link colour on these plates */
+html[data-look] .ft-nav a:hover{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.3em}
 /* the walking-group numbers inherit --mut on an --ink tag (2.5:1 in the original); on the demo palettes --mut sits too close to --ink */
 html[data-look] .grp:not(.grp-beach) .grp-tag{color:var(--facade)}
 
@@ -50,21 +60,45 @@ html[data-font] .wm-plate{font-family:var(--f0)}
 html[data-font="modern"]{--f:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;--fm:var(--f)}
 html[data-font="boutique"]{--f:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;--fm:var(--f);--fd:"Cormorant Garamond",Georgia,"Times New Roman",serif}
 html[data-font="soft"]{--f:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;--fm:var(--f);--fd:"Quicksand",system-ui,-apple-system,"Segoe UI",sans-serif}
-/* set on every element: site.css's `font:` shorthands would otherwise reset the inherited value */
+/* set on every element: site.css's `font:` shorthands would otherwise reset the inherited value.
+   DM Sans sets ~5% wider than Overpass at the same x-height, so soft runs a hair smaller to keep line breaks */
 html[data-font],html[data-font] *{font-size-adjust:.511}
+html[data-font="soft"],html[data-font="soft"] *{font-size-adjust:.5}
 html[data-font] .looks *{font-size-adjust:none}
-/* Cormorant: a semibold editorial cut, sized up to the sans' visual height (its x-height is 0.39 em), lining figures for scores */
-html[data-font="boutique"] :is(h1,h2,.q-lead p,.sc-n,.score-n,.dir-name,.room-plate b,.addr,.menu-list a){font-weight:600;font-size-adjust:.44;letter-spacing:-.01em;font-variant-numeric:lining-nums}
-/* Quicksand tops out at 700 and its round letters want a touch more air than Overpass 800 */
-html[data-font="soft"] :is(h1,h2,.q-lead p,.sc-n,.score-n,.dir-name,.room-plate b,.addr,.menu-list a){font-weight:700;letter-spacing:-.012em}
-/* Manrope + DM Sans set wider than Overpass: keep the 1024–1279px desktop header (already flush in FR) and the
-   room directory names inside their boxes — the only places where the extra width would overflow */
-@media (min-width:64rem) and (max-width:79.99rem){
-  html[data-font] :is(.hd-nav a,.hd-ask){font-size-adjust:.48}
-  html:is([data-font="modern"],[data-font="soft"]) .dir-name{font-size:1.375rem}
+/* Cormorant: a semibold editorial cut, sized up to the sans' visual height (its x-height is 0.39 em), lining figures
+   for scores. Rendered that much larger, its long ascenders, descenders and French accents need open leading */
+html[data-font="boutique"] :is(h1,h2,.q-lead p,.sc-n,.score-n,.dir-name,.room-plate b,.addr,.menu-list a){font-weight:600;font-size-adjust:.42;letter-spacing:-.01em;font-variant-numeric:lining-nums}
+html[data-font="boutique"] :is(h1,h2,.q-lead p){line-height:1.16}
+html[data-font="boutique"] .dir-name{line-height:1.25}
+/* a 20px Cormorant subhead reads spindly under the Manrope side card: small h2s take the body face, like the h3s */
+html[data-font="boutique"] h2.steps-h{font-family:var(--f);font-weight:800;font-size-adjust:.511;letter-spacing:0}
+/* Manrope's tall accents (ê, à) meet descenders at the hero's 0.94 leading */
+html[data-font="modern"] h1{line-height:1.03}
+/* Quicksand tops out at 700 and sets ~6% wider than Overpass 800: a slightly smaller x-height keeps every heading on
+   the original's line breaks */
+html[data-font="soft"] :is(h1,h2,.q-lead p,.sc-n,.score-n,.dir-name,.room-plate b,.addr,.menu-list a){font-weight:700;font-size-adjust:.485;letter-spacing:-.02em}
+/* …and the few DM Sans lines that would otherwise gain a line on phones: the sticky CTA, the walking-list stops */
+html[data-font="soft"] .sticky .btn{font-size-adjust:.49}
+@media (max-width:29.99rem){
+  html[data-font="soft"] .rt-txt h3{font-size-adjust:.47}
 }
-@media (max-width:22.5rem){
-  html:is([data-font="modern"],[data-font="soft"]) .dir-name{font-size:1.25rem}
+/* sizes that site.css ties to Overpass metrics: the band heading's 20ch measure (= 13.25em in Overpass), the m² unit
+   inside display figures, the minute columns (Overpass Mono's wide side bearings kept them off the route dots).
+   New faces re-break paragraphs, so let them avoid one-word last lines */
+html[data-font] .band h2{max-width:13.25em}
+html[data-font] .q-lead p{text-wrap:balance}
+html[data-font] p{text-wrap:pretty}
+html[data-font] .room-plate b .u{font-family:inherit}
+html[data-font] .rt-min{width:3.3rem}
+@media (max-width:63.99rem){
+  html[data-font] .stop-min{width:3.2rem}
+}
+/* the 1024–1279px desktop header is already flush in French with Overpass; Manrope and DM Sans UI text is a few
+   percent wider, so the nav, phone and ask button get a slightly smaller x-height there and nothing overflows;
+   DM Sans also needs it for the two-column yes-list headings to stay on one line */
+@media (min-width:64rem) and (max-width:79.99rem){
+  html[data-font] :is(.hd-nav a,.hd-ask,.hd-tel){font-size-adjust:.47}
+  html[data-font="soft"] .board-list h3{font-size-adjust:.47}
 }
 
 /* ===== style demo switcher: trigger + panel =====

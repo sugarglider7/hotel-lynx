@@ -63,7 +63,7 @@ MAPS = ("door", "city", "city-m")
 LOOK_MAPS = {
     "green": {"#e6d9d9": "#e2e6d8", "#d9c9c9": "#d5d9ca", "#384770": "#2e4a52", "#fffdfc": "#fcfaf4", "#15110f": "#264a3a"},
     "blue": {"#e6d9d9": "#d6e0de", "#d9c9c9": "#c8d3d1", "#384770": "#2c4468", "#fffdfc": "#faf6ee", "#15110f": "#173a52"},
-    "rose": {"#e6d9d9": "#f2e2d8", "#d9c9c9": "#e5d3c8", "#384770": "#5a4458", "#fffdfc": "#fffaf5", "#15110f": "#7c4c46"},
+    "rose": {"#e6d9d9": "#f2e2d8", "#d9c9c9": "#e5d3c8", "#384770": "#4a5361", "#fffdfc": "#fffaf5", "#15110f": "#7c4c46"},
 }
 
 

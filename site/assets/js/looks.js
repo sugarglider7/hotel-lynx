@@ -24,18 +24,20 @@
     if (!specs || !d.fonts) return null;
     return Promise.all(specs.map(function (s) { return d.fonts.load(s); })).catch(noop);
   }
+  function fontsReady(f) { return !SPECS[f] || !d.fonts || SPECS[f].every(function (s) { return d.fonts.check(s); }); }
 
   /* ---- maps (your Agadir page): the OSM base maps are images, so each palette has its own tinted copy (tools/build.py) ---- */
-  var maps = d.querySelectorAll('img[src*="/assets/img/map-"]');
+  var maps = d.querySelectorAll('img[src*="/assets/img/map-"]'), decoded = {};
   var MAP_RE = /(\/map-(?:door|city-m|city))(?:-(?:green|blue|rose))?\.svg/;
   function mapSrc(img, c) { return img.getAttribute('src').replace(MAP_RE, '$1' + (c === 'original' ? '' : '-' + c) + '.svg'); }
+  function idle(img, c) { var s = mapSrc(img, c); return s === img.getAttribute('src') || decoded[s] || img.loading === 'lazy' && !img.complete; }
+  function mapsReady(c) { return [].every.call(maps, function (img) { return idle(img, c); }); }
   function mapsFor(c) {
     // decode the target tints before the switch so the maps change in the same frame as the colours
     return Promise.all([].map.call(maps, function (img) {
-      var src = mapSrc(img, c);
-      if (src === img.getAttribute('src') || img.loading === 'lazy' && !img.complete) return null;
-      var pre = new Image(); pre.src = src;
-      return pre.decode ? pre.decode().catch(noop) : null;
+      if (idle(img, c)) return null;
+      var src = mapSrc(img, c), pre = new Image(); pre.src = src;
+      return (pre.decode ? pre.decode() : Promise.resolve()).then(function () { decoded[src] = true; }, noop);
     }));
   }
   function setMaps(c) { [].forEach.call(maps, function (img) { var s = mapSrc(img, c); if (s !== img.getAttribute('src')) img.setAttribute('src', s); }); }
@@ -70,12 +72,15 @@
   function apply(c, f) {
     c = pick(LOOKS, c); f = pick(FONTS, f);
     var mine = ++token;
-    // wait (≤ 3 s) for the mode's faces and the palette's maps, so the switch lands in one frame with no fallback flash
-    Promise.race([Promise.all([fontsFor(f), mapsFor(c)]), new Promise(function (r) { setTimeout(r, 3000); })]).then(function () {
+    var land = function () {
       if (mine !== token) return; // a later choice superseded this one while it loaded
       animate();
       commit(c, f);
-    });
+    };
+    // the usual case once the panel has been open a moment: everything is loaded, switch in this very frame
+    if (fontsReady(f) && mapsReady(c)) return land();
+    // otherwise wait (≤ 3 s) for the mode's faces and the palette's maps, so the switch lands in one frame, no fallback flash
+    Promise.race([Promise.all([fontsFor(f), mapsFor(c)]), new Promise(function (r) { setTimeout(r, 3000); })]).then(land);
   }
   function checked(name) { var r = panel.querySelector('input[name="' + name + '"]:checked'); return r ? r.value : 'original'; }
 
